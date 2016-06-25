@@ -11,16 +11,9 @@ def parse_section(section, title):
     section_lists = {}  # initializing dictionary
     # parse only if there is available content
     if ('content' in section and section['content'] != ""):
-        """
-        #for sections with empty content, acting only as header
-        if section['content'] == "" and 'title' in section :
-            title = section['title']
-            section_lists[title] = ""
-        """
         # checks whether to concatenate the title or not
         if section['level'] > 0:  # represents a nested section
             title = str(title) + " - " + section['title']  # concatenate titles
-
         else:
             title = section['title']
             section_lists[title] = ""
@@ -65,7 +58,6 @@ def parse_list(list_elem):
     :param list_elem: current list item in json format
     :return: a string containing useful info from list element
     """
-
     list_content = ""  # initializing output
 
     if ('content' in list_elem and list_elem['content'] != ""):
@@ -74,8 +66,12 @@ def parse_list(list_elem):
             if ('@type' in cont and cont['@type'] != 'list_element'):
                 # we don't want to consider templates and links
                 cont_type = cont['@type']
-                if (cont_type == 'link') or (cont_type == 'template'):
+                if (cont_type == 'link'):
                     pass
+                if (cont_type == 'template'):
+                    templ_cont = cont['content']
+                    for templ_val in templ_cont.values():
+                        list_content += templ_val + " "
                 elif (cont_type == 'reference'):
                     # this format helps me to discriminate the references
                     list_content += " {{" + cont['label'] + "}} "
@@ -103,6 +99,7 @@ def mainParser(language, resource):
     jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + input + "?filter=@type:section&procs=Structure"
     try:
         sections = utilities.json_req(jsonpediaURL_sect)
+
     except (IOError, ValueError):
         print('Network Error - please check your connection and try again')
         raise

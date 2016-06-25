@@ -5,7 +5,6 @@ import urllib
 import json
 import sys
 
-
 def readResFile(resName):
     current_dir = os.path.dirname(os.path.abspath(__file__))
     dirname = os.path.join(current_dir, 'resources')
@@ -96,7 +95,7 @@ def sparql_query(query, lang):
     return json_result
 
 
-def get_resources(lang, page_type="<http://dbpedia.org/ontology/Writer>"):
+def get_resources(lang, page_type="Writer"):
     '''
     constructs a list containing all resources from specified type (default: writers)
     :param lang: endpoint language
@@ -108,7 +107,7 @@ def get_resources(lang, page_type="<http://dbpedia.org/ontology/Writer>"):
     fin_list = []
 
     while (offset < tot_res):
-        base_query = "SELECT distinct ?s as ?res WHERE{ ?s a " + page_type + " .?s <http://dbpedia.org/ontology/wikiPageID> ?f} LIMIT 1000 OFFSET "
+        base_query = "SELECT distinct ?s as ?res WHERE{ ?s a <http://dbpedia.org/ontology/" + page_type + "> .?s <http://dbpedia.org/ontology/wikiPageID> ?f} LIMIT 1000 OFFSET "
         query = base_query + str(offset)
         json_res = sparql_query(query, lang)
         res_list = json_res['results']['bindings']
@@ -118,17 +117,20 @@ def get_resources(lang, page_type="<http://dbpedia.org/ontology/Writer>"):
             fin_res = resource_name.encode('utf-8')
             fin_list.append(fin_res)
         offset += 1000
+
+    if fin_list == []:  # No resource found
+        raise
     return fin_list
 
 
-def count_query(lang, page_type="<http://dbpedia.org/ontology/Writer>"):
+def count_query(lang, page_type="Writer"):
     '''
     Gets the number of resources of the given type which have also a Wikipedia related page found on a specified enpoint
     :param lang: endpoint
     :param page_type: for example "<http://dbpedia.org/ontology/Writer>"
     :return: endpoint answer as a number
     '''
-    where_clause = "?s a " + page_type + " .?s <http://dbpedia.org/ontology/wikiPageID> ?f"
+    where_clause = "?s a <http://dbpedia.org/ontology/" + page_type + "> .?s <http://dbpedia.org/ontology/wikiPageID> ?f"
     query = "select (count(distinct ?s) as ?res_num) where{" + where_clause + "}"
     json_res = sparql_query(query, lang)
     try:
