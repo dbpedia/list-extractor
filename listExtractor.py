@@ -1,5 +1,5 @@
 # coding: utf-8
-__author__ = 'feddie - Federica Baiocchi - feddiebai@gmail.com'
+__author__ = 'feddie - Federica Baiocchi - finalfed@hotmail.it'
 
 import sys
 import argparse
@@ -21,7 +21,7 @@ g.bind("dbr", "http://dbpedia.org/resource/")
 
 try:
     resources = utilities.get_resources(args.language, args.res_type)
-    # resources = ['Charles_Marie_René_Leconte_de_Lisle'] #use this line to specify each resource
+    # resources = ['Thomas_Piccirilli'] #use this line to specify each resource
 except:
     print("Could not retrieve specified resources")
     sys.exit(0)
@@ -33,12 +33,13 @@ for res in resources:
         # Decomment the line below to create a file inside a resources folder containing the dictionary
         # utilities.createResFile(resDict, language, resource)
     except:
-        print("--- Could not parse : " + args.language + ":" + res + " ---")
+        err = str(sys.exc_info()[0])
+        print("Could not parse " + args.language + ":" + res + " --- Error " + err)
     else:
         print(">>> " + args.language + ":" + res + "  has been successfully parsed <<<")
         mapper.select_mapping(resDict, res, g, args.language)
         print(">>> " + args.language + ":" + res + "  has been mapped <<<")
 
-file_name = "ListExtractor_" + args.language + "_" + utilities.getDate() + ".ttl"
+file_name = "ListExtractor_Piccirilli_" + args.language + "_" + utilities.getDate() + ".ttl"
 g.serialize(file_name, format="turtle")
 print("Triples serialized in file: " + file_name)

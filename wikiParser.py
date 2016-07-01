@@ -26,6 +26,7 @@ def parse_section(section, title):
         '''Extract section content - values inside dictionary inside 'content' key '''
         for val in content:
             if ('@type' in val):
+                # look for lists in current section
                 if (val['@type'] == 'list'):
                     level = 1  # level is used to keep trace of list inception
                     nest_list = []  # will contain a nested list if there is one
@@ -70,8 +71,9 @@ def parse_list(list_elem):
                     pass
                 if (cont_type == 'template'):
                     templ_cont = cont['content']
+                    #look for significant info in templates
                     for templ_val in templ_cont.values():
-                        list_content += templ_val + " "
+                        list_content += templ_val[0] + " "
                 elif (cont_type == 'reference'):
                     # this format helps me to discriminate the references
                     list_content += " {{" + cont['label'] + "}} "
@@ -106,7 +108,7 @@ def mainParser(language, resource):
     else:
         if 'success' in sections and sections['success'] == "false":
             print("JSONpedia error! - the web service may be currently overloaded, please try again in a while")
-            # mainParser(language, resource)  #brute force approach on JSONpedia
+            #mainParser(language, resource)  #brute force approach on JSONpedia
             raise
         else:
             # JSON index with actual content

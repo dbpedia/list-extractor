@@ -5,9 +5,10 @@ import json
 import re
 import rdflib
 import utilities
+import time
 
 BIBLIOGRAPHY = {
-    'en': ['bibliography'],
+    'en': ['bibliography', 'works', 'fiction'],
     'it': ['opere']
 }
 
@@ -23,7 +24,10 @@ def select_mapping(resDict, res, g, lang):
     :param g: RDF graph to be created
     :param lang: resource language
     """
+    # try:
     res = rdflib.URIRef(dbr + res.decode('utf-8'))
+    #except:
+
     biblio_keys = BIBLIOGRAPHY[lang]
     for res_key in resDict.keys():
         for bk in biblio_keys:  # search for keys related to bibliography
@@ -45,21 +49,27 @@ def map_bibliography(elem_list, res, lang, g):
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             ref = reference_mapper(elem)  # look for resource references
-            if ref != None:  # elem contains a reference
+            if ref != None:  # current element contains a reference
                 uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
                 if (uri != None):
                     dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
                     if dbpedia_uri != None:  #if you can find a DBpedia res, use it as subject
                         uri = dbpedia_uri
-                    g.add((rdflib.URIRef(uri), dbo.author, res))
+                else:  # Take the reference as it is if you can't reconcile it
+                    uri_name = ref.replace(' ', '_')
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
+                g.add((rdflib.URIRef(uri), dbo.author, res))
             else:  # no reference found
                 uri_name = general_mapper(elem)
                 if (uri_name != None and uri_name != ""):
                     uri_name = uri_name.replace(' ', '_')
-                    uri = dbr + uri_name.decode('utf-8')
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
                     g.add((rdflib.URIRef(uri), dbo.author, res))
             year = year_mapper(elem)
             if year != None and uri != None and uri != "":
+                print (rdflib.URIRef(uri) + " " + dbo.releaseYear + " " + year)
                 g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
 
 
@@ -88,18 +98,17 @@ def general_mapper(list_elem):
     :param list_elem: current list element
     :return: a match if found
     '''
-    list_elem = list_elem.replace("{", "")
-    list_elem = list_elem.replace("}", "")
-    list_elem = list_elem.replace("«", "")
-    list_elem = list_elem.replace("»", "")
-    match_str = re.search(r'[^0-9][^ -][^,|:|(*]+', list_elem, re.IGNORECASE)
+    list_elem = list_elem_clean(list_elem)
+    # match_str = re.search(r'[^0-9][^,|:][^-|(*]+', list_elem, re.IGNORECASE)
+    # look for strings and cut everything which follow punctuation (not 100% successful)
+    match_str = re.search(r'[^0-9][^,|:|\-|(*]+', list_elem, re.IGNORECASE)
     if match_str != None:
         match_str = match_str.group()
-        match_str = match_str.replace("\'\'", "")
-        match_str = match_str.replace("\"", "")
+        match_str = match_str.lstrip('\'')
+        match_str = match_str.rstrip('\'')
+        match_str = match_str.lstrip('(')
         match_str = match_str.lstrip()
         match_str = match_str.rstrip()
-        #match_str = match_str.encode('utf-8')
     '''
     print("general mapper: "),
     print(match_str)
@@ -163,6 +172,11 @@ def wikidataAPI_call(res, lang):
         if result == []:  # no URis found
             return None
         uri = result[0]['concepturi']
+    except urllib2.URLError:  # sometimes the host can refuse too many connections
+        time.sleep(5)
+        print("retrying Wikidata API call...")
+        wikidataAPI_call(res, lang)
+        # raise
     except:
         print ("Wikidata API error")
         raise
@@ -180,6 +194,7 @@ def find_DBpedia_uri(wk_uri, lang):
     '''
     query = "select distinct ?s where {?s <http://www.w3.org/2002/07/owl#sameAs> <" + wk_uri + "> }"
     json = utilities.sparql_query(query, lang)
+
     try:
         result = json['results']['bindings'][0]['s']['value']
     except:
@@ -189,3 +204,14 @@ def find_DBpedia_uri(wk_uri, lang):
     print(result)
     '''
     return result
+
+
+def list_elem_clean(list_elem):
+    list_elem = list_elem.replace("{", "")
+    list_elem = list_elem.replace("}", "")
+    list_elem = list_elem.replace("«", "")
+    list_elem = list_elem.replace("»", "")
+    list_elem = list_elem.replace("\'\'", "")
+    list_elem = list_elem.replace("\"", "")
+
+    return list_elem
