@@ -2,12 +2,19 @@
 
 #### [GSoC'16 Progress available here](https://github.com/dbpedia/extraction-framework/wiki/GSoC_2016_Progress_Federica)
 
+
+
 ###How to run the script
-`python listExtractor.py res_type language`
-* `res_type`: a string representing a class of resources from DBpedia ontology (it works with Writer for now)
-* `language`: a language two-letters long prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint (it accepts only 'en'' or 'it' at the moment)
-(e.g. `python listExtractor.py Writer en`)
+`python listExtractor.py req_type res_type language`
+* `req_type` : use `-s` to specify a single resource or `-a` for a class of resources in the next parameter
+* `res_type`: a string representing a class of resources from DBpedia ontology (it works with Writer for now), or a single resource of a writer
+* `language`: a two-letters long prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried (it accepts only `en` or `it` at the moment)
+(e.g. `python listExtractor.py -a Writer it`  | `python listExtractor.py -s William_Gibson en`)
 If successful, a .ttl file containing RDF triples with the literary work as subject, related to its author and publication year will be returned.
+
+###Requirements
+* Python 2.7 
+* Stable internet connection
 
 ### Modules:
 **listExtractor** Starting point, calls other modules. Ideally it will call the collector once and iterate the other calls on each resource found to extract data

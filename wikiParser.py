@@ -1,3 +1,4 @@
+# coding: utf-8
 import utilities
 
 def parse_section(section, title):
@@ -13,7 +14,7 @@ def parse_section(section, title):
     if ('content' in section and section['content'] != ""):
         # checks whether to concatenate the title or not
         if section['level'] > 0:  # represents a nested section
-            title = str(title) + " - " + section['title']  # concatenate titles
+            title += " - " + section['title']  # concatenate titles
         else:
             title = section['title']
             section_lists[title] = ""
@@ -61,19 +62,20 @@ def parse_list(list_elem):
     """
     list_content = ""  # initializing output
 
-    if ('content' in list_elem and list_elem['content'] != ""):
-
+    if ('content' in list_elem and list_elem['content'] != None):
         for cont in list_elem['content']:
             if ('@type' in cont and cont['@type'] != 'list_element'):
                 # we don't want to consider templates and links
                 cont_type = cont['@type']
+                '''
                 if (cont_type == 'link'):
                     pass
-                if (cont_type == 'template'):
-                    templ_cont = cont['content']
-                    #look for significant info in templates
-                    for templ_val in templ_cont.values():
-                        list_content += templ_val[0] + " "
+                '''
+                if (cont_type == 'template' or cont_type == 'link'):
+                    tl_cont = cont['content']
+                    if type(tl_cont) == list:
+                        for tl_val in tl_cont.values():  # look for significant info in templates or links
+                            list_content += tl_val[0] + " "
                 elif (cont_type == 'reference'):
                     # this format helps me to discriminate the references
                     list_content += " {{" + cont['label'] + "}} "
@@ -84,6 +86,7 @@ def parse_list(list_elem):
 
             elif ('attributes' not in cont):  # Take everything else but ignore bottom page references
                 list_content += cont
+    list_content = list_content
     return list_content
 
 
@@ -95,21 +98,27 @@ def mainParser(language, resource):
     :return: a dictionary with sections as keys and lists as values
     """
 
-    input = language + ":" + resource
+    input = language + "%3A" + resource
 
     # JSONpedia call to retrieve sections  - in this way I can retrieve both section titles and their lists
     jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + input + "?filter=@type:section&procs=Structure"
+    print (jsonpediaURL_sect)
     try:
         sections = utilities.json_req(jsonpediaURL_sect)
-
-    except (IOError, ValueError):
+    except (IOError):
         print('Network Error - please check your connection and try again')
+        raise
+    except (ValueError):
         raise
     else:
         if 'success' in sections and sections['success'] == "false":
-            print("JSONpedia error! - the web service may be currently overloaded, please try again in a while")
-            #mainParser(language, resource)  #brute force approach on JSONpedia
-            raise
+            if sections['message'] == 'Invalid page metadata.':
+                print("JSONpedia error: Invalid metadata"),
+            else:
+                print("JSONpedia error! - the web service may be currently overloaded, please try again in a while")
+                print sections['message']
+                # mainParser(language, resource)  #repeat JSONpedia call
+            raise BaseException
         else:
             # JSON index with actual content
             result = sections['result']

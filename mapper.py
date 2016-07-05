@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import urllib2
 import json
 import re
@@ -24,10 +23,10 @@ def select_mapping(resDict, res, g, lang):
     :param g: RDF graph to be created
     :param lang: resource language
     """
-    # try:
-    res = rdflib.URIRef(dbr + res.decode('utf-8'))
-    #except:
 
+    res = rdflib.URIRef(dbr + res.decode('utf-8'))
+    # if res_class == 'Writer' :
+    # search_keys = BIBLIOGRAPHY
     biblio_keys = BIBLIOGRAPHY[lang]
     for res_key in resDict.keys():
         for bk in biblio_keys:  # search for keys related to bibliography
@@ -41,6 +40,7 @@ def map_bibliography(elem_list, res, lang, g):
     :param elem_list: list of elements to be mapped
     :param res: current resource
     :param lang: resource language
+    :param g: RDF graph to be constructed
     '''
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
@@ -55,14 +55,15 @@ def map_bibliography(elem_list, res, lang, g):
                     dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
                     if dbpedia_uri != None:  #if you can find a DBpedia res, use it as subject
                         uri = dbpedia_uri
-                else:  # Take the reference as it is if you can't reconcile it
+                else:  # Take the reference name anyway if you can't reconcile it
+                    ref = list_elem_clean(ref)
                     uri_name = ref.replace(' ', '_')
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
                 print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
                 g.add((rdflib.URIRef(uri), dbo.author, res))
             else:  # no reference found
                 uri_name = general_mapper(elem)
-                if (uri_name != None and uri_name != ""):
+                if (uri_name != None and uri_name != "" and uri_name != res):
                     uri_name = uri_name.replace(' ', '_')
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
                     print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
@@ -99,14 +100,17 @@ def general_mapper(list_elem):
     :return: a match if found
     '''
     list_elem = list_elem_clean(list_elem)
-    # match_str = re.search(r'[^0-9][^,|:][^-|(*]+', list_elem, re.IGNORECASE)
     # look for strings and cut everything which follow punctuation (not 100% successful)
     match_str = re.search(r'[^0-9][^,|:|\-|(*]+', list_elem, re.IGNORECASE)
     if match_str != None:
         match_str = match_str.group()
+        match_str = match_str.lstrip()
         match_str = match_str.lstrip('\'')
         match_str = match_str.rstrip('\'')
+        match_str = match_str.lstrip(':')
+        match_str = match_str.lstrip('-')
         match_str = match_str.lstrip('(')
+        match_str = match_str.lstrip(',')
         match_str = match_str.lstrip()
         match_str = match_str.rstrip()
     '''
@@ -172,7 +176,7 @@ def wikidataAPI_call(res, lang):
         if result == []:  # no URis found
             return None
         uri = result[0]['concepturi']
-    except urllib2.URLError:  # sometimes the host can refuse too many connections
+    except urllib2.URLError:  # sometimes the host can refuse too many connections and returns a socket error
         time.sleep(5)
         print("retrying Wikidata API call...")
         wikidataAPI_call(res, lang)
@@ -193,8 +197,12 @@ def find_DBpedia_uri(wk_uri, lang):
     :return: DBpedia equivalent URI if found
     '''
     query = "select distinct ?s where {?s <http://www.w3.org/2002/07/owl#sameAs> <" + wk_uri + "> }"
-    json = utilities.sparql_query(query, lang)
-
+    try:
+        json = utilities.sparql_query(query, lang)
+    except IOError:
+        time.sleep(5)
+        print("retrying DBpedia API call...")
+        find_DBpedia_uri(wk_uri, lang)
     try:
         result = json['results']['bindings'][0]['s']['value']
     except:
@@ -213,5 +221,5 @@ def list_elem_clean(list_elem):
     list_elem = list_elem.replace("»", "")
     list_elem = list_elem.replace("\'\'", "")
     list_elem = list_elem.replace("\"", "")
-
+    list_elem = list_elem.replace("#", "")
     return list_elem
