@@ -13,7 +13,7 @@
 If successful, a .ttl file containing RDF triples with the literary work as subject, related to its author and publication year will be returned.
 
 ###Requirements
-* Python 2.7 
+* Python 2.7 and [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)
 * Stable internet connection
 
 ### Modules:

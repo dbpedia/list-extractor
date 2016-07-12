@@ -57,14 +57,19 @@ def map_bibliography(elem_list, res, lang, g):
                         uri = dbpedia_uri
                 else:  # Take the reference name anyway if you can't reconcile it
                     ref = list_elem_clean(ref)
+                    elem = elem.replace(ref,
+                                        "")  # subtract reference part from list element, to facilitate further parsing
                     uri_name = ref.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
                 print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
                 g.add((rdflib.URIRef(uri), dbo.author, res))
             else:  # no reference found
                 uri_name = general_mapper(elem)
                 if (uri_name != None and uri_name != "" and uri_name != res):
+                    #elem = elem.replace(uri_name, "") #subtract reference part from list element, to facilitate further parsing
                     uri_name = uri_name.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
                     print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
                     g.add((rdflib.URIRef(uri), dbo.author, res))
@@ -76,21 +81,20 @@ def map_bibliography(elem_list, res, lang, g):
 
 def reference_mapper(list_elem):
     '''
-    Looks for a reference inside the element, which has been marked by {{ }}
+    Looks for a reference inside the element, which has been marked by {{ }} by wikiParser
     :param list_elem: current list element
-    :return: a match if found
+    :return: a match if found, excluding number references
     '''
-    match_ref = re.search(r'\{\{(.*?)\}\}', list_elem)
+    match_ref = re.search(r'\{\{.*?\}\}', list_elem)
     if match_ref != None:
-        match_ref = match_ref.group(1)
-        match_num = re.search(r'[0-9]+', match_ref)
-        if match_num != None:  # date references must be ignored
-            return None
-        '''
-        print("reference match " + list_elem + " -> "),
-        print(match_ref)
-        '''
+        match_ref = match_ref.group()
+        match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
+        if match_num != None:  # date references must be ignored for this mapping
+            num = match_num.group()
+            new_ref = re.sub(r'\{\{.*\}\}', "", num, count=1)  # delete the number part
+            match_ref = reference_mapper(new_ref)  #call again reference_mapper passing the new reference
     return match_ref
+
 
 
 def general_mapper(list_elem):
@@ -100,8 +104,8 @@ def general_mapper(list_elem):
     :return: a match if found
     '''
     list_elem = list_elem_clean(list_elem)
-    # look for strings and cut everything which follow punctuation (not 100% successful)
-    match_str = re.search(r'[^0-9][^,|:|\-|(*]+', list_elem, re.IGNORECASE)
+    # look for strings and cut everything which follows punctuation
+    match_str = re.search(r"[^0-9][^,|:|\-|–|(*]+", list_elem, re.IGNORECASE)
     if match_str != None:
         match_str = match_str.group()
         match_str = match_str.lstrip()
@@ -109,6 +113,7 @@ def general_mapper(list_elem):
         match_str = match_str.rstrip('\'')
         match_str = match_str.lstrip(':')
         match_str = match_str.lstrip('-')
+        match_str = match_str.lstrip('–')
         match_str = match_str.lstrip('(')
         match_str = match_str.lstrip(',')
         match_str = match_str.lstrip()
@@ -182,8 +187,7 @@ def wikidataAPI_call(res, lang):
         wikidataAPI_call(res, lang)
         # raise
     except:
-        print ("Wikidata API error")
-        raise
+        print ("Wikidata API error on request " + req)
     else:
         return uri
 
@@ -215,6 +219,7 @@ def find_DBpedia_uri(wk_uri, lang):
 
 
 def list_elem_clean(list_elem):
+    list_elem = list_elem.lstrip()
     list_elem = list_elem.replace("{", "")
     list_elem = list_elem.replace("}", "")
     list_elem = list_elem.replace("«", "")

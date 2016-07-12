@@ -29,10 +29,8 @@ if args.single:  #extract lists from single resource
         resource = args.res_type.encode('utf-8')
         resDict = wikiParser.mainParser(args.language, resource)  # .encode('utf-8'))
         print (resDict)
-
     except:
-        print("Could not retrieve specified resource: " + args.res_type + "\n")
-        parser.print_help()
+        print("Could not retrieve specified resource: " + args.res_type)
         sys.exit(0)
 
     mapper.select_mapping(resDict, resource, g, args.language)
