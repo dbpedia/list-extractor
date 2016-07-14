@@ -66,10 +66,6 @@ def parse_list(list_elem):
         for cont in list_elem['content']:
             if ('@type' in cont and cont['@type'] != 'list_element'):
                 cont_type = cont['@type']
-                '''
-                if (cont_type == 'link'):
-                    pass
-                '''
                 if (cont_type == 'template' or cont_type == 'link'):
                     tl_cont = cont['content']
                     if type(tl_cont) == list:

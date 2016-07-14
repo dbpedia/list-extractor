@@ -15,12 +15,21 @@ def readResFile(resName):
         text = out_file.read()
         out_file.close()
     except:
-        print("Ops! Something went wrong with file reading")
+        print("Ops! Something went wrong with file reading (" + resName + ")")
         raise
     return eval(text)
 
 
+def read_mappingrules(mapdict):
+    map_file = open('mapping_rules.py', "r")
+    cont = map_file.read()
+    map_file.close()
+
+
 def getDate():
+    """
+    Simply returns current date in format YYYY_MM_DD, used for naming dataset
+    """
     timestmp = time.time()
     date = datetime.datetime.fromtimestamp(timestmp).strftime('%Y_%m_%d')
     return date

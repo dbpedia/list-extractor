@@ -33,7 +33,7 @@ if args.single:  #extract lists from single resource
         print("Could not retrieve specified resource: " + args.res_type)
         sys.exit(0)
 
-    mapper.select_mapping(resDict, resource, g, args.language)
+    mapper.select_mapping(resDict, resource, args.language, 'Writer', g)
 
 elif args.all:  # extract lists from a class of resources (it works with Writer)
     try:
@@ -44,10 +44,12 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
         print("Could not retrieve specified class of resources: " + args.res_type)
         parser.print_help()
         sys.exit(0)
+
+    tot_nodes = 0
     for res in resources:
         try:
             resDict = wikiParser.mainParser(args.language, res)  ##
-            print(res + " (" + str(curr_num) + " of " + str(res_num) + ") -> " + str(resDict))
+            print(res + " (" + str(curr_num) + " of " + str(res_num) + ") -> ")  # + str(resDict))
             curr_num += 1
         # Decomment the line below to create a file inside a resources folder containing the dictionary
         # utilities.createResFile(resDict, language, resource)
@@ -55,9 +57,11 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
             err = str(sys.exc_info()[0])
             print("Could not parse " + args.language + ":" + res + "  -  Error " + err)
         else:
+
             print(">>> " + args.language + ":" + res + "  has been successfully parsed <<<")
-            mapper.select_mapping(resDict, res, g, args.language)
+            tot_nodes += mapper.select_mapping(resDict, res, args.language, args.res_type, g)
             print(">>> " + args.language + ":" + res + "  has been mapped <<<")
+    print tot_nodes
 
 # If the graph contains at least one statement, create a .ttl file with the RDF triples created
 if len(g) > 0:
