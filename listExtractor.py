@@ -1,4 +1,4 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 __author__ = 'feddie - Federica Baiocchi - finalfed@hotmail.it'
 
 import sys
@@ -15,9 +15,12 @@ group.add_argument('-s', '--single', help="To specify a single Wikipedia resourc
 group.add_argument('-a', '--all', help="To parse all resources from the given DBpedia ontology concept.",
                    action="store_true")
 parser.add_argument('res_type', type=lambda s: unicode(s, sys.getfilesystemencoding()),
-                    help="if using -s (single resource) example: William_Gibson |\nwith -a (all resources) example: Writer")
+                    help="if using -s (single resource) example: William_Gibson |"
+                         "\nwith -a (all resources) example: Writer")
+
 parser.add_argument('language', type=str, choices=['en', 'it'], help="Language of Wikipedia pages/resources to analyze")
 args = parser.parse_args()
+
 
 #initialize RDF graph which will contain the triples
 g = rdflib.Graph()
@@ -27,8 +30,9 @@ g.bind("dbr", "http://dbpedia.org/resource/")
 if args.single:  #extract lists from single resource
     try:
         resource = args.res_type.encode('utf-8')
-        resDict = wikiParser.mainParser(args.language, resource)  # .encode('utf-8'))
+        resDict = wikiParser.main_parser(args.language, resource)
         print (resDict)
+
     except:
         print("Could not retrieve specified resource: " + args.res_type)
         sys.exit(0)
@@ -48,8 +52,8 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
     tot_nodes = 0
     for res in resources:
         try:
-            resDict = wikiParser.mainParser(args.language, res)  ##
-            print(res + " (" + str(curr_num) + " of " + str(res_num) + ") -> ")  # + str(resDict))
+            print(res + " (" + str(curr_num) + " of " + str(res_num) + ")")
+            resDict = wikiParser.main_parser(args.language, res)  ##
             curr_num += 1
         # Decomment the line below to create a file inside a resources folder containing the dictionary
         # utilities.createResFile(resDict, language, resource)
@@ -57,11 +61,10 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
             err = str(sys.exc_info()[0])
             print("Could not parse " + args.language + ":" + res + "  -  Error " + err)
         else:
-
             print(">>> " + args.language + ":" + res + "  has been successfully parsed <<<")
             tot_nodes += mapper.select_mapping(resDict, res, args.language, args.res_type, g)
             print(">>> " + args.language + ":" + res + "  has been mapped <<<")
-    print tot_nodes
+    print ("Total nodes extracted: " + str(tot_nodes))
 
 # If the graph contains at least one statement, create a .ttl file with the RDF triples created
 if len(g) > 0:
@@ -69,4 +72,4 @@ if len(g) > 0:
     g.serialize(file_name, format="turtle")
     print("Triples serialized in file: " + file_name)
 else:
-    print("Could not extract any RDF statement! :(")
+    print("Could not serialize any RDF statement! :(")

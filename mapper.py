@@ -7,29 +7,6 @@ import utilities
 import time
 from mapping_rules import *
 
-'''
-#Used to select a mapping function for the given resource class,
-# Values must correspond to mapping methods in the form of 'map_bibliography()'
-MAPPING = {'Writer' : 'BIBLIOGRAPHY'}
-
-#Contains the substrings to be searched in section names in order to relate the inner list to the topic
-#Title describes the topic and is a value from MAPPING
-#Keys correspond to language prefix, Values to section titles
-BIBLIOGRAPHY = {
-    'en': ['bibliography', 'works', 'fiction'],
-    'it': ['opere', 'romanzi', 'saggi']
-}
-
-#Used to reconcile section names with literary genres of inner list elements (for bibliography-kind lists)
-BIBLIO_GENRE = {
-    'en' : {'Novels' : 'Novel', 'Short stories' : 'Short_story', 'Short Fiction' : 'Short_story',
-            'Comics' : 'Comic', 'Articles': 'Article', 'Essays':'Essay', 'Plays' : 'Play_(theatre)'},
-    'it' : {'Romanzi' : 'Romanzo', 'Racconti' : 'Racconto', 'Antologie': 'Antologia',
-            'Audiolibri' : 'Audiolibro', 'Saggistica' : 'Saggio', 'Poesie' : 'Poesia',
-            'Drammi': 'Dramma'}
-}
-'''
-
 dbo = rdflib.Namespace("http://dbpedia.org/ontology/")
 dbr = rdflib.Namespace("http://dbpedia.org/resource/")
 
@@ -55,77 +32,112 @@ def select_mapping(resDict, res, lang, res_class, g):
         dbr = rdflib.Namespace("http://" + lang + ".dbpedia.org/resource/")
 
     db_res = rdflib.URIRef(dbr + res.decode('utf-8'))
-    res_triples = 0
+    res_nodes = 0
     for res_key in resDict.keys():  # iterate on resource dictionary keys
+        mapped = False
         for dk in domain_keys:  # search for resource keys related to the selected domain
-            if re.search(dk, res_key, re.IGNORECASE):  # if they match, apply bibliography mapping
-                mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g)"
-                res_triples += eval(mapper)  # calls the proper mapping for that domain
-    print("Nodes extracted from " + res + ": " + str(res_triples))
-    return res_triples
+            # if the section hasn't been mapped yet and the title match, apply domain related mapping
+            if not mapped and re.search(dk, res_key, re.IGNORECASE):
+                mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
+                res_nodes += eval(
+                    mapper)  # calls the proper mapping for that domain and gets the number of extracted nodes
+                mapped = True
+    print("Nodes extracted from " + res + ": " + str(res_nodes))
+    return res_nodes
 
 
-def map_bibliography(elem_list, sect_name, res, lang, g):
+def map_bibliography(elem_list, sect_name, res, lang, g, nodes):
     '''
     Handles lists related to bibliography contained in a section
-    adding RDF triples containing the resource, its author and its publication year
+    adding RDF nodes containing the resource, its author and its publication year
     :param elem_list: list of elements to be mapped
     :param sect_name: section name, used to reconcile literary genre
     :param res: current resource
     :param lang: resource language
     :param g: RDF graph to be constructed
+    :param nodes: a counter to keep track of the number of nodes extracted
     '''
     lit_genre = litgenre_mapper(sect_name, lang)
-    triples = 0
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
-            map_bibliography(elem, sect_name, res, lang, g)
+            nodes += 1
+            map_bibliography(elem, sect_name, res, lang, g, nodes)
         else:
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
-            ref = reference_mapper(elem)  # look for resource references
-            if ref != None:  # current element contains a reference
-                uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
-                if (uri != None):
-                    dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
-                    if dbpedia_uri != None:  #if you can find a DBpedia res, use it as subject
-                        uri = dbpedia_uri
-                else:  # Take the reference name anyway if you can't reconcile it
-                    ref = list_elem_clean(ref)
-                    elem = elem.replace(ref,
-                                        "")  # subtract reference part from list element, to facilitate further parsing
-                    uri_name = ref.replace(' ', '_')
-                    uri_name = urllib2.quote(uri_name) ###
-                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                #print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
+            res_name = italic_mapper(elem)
+            if res_name:
+                print("italic: " + res_name),
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
                 g.add((rdflib.URIRef(uri), dbo.author, res))
-                triples+=1
-            else:  # no reference found
-                uri_name = general_mapper(elem)
-                if (uri_name != None and uri_name != "" and uri_name != res):
-                    uri_name = uri_name.replace(' ', '_')
-                    uri_name = urllib2.quote(uri_name) ###
-                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                nodes += 1
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref != None:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  # try to reconcile resource with Wikidata API
+                    if (uri != None):
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri != None:  # if you can find a DBpedia res, use it as subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref,
+                                            "")  # subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
                     #print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
+                    print("reference: " + uri)
                     g.add((rdflib.URIRef(uri), dbo.author, res))
-                    triples += 1
-            if uri != None and uri != "":
+                    nodes += 1
+                else:  # no reference found
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        print("other: " + uri_name)
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.author, res))
+                        nodes += 1
+            if uri and uri != "":
                 year = year_mapper(elem)
                 if year != None:
+                    print (year)
                     # print (rdflib.URIRef(uri) + " " + dbo.releaseYear + " " + year)
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
-
                 if lit_genre != None:
+                    print(lit_genre)
                     # print (rdflib.URIRef(uri) + " " + dbo.literaryGenre + " " + dbr + lit_genre)
                     g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbr + rdflib.URIRef(lit_genre)))
+    return nodes
 
-    return triples
 
+def italic_mapper(list_elem):
+    """
+    Extracts italic text inside the list element, mapped by ''..'' in Wikipedia.
+    This is the first mapping to be applied since it's very precise.
+    If this fails, more geneal mappings are applied.
+    :param list_elem: current list element
+    :return: a match if found, None object otherwise
+    """
+    # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
+    match_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
+    '''
+    if re.search(r'\'{2,}.\{\{'+ match_italic + '\}\}.\'{2,}', list_elem) :
+        return None
+    '''
+    if match_italic:
+        match_italic = match_italic.group(0)
+        match_italic = list_elem_clean(match_italic)
+    return match_italic
 
 
 def reference_mapper(list_elem):
     '''
-    Looks for a reference inside the element, which has been marked by {{ }} by wikiParser
+    Looks for a reference inside the element, which has been marked with {{...}} by wikiParser,
+    ignoring date references
     :param list_elem: current list element
     :return: a match if found, excluding number references
     '''
@@ -140,10 +152,10 @@ def reference_mapper(list_elem):
     return match_ref
 
 
-
 def general_mapper(list_elem):
     '''
-    Called when no reference is found, applies a regex to find the main concept and cuts off punctuation marks
+    Called when no italic text and reference is found,
+    applies a regex to find the main concept and cuts off punctuation marks
     :param list_elem: current list element
     :return: a match if found
     '''
@@ -161,12 +173,6 @@ def general_mapper(list_elem):
         match_str = match_str.lstrip('–')
         match_str = match_str.lstrip('(')
         match_str = match_str.lstrip(',')
-        match_str = match_str.lstrip()
-        match_str = match_str.rstrip()
-    '''
-    print("general mapper: "),
-    print(match_str)
-    '''
     return match_str
 
 def year_mapper(list_elem):
@@ -175,6 +181,7 @@ def year_mapper(list_elem):
     :param list_elem: current list element
     :return: a numeric match if found
     '''
+    # select an occurance of a 4 digit number as the (publication) year
     match_num = re.search(r'[0-9]{4}', list_elem)
     if match_num != None:
         match_num = match_num.group()
@@ -187,9 +194,9 @@ def year_mapper(list_elem):
 
 def litgenre_mapper(sect_name, lang):
     """
-    Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary,
-    if a genre is found, it checks also for multiple matches and ignores them
-    (some sections can be called 'Novels and short stories', so it's impossible to know if each list element is actually novels or short stories.
+    Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
+    if a genre is found, it also checks for multiple matches and ignores them
+    (some sections may be called 'Novels and short stories', therefore it's impossible to know if each list element is actually a novel or a short story.
     :param sect_name: wikipedia section name, to reconcile
     :param language: resource/endpoint language
     :return: a literary genre if there is a match, None otherwise
@@ -283,11 +290,19 @@ def find_DBpedia_uri(wk_uri, lang):
 
 def list_elem_clean(list_elem):
     list_elem = list_elem.lstrip()
+    list_elem = list_elem.lstrip('\'')
+    list_elem = list_elem.rstrip('\'')
     list_elem = list_elem.replace("{", "")
     list_elem = list_elem.replace("}", "")
+    list_elem = list_elem.replace("[", "")
+    list_elem = list_elem.replace("]", "")
+    list_elem = list_elem.replace("“", "")
+    list_elem = list_elem.replace("”", "")
     list_elem = list_elem.replace("«", "")
     list_elem = list_elem.replace("»", "")
     list_elem = list_elem.replace("\'\'", "")
     list_elem = list_elem.replace("\"", "")
     list_elem = list_elem.replace("#", "")
+    list_elem = list_elem.lstrip()
+    list_elem = list_elem.rstrip()
     return list_elem
