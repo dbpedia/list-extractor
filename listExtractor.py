@@ -32,7 +32,8 @@ if args.single:  #extract lists from single resource
         resource = args.res_type.encode('utf-8')
         resDict = wikiParser.main_parser(args.language, resource)
         print (resDict)
-
+        # Decomment the line below to create a file inside a resources folder containing the dictionary
+        # utilities.createResFile(resDict, args.language, resource)
     except:
         print("Could not retrieve specified resource: " + args.res_type)
         sys.exit(0)
@@ -55,8 +56,8 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
             print(res + " (" + str(curr_num) + " of " + str(res_num) + ")")
             resDict = wikiParser.main_parser(args.language, res)  ##
             curr_num += 1
-        # Decomment the line below to create a file inside a resources folder containing the dictionary
-        # utilities.createResFile(resDict, language, resource)
+            # Decomment the line below to create a file inside a resources folder containing the dictionary
+            #utilities.createResFile(resDict, args.language, res)
         except:
             err = str(sys.exc_info()[0])
             print("Could not parse " + args.language + ":" + res + "  -  Error " + err)
@@ -69,7 +70,8 @@ elif args.all:  # extract lists from a class of resources (it works with Writer)
 # If the graph contains at least one statement, create a .ttl file with the RDF triples created
 if len(g) > 0:
     file_name = "ListExtractor_" + args.res_type + "_" + args.language + "_" + utilities.getDate() + ".ttl"
-    g.serialize(file_name, format="turtle")
-    print("Triples serialized in file: " + file_name)
+    file_path = utilities.get_subdirectory('extracted', file_name)
+    g.serialize(file_path, format="turtle")
+    print("Triples serialized in file: " + file_path)
 else:
     print("Could not serialize any RDF statement! :(")

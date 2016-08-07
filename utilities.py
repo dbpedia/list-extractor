@@ -35,21 +35,16 @@ def getDate():
     date = datetime.datetime.fromtimestamp(timestmp).strftime('%Y_%m_%d')
     return date
 
-def createResFile (file_content, lang, resName) :
+
+def createResFile(file_content, lang, resName):
     """
     Creates a new file named 'resource-name - date'.txt containing extracted info
     :param file_content: parsed data
     :param resName: name_of_resource
     """
     title = resName + " [" + lang.upper() + "] - " + getDate() + ".txt"
-
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    dirname = os.path.join(current_dir, 'resources')
-
-    if not os.path.exists(dirname):
-        os.makedirs(dirname)
-
-    path = os.path.join(dirname, title)
+    path = get_subdirectory('resources', title)
+    # path = os.path.join(dirname, title)
     str_content = makeReadable(file_content)
     try:
         out_file = open(path, "w")
@@ -59,6 +54,14 @@ def createResFile (file_content, lang, resName) :
         print("Ops! Something went wrong with file creation")
         raise
 
+
+def get_subdirectory(dirname, filename):
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    dirpath = os.path.join(current_dir, dirname)
+    if not os.path.exists(dirpath):
+        os.makedirs(dirpath)
+    file_path = os.path.join(dirname, filename)
+    return file_path
 
 def makeReadable (res_dict) :
     """

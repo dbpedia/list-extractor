@@ -109,13 +109,13 @@ def jsonpedia_convert(language, resource):
     else:
         if 'success' in sections and sections['success'] == "false":
             if sections['message'] == 'Invalid page metadata.':
-                print("JSONpedia error: Invalid metadata."),
+                print("JSONpedia error: Invalid metadata. "),
                 raise
             else:
                 print("JSONpedia error! - the web service may be currently overloaded, please try again in a while. "
                       "Error: " + sections['message'])
                 time.sleep(1)
-                return jsonpedia_convert(language, resource)  # try again
+                return jsonpedia_convert(language, resource)  # try again JSONpedia call
         else:
             #JSON index with actual content
             result = sections['result']

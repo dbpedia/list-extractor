@@ -67,7 +67,8 @@ def map_bibliography(elem_list, sect_name, res, lang, g, nodes):
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)
             if res_name:
-                print("italic: " + res_name),
+                # print("italic: " + res_name),
+                elem = elem.replace(res_name, "")  # delete
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
@@ -88,27 +89,31 @@ def map_bibliography(elem_list, sect_name, res, lang, g, nodes):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    #print (rdflib.URIRef(uri) + " " + dbo.author + " " + res)
-                    print("reference: " + uri)
+                    #print("reference: " + uri)
                     g.add((rdflib.URIRef(uri), dbo.author, res))
                     nodes += 1
                 else:  # no reference found
                     uri_name = general_mapper(elem)
                     if (uri_name and uri_name != "" and uri_name != res):
-                        print("other: " + uri_name)
+                        #print("other: " + uri_name)
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
                         g.add((rdflib.URIRef(uri), dbo.author, res))
                         nodes += 1
             if uri and uri != "":
+                isbn = isbn_mapper(elem)
+                if isbn != None:
+                    # print("isbn:" + isbn)
+                    g.add((rdflib.URIRef(uri), dbo.isbn, rdflib.Literal(isbn, datatype=rdflib.XSD.string)))
+                    elem = elem.replace(isbn, "")
                 year = year_mapper(elem)
                 if year != None:
-                    print (year)
+                    #print (year)
                     # print (rdflib.URIRef(uri) + " " + dbo.releaseYear + " " + year)
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
                 if lit_genre != None:
-                    print(lit_genre)
+                    #print(lit_genre)
                     # print (rdflib.URIRef(uri) + " " + dbo.literaryGenre + " " + dbr + lit_genre)
                     g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbr + rdflib.URIRef(lit_genre)))
     return nodes
@@ -124,10 +129,7 @@ def italic_mapper(list_elem):
     """
     # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
     match_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
-    '''
-    if re.search(r'\'{2,}.\{\{'+ match_italic + '\}\}.\'{2,}', list_elem) :
-        return None
-    '''
+
     if match_italic:
         match_italic = match_italic.group(0)
         match_italic = list_elem_clean(match_italic)
@@ -155,12 +157,12 @@ def reference_mapper(list_elem):
 def general_mapper(list_elem):
     '''
     Called when no italic text and reference is found,
-    applies a regex to find the main concept and cuts off punctuation marks
+    applies a regex to find the main concept and cuts off numbers and punctuation marks
     :param list_elem: current list element
     :return: a match if found
     '''
     list_elem = list_elem_clean(list_elem)
-    # look for strings and cut everything which follows punctuation
+    # look for strings cutting numbers and punctuation
     match_str = re.search(r"[^0-9][^,|:|\-|–|(*|\[*]+", list_elem, re.IGNORECASE)
     if match_str != None:
         match_str = match_str.group()
@@ -175,6 +177,22 @@ def general_mapper(list_elem):
         match_str = match_str.lstrip(',')
     return match_str
 
+
+def isbn_mapper(list_elem):
+    '''
+    Applies a regex to look for a isbn number, returns a match if found
+    ISBN or International Standard Book Number consists of 4 parts and 10 digits (if assigned before 2007)
+    where the last character may equal to the letter "X", or 5 parts and 13 digits , possibly separated by hyphens
+    :param list_elem: current list element
+    :return: a match for a isbn code, if present
+    '''
+
+    match_isbn = re.search(r'ISBN ([0-9]|-)*X?', list_elem)
+    if match_isbn != None:
+        match_isbn = match_isbn.group()
+        match_isbn = match_isbn.replace('ISBN ', "")
+    return match_isbn
+
 def year_mapper(list_elem):
     '''
     Looks for a set of 4 digits which would likely represent the year of publication
@@ -185,10 +203,7 @@ def year_mapper(list_elem):
     match_num = re.search(r'[0-9]{4}', list_elem)
     if match_num != None:
         match_num = match_num.group()
-    '''
-    print("year: "),
-    print(match_num)
-    '''
+
     return match_num
 
 
@@ -205,9 +220,11 @@ def litgenre_mapper(sect_name, lang):
     for bg in b_genres.keys():  # iterate on literary genres provided for the given language
         if re.search(bg, sect_name, re.IGNORECASE):  # try to match section name with a genre
             for other_bg in b_genres.keys():
-                if bg != other_bg and re.search(other_bg, sect_name,
+                # sect_name = sect_name.replace(bg, "")
+                if other_bg != bg and re.search(other_bg, sect_name,
                                                 re.IGNORECASE):  # if another genre also matches the current section
-                    return None
+                    return None  #
+            print(b_genres[bg])
             return b_genres[bg]
 
 
