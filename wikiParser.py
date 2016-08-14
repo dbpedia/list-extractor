@@ -2,22 +2,61 @@
 import utilities
 import time
 
+last_sec_title = ""
+header_title = ""
+last_sec_lev = 0
+
+
+def main_parser(language, resource):
+    """
+    Main method, obtains JSON representation of the resource and parses the result looking for lists in sections.
+    Returns final dictionary containing all lists and their section names from given resource in given language
+    :param language: Language of Wikipedia page, needed by JSONpedia to identify the resource
+    :param resource: Resource name, needed by JSONpedia
+    :return: a dictionary containing section names as keys and featured lists as values, without empty fields
+    """
+    result = jsonpedia_convert(language, resource)
+    if result == []:
+        new_resource = find_page_redirects(resource, language)
+        result = jsonpedia_convert(language, new_resource)
+    lists = {}
+    global header_title
+    # iterate on every section
+    for res in result:
+        if '@type' in res and res['@type'] == 'section':
+            parsed_sect = parse_section(res, header_title)
+            lists.update(parsed_sect)
+    cleanlists = utilities.clean_dictionary(lists)  # clean resulting dictionary and leave only meaningful keys
+    return cleanlists
+
+
 def parse_section(section, title):
     '''
+    Parses each section of the Wikipedia page searching for lists.
     Returns a dictionary with section names as keys and their list contents as values
     :param section: current section to parse in json format
     :param title: a string used to concatenate names of nested sections
     :return: a dictionary element representing the section
     '''
     section_lists = {}  # initializing dictionary
+    global last_sec_lev
+    global last_sec_title
+    global header_title
     # parse only if there is available content
     if ('content' in section and section['content'] != ""):
         # checks whether to concatenate the title or not
-        if section['level'] > 0:  # represents a nested section
-            title += " - " + section['title']  # concatenate titles
-        else:
+        if section['level'] == 0:
             title = section['title']
-            section_lists[title] = ""
+            last_sec_lev = 0
+            header_title = title
+        elif section['level'] > last_sec_lev:
+            title = last_sec_title + " - " + section['title']
+            header_title = last_sec_title
+        else:
+            title = header_title + " - " + section['title']
+
+        last_sec_title = title
+        last_sec_lev = section['level']
 
         # don't consider keys since they are non-relevant (e.g. an0, an1,..)
         content = section['content'].values()
@@ -51,7 +90,8 @@ def parse_section(section, title):
 
 def parse_list(list_elem):
     """
-    Parses a list element extracting relevant info
+    Parses a list element extracting relevant info.
+    It also marks references (links) with double curly brackets {{...}} in order to be recognizable for mapping
     :param list_elem: current list item in json format
     :return: a string containing useful info from list element
     """
@@ -66,12 +106,13 @@ def parse_list(list_elem):
                         for tl_val in tl_cont.values():  # look for significant info in templates or links
                             list_content += tl_val[0] + " "
                     elif type(tl_cont) == dict:
-                        if '@an0' in tl_cont:  # structure type with ad anonymous field
+                        if '@an0' in tl_cont:  # recurring structure type with an anonymous field
                             tl_val = tl_cont['@an0']  # template content lies inside first anonymus value
                             if type(tl_val) == list:
                                 for tlv in tl_val:
                                     if type(tlv) == dict:
-                                        list_content += tlv['label']  # for references
+                                        if 'label' in tlv:
+                                            list_content += tlv['label']  # for references
                                     else:
                                         list_content += tlv + " "  # for actual values
                                         # list_content += tl_val + " "
@@ -110,7 +151,7 @@ def jsonpedia_convert(language, resource):
         if 'success' in sections and sections['success'] == "false":
             if sections['message'] == 'Invalid page metadata.':
                 print("JSONpedia error: Invalid metadata. "),
-                raise
+                raise BaseException
             else:
                 print("JSONpedia error! - the web service may be currently overloaded, please try again in a while. "
                       "Error: " + sections['message'])
@@ -122,34 +163,6 @@ def jsonpedia_convert(language, resource):
             return result
 
 
-def main_parser(language, resource):
-    """
-    Main method, returns final dictionary containing all extracted data from given resource in given language
-    :param language: Language of Wikipedia page, needed by JSONpedia to identify the resource
-    :param resource: Resource name, needed by JSONpedia
-    :return: a dictionary containing section names as keys and featured lists as values, without empty fields
-    """
-    result = jsonpedia_convert(language, resource)
-    if result == []:
-        new_resource = find_page_redirects(resource, language)
-        result = jsonpedia_convert(language, new_resource)
-
-    lists = {}
-    # iterate on every section
-    for res in result:
-        if '@type' in res and res['@type'] == 'section':
-            if res['level'] == 0:
-                parsed_sect = parse_section(res, "")
-                lists.update(parsed_sect)
-                keys = parsed_sect.keys()
-                header_title = keys[0]
-
-            elif res['level'] > 0:
-                # if it's a nested section, concatenate its name with last header title
-                parsed_sect = parse_section(res, header_title)
-                lists.update(parsed_sect)
-    cleanlists = utilities.clean_dictionary(lists)  # clean resulting dictionary and leave only meaningful keys
-    return cleanlists
 
 
 def find_page_redirects(res, lang):

@@ -136,7 +136,7 @@ def get_resources(lang, page_type="Writer"):
     return fin_list
 
 
-def count_query(lang, page_type="Writer"):
+def count_query(lang, page_type):
     '''
     Gets the number of resources of the given type which have also a Wikipedia related page found on a specified enpoint
     :param lang: endpoint
@@ -169,3 +169,39 @@ def json_req(req):
         err = str(sys.exc_info()[0])
         print("Error: " + err + " - on request " + req)
         raise
+
+
+def get_resource_type(lang, resource):
+    """
+    Asks all rdf:type of current resource to the local SPARQL endpoint
+    :param resource: current resource with unknown type
+    :param lang: language/endpoint
+    :return: a list containing all types associated to the resource in the local endpoint
+    """
+    if lang == 'en':
+        local = ""
+    else:
+        local = lang + "."
+    type_query = "SELECT distinct ?t WHERE {<http://" + local + "dbpedia.org/resource/" + resource + "> a ?t}"
+    answer = sparql_query(type_query, lang)
+    results = answer['results']['bindings']
+    types = []
+    for res in results:
+        full_uri = res['t']['value']  # e.g. http://dbpedia.org/ontology/Person
+        type = full_uri.split("/")[-1]  # e.g Person
+        types.append(type)
+    return types
+
+
+def count_listelem_dict(res_dict):
+    """
+    Counts the number of list elements from the dictionary representing the Wikipedia page.
+    It's used to know how many list elements in a page are actually extracted.
+    :param res_dict: dictionary representing the resource (Wikipedia page)
+    :return: total list elements
+    """
+    list_el_num = 0
+    for k in res_dict.keys():
+        for el in res_dict[k]:
+            list_el_num += 1
+    return list_el_num

@@ -6,11 +6,11 @@
 
 ###How to run the script
 `python listExtractor.py req_type res_type language`
-* `req_type` : use `-s` to specify a single resource or `-a` for a class of resources in the next parameter
+* `collect_mode` : use `s` to specify a single resource or `a` for a class of resources in the next parameter
 * `res_type`: a string representing a class of resources from DBpedia ontology (it works with Writer for now), or a single resource of a writer
 * `language`: a two-letters long prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried (it accepts only `en` or `it` at the moment)
-(e.g. `python listExtractor.py -a Writer it`  | `python listExtractor.py -s William_Gibson en`)
-If successful, a .ttl file containing RDF triples with the literary work as subject, related to its author and publication year will be returned.
+(e.g. `python listExtractor.py a Writer it`  | `python listExtractor.py s William_Gibson en`)
+If successful, a .ttl file containing RDF triples with the literary work as subject, related to its author, publication year and possibly ISBN will be returned.
 
 ###Requirements
 * Python 2.7 and [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)
