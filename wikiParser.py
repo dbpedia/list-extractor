@@ -29,7 +29,6 @@ def main_parser(language, resource):
     cleanlists = utilities.clean_dictionary(lists)  # clean resulting dictionary and leave only meaningful keys
     return cleanlists
 
-
 def parse_section(section, title):
     '''
     Parses each section of the Wikipedia page searching for lists.
@@ -161,8 +160,6 @@ def jsonpedia_convert(language, resource):
             #JSON index with actual content
             result = sections['result']
             return result
-
-
 
 
 def find_page_redirects(res, lang):

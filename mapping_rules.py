@@ -3,7 +3,7 @@ The "MAPPING" dictionary is used to select a mapping function for the given reso
 each key represents a class of resources from DBpedia ontology, while values must correspond
 to mapping methods in mapper.py and begin with 'map_'
 """
-MAPPING = {'Writer': 'BIBLIOGRAPHY', 'Actor': 'FILMOGRAPHY', 'Director': 'FILMOGRAPHY'}
+MAPPING = {'Writer': 'BIBLIOGRAPHY', 'Actor': 'FILMOGRAPHY'}
 
 ###################################################################
 
@@ -18,8 +18,8 @@ BIBLIOGRAPHY = {
 }
 
 FILMOGRAPHY = {
-    'it': ['filmografia', 'cinema'],
-    'en': ['filmography']
+    'en': ['filmography'],
+    'it': ['filmografia', 'cinema']
 }
 
 CAST = {
@@ -42,7 +42,14 @@ BIBLIO_GENRE = {
 
 # Used in map_filmography to map how the given resource takes part in the movie from the section title
 FILMOGRAPHY_PARTICIPATION = {
-    'it': {'Attore': 'starring', 'Attrice': 'starring', 'Regista': 'director', 'Sceneggiatore': 'screenWriter',
-           'Sceneggiatrice': 'screenwriter'},
-    'en': {'Actor': 'starring', 'Director': 'director'}
+    'en': {'Actor': 'starring', 'Director': 'director', 'Producer': 'producer', 'Dubbing': 'voiceActor'},
+    'it': {'Attore': 'starring', 'Attrice': 'starring', 'Sceneggiatore': 'screenWriter',
+           'Sceneggiatrice': 'screenwriter',
+           'Doppiatore': 'voiceActor', 'Doppiatrice': 'voiceActor', 'Regista': 'director', 'Montaggio': 'editing',
+           'Montatore': 'editing', 'Montatrice': 'editing', 'Produttore': 'producer', 'Produttrice': 'producer'}
+}
+
+FILMOGRAPHY_TYPE = {
+    'en': {'TV': 'TelevisionShow', 'Animation': 'Cartoon', 'Anime': 'Anime'},
+    'it': {'Televisione': 'TelevisionShow', 'TV': 'TelevisionShow', 'Animazione': 'Cartoon'}
 }

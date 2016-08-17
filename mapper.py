@@ -12,19 +12,25 @@ dbr = rdflib.Namespace("http://dbpedia.org/resource/")
 rdf = rdflib.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 mapped_domains = []  # used to prevent duplicate mappings
+resource_class = ""
 
 def select_mapping(resDict, res, lang, res_class, g):
     """
-    Select the mapping rules to apply
+    Firstly selects the mapping type(s) to apply from MAPPING (in mapping_rules.py) based on resource class (domain).
+    If a match is found, tries to find another match between section names and key-words for that domain
+    to apply related mapping functions for the list elements contained in that section.
     :param resDict: dictionary representing current resource
     :param res: current resource name
     :param res_class: resource class/type (e.g. Writer)
     :param lang: resource language
     :param g: RDF graph to be created
+    :return number of list elements actually mapped in th graph
     """
     global mapped_domains
+    global resource_class
     if res_class in MAPPING and MAPPING[res_class] not in mapped_domains:
         domain = MAPPING[res_class]  # e.g. BIBLIOGRAPHY
+        resource_class = res_class
         if lang in eval(domain):
             domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
         else:
@@ -32,7 +38,6 @@ def select_mapping(resDict, res, lang, res_class, g):
             return 0
     else:
         return 0
-
     mapped_domains.append(domain)  #this domain won't be used again for mapping
     if lang != 'en':  # correct dbpedia resource domain for non-english language
         global dbr
@@ -54,7 +59,22 @@ def select_mapping(resDict, res, lang, res_class, g):
 
 
 def map_filmography(elem_list, sect_name, res, lang, g, elems):
+    '''
+    Handles lists related to filmography inside a (sub)section containing a match with FILMOGRAPHY.
+    Constructs RDF statements about the movie title, it release year and type (TV show, Cartoon..) and
+    which part the current resource took in it (director, actor, ...)
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name, used to reconcile literary genre
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
+    '''
     film_particip = filmpart_mapper(sect_name, lang)
+    filmography_type = filmtype_mapper(sect_name, lang)
+    print(sect_name),
+    print("type: " + filmography_type + " -  particip: " + film_particip)
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
@@ -69,21 +89,21 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), rdf.type, dbo.Film))
+                g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
                 elems += 1
             else:  # if unsuccessful, apply general mapping (lower accuracy)
                 uri_name = general_mapper(elem)
                 if (uri_name and uri_name != "" and uri_name != res):
-                    # print("other: " + uri_name),
+                    #print("other: " + uri_name),
                     uri_name = uri_name.replace(' ', '_')
                     uri_name = urllib2.quote(uri_name)  ###
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), rdf.type, dbo.Film))
+                    g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
                     elems += 1
             if uri and uri != "":
                 year = year_mapper(elem)
                 if year:
-                    # print (year)
+                    print (year)
                     # print (rdflib.URIRef(uri) + " " + dbo.releaseYear + " " + year)
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
                 if film_particip:
@@ -94,14 +114,15 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
 
 def map_bibliography(elem_list, sect_name, res, lang, g, elems):
     '''
-    Handles lists related to bibliography contained in a (sub)section
-    adding RDF nodes containing the resource, its author, publication year and isbn code
+    Handles lists related to bibliography inside a (sub)section containing a match with BIBLIOGRAPHY.
+    Adds RDF statement about the work title, its author (the current resource), publication year and isbn code.
     :param elem_list: list of elements to be mapped
     :param sect_name: section name, used to reconcile literary genre
     :param res: current resource
     :param lang: resource language
     :param g: RDF graph to be constructed
     :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
     '''
     # literary genre depends on the name of the section, so it is the same for every element of the list
     lit_genre = litgenre_mapper(sect_name, lang)  #literary genre is the same for every element of the list
@@ -123,11 +144,11 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
             else:
                 ref = reference_mapper(elem)  # look for resource references
-                if ref != None:  # current element contains a reference
+                if ref:  # current element contains a reference
                     uri = wikidataAPI_call(ref, lang)  # try to reconcile resource with Wikidata API
-                    if (uri != None):
+                    if uri:
                         dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
-                        if dbpedia_uri != None:  # if you can find a DBpedia res, use it as subject
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as subject
                             uri = dbpedia_uri
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
@@ -150,16 +171,16 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                         elems += 1
             if uri and uri != "":
                 isbn = isbn_mapper(elem)
-                if isbn != None:
+                if isbn:
                     # print("isbn:" + isbn)
                     g.add((rdflib.URIRef(uri), dbo.isbn, rdflib.Literal(isbn, datatype=rdflib.XSD.string)))
                     elem = elem.replace(isbn, "")
                 year = year_mapper(elem)
-                if year != None:
+                if year:
                     #print (year)
                     # print (rdflib.URIRef(uri) + " " + dbo.releaseYear + " " + year)
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
-                if lit_genre != None:
+                if lit_genre:
                     #print(lit_genre)
                     # print (rdflib.URIRef(uri) + " " + dbo.literaryGenre + " " + dbr + lit_genre)
                     g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbr + rdflib.URIRef(lit_genre)))
@@ -176,7 +197,6 @@ def italic_mapper(list_elem):
     """
     # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
     match_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
-
     if match_italic:
         match_italic = match_italic.group(0)
         match_italic = list_elem_clean(match_italic)
@@ -191,10 +211,10 @@ def reference_mapper(list_elem):
     :return: a match if found, excluding number references
     '''
     match_ref = re.search(r'\{\{.*?\}\}', list_elem)
-    if match_ref != None:
+    if match_ref:
         match_ref = match_ref.group()
         match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
-        if match_num != None:  # date references must be ignored for this mapping
+        if match_num:  # date references must be ignored for this mapping
             num = match_num.group()
             new_ref = re.sub(r'\{\{.*\}\}', "", num, count=1)  # delete the number part
             match_ref = reference_mapper(new_ref)  #call again reference_mapper passing the new reference
@@ -239,6 +259,7 @@ def isbn_mapper(list_elem):
         match_isbn = match_isbn.replace('ISBN ', "")
     return match_isbn
 
+
 def year_mapper(list_elem):
     '''
     Looks for a set of 4 digits which would likely represent the year of publication
@@ -279,12 +300,28 @@ def filmpart_mapper(sect_name, lang):
     :param sect_name: section and sub-section name to compare with a regex
     :return: a match for a part from FILMOGRAPHY_PARTICIPATION, if found
     """
+    film_particip = 'starring'  #default property for Actors is 'starring'
     f_parts = FILMOGRAPHY_PARTICIPATION[lang]
     for fp in f_parts.keys():
         if re.search(fp, sect_name, re.IGNORECASE):
-            return f_parts[fp]
+            film_particip = f_parts[fp]
+    return film_particip
 
 
+def filmtype_mapper(sect_name, lang):
+    """
+    Returns the type of Filmography elements in current list (tv show, cartoon, etc...)
+    in the form of a DBpedia class. Default value is Movie.
+    :param sect_name:
+    :param lang: page panguage
+    :return: a match for a part from FILMOGRAPHY_TYPE, if found
+    """
+    filmtype = 'Film'  # default type for Filmography elements is 'Film'
+    f_types = FILMOGRAPHY_TYPE[lang]
+    for ft in f_types.keys():
+        if re.search(ft, sect_name, re.IGNORECASE):
+            filmtype = f_types[ft]
+    return filmtype
 
 
 def lookup_call(keyword):

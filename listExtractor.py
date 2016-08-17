@@ -8,7 +8,7 @@ import wikiParser
 import utilities
 import mapper
 
-# initialize script parameters
+# initialize parameters
 parser = argparse.ArgumentParser(description='Extract data from lists in Wikipedia pages and serialize it in RDF. '
                                              'Example: -a Writer en.')
 
@@ -37,7 +37,6 @@ if args.collect_mode == 's':  # extract lists from single resource
     except:
         print("Could not retrieve specified resource: " + args.res_type)
         sys.exit(0)
-
     list_elems = 0  # Used to keep trace of the number of list elements extracted
     for t in rdf_type:  # for each type found, look for a suitable mapping and apply it
         list_elems += mapper.select_mapping(resDict, resource, args.language, t, g)
@@ -53,9 +52,7 @@ elif args.collect_mode == 'a':  # extract lists from a class of resources from D
         print("Could not retrieve specified class of resources: " + args.res_type)
         parser.print_help()
         sys.exit(0)
-
     tot_elems = 0  #Used to keep trace of the number of list elements extracted
-
     for res in resources:
         try:
             print(res + " (" + str(curr_num) + " of " + str(res_num) + ")")
@@ -79,6 +76,6 @@ if g_length > 0:
     file_name = "ListExtractor_" + args.res_type + "_" + args.language + "_" + utilities.getDate() + ".ttl"
     file_path = utilities.get_subdirectory('extracted', file_name)
     g.serialize(file_path, format="turtle")
-    print(str(g_length) + " statements created. Triples serialized in file: " + file_path)
+    print(str(g_length) + " statements created. Triples serialized in: " + file_path)
 else:
     print("Could not serialize any RDF statement! :(")

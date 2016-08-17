@@ -17,13 +17,15 @@ If successful, a .ttl file containing RDF triples with the literary work as subj
 * Stable internet connection
 
 ### Modules:
-**listExtractor** Starting point, calls other modules. Ideally it will call the collector once and iterate the other calls on each resource found to extract data
+**listExtractor** Starting point, calls other modules. Verifies input parameters, collects the single resource or all the resources from a domain and then starts the mapping process iteratively adding statements to the graph. Finally, if the graph is non-empty, a .ttl file (dataset) with all the RDF statements is created in a sub-directory named 'extracted', and the total number of statement is printed.
  
-**wikiParser** mainParser function takes a language and a wiki-page and returns a dictionary containing section names as keys and their inner lists as values. To do so it uses the [JSONpedia web service] (http://jsonpedia.org/frontend/index.html) and calls _jsonpedia_req function_ (which returns a json representation of given page), and _parse_section_ which iterates on every section and constructs the dicionary using _parse_list_ on each list element. 
+**wikiParser** _mainParser_ function takes a language and a wiki-page and returns a dictionary containing all lists from page connected to their section and sub-section title (every key is a section title and its value corresponds to the related list). To do so it uses the [JSONpedia web service] (http://jsonpedia.org/frontend/index.html) calling _jsonpedia_convert_ (which returns a JSON representation of given page), and _parse_section_ which iterates on every section and constructs the dicionary using _parse_list_ on each list element. 
 
-**mapper** Takes a resource dictionary and construct the RDF triples. In order to do so, it must try to apply a set of specified rules to every list element, considering also the section name. It uses [WikiData API](https://www.wikidata.org/w/api.php) to reconcile URI references and then queries the endpoint for the correspondant DBpedia resource. It also applies regular expressions to unstructured text in list elements in order to extract relevant info.
+**mapper** Takes a resource dictionary and extracts statements adding RDF triples to the graph. In order to do so, it must try to apply a set of specified rules to every list element, considering the resource type and its section titles. It uses different mappings for each domain and other support functions to extract particular portions of text, typically by applying regular expressions or by using [WikiData API](https://www.wikidata.org/w/api.php) to reconcile URI references and querying the endpoint for the corresponding DBpedia resource.
 
-**utilities** contains accessory functions (e.g. querying a sparql endpoint, creation of a file containing the dictionary which represents a resource...)
+**utilities** contains accessory functions (e.g. querying a SPARQL endpoint, creation of a file containing the dictionary which represents a resource...)
+
+**mapping_rules** contains the dictionaries used by _mapper_ module to select the domain and to link key-words to concepts in order to form statements. It can be easily extended with new domains and key-words to expand the potential of listExtractor.
 
 ### Abstract:
  _The project focuses on the extraction of relevant but hidden data which lies inside lists in Wikipedia pages. The information is unstructured and thus cannot be easily used to form semantic statements and be integrated in the DBpedia ontology. Hence, the main task consists in creating a tool which can take one or more Wikipedia pages with lists within as an input and then construct appropriate mappings to be inserted in a DBpedia dataset. The extractor must prove to work well on a given domain and to have the ability to be expanded to reach generalization._
