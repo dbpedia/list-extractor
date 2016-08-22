@@ -1,14 +1,15 @@
 '''
 The "MAPPING" dictionary is used to select a mapping function for the given resource class,
-each key represents a class of resources from DBpedia ontology, while values must correspond
+each key represents a class of resources from DBpedia ontology, while values MUST correspond
 to mapping methods in mapper.py and begin with 'map_'
 '''
 MAPPING = {'Writer': 'BIBLIOGRAPHY', 'Actor': 'FILMOGRAPHY'}
 
 '''
-Contains the substrings to be searched inside section names in order to relate a list to the topic (here: Bibliography)
-The name of the dictionary describes the topic and must be a value from MAPPING.
-Keys correspond to language prefix from the page to be extracted, their values to various section titles used to express that concept
+Contains the substrings or keywords to be searched inside section names in order to relate a list to the topic.
+The name of the dictionary describes the topic and MUST be a value from MAPPING.
+Keys correspond to language prefix from the page to be extracted, their values to a list of section titles
+used to express the concept.
 '''
 BIBLIOGRAPHY = {
     'en': ['bibliography', 'works', 'fiction', 'novels', 'books', 'publications', 'comics'],
@@ -20,10 +21,6 @@ FILMOGRAPHY = {
     'it': ['filmografia']
 }
 
-CAST = {
-    'en': ['cast'],
-    'it': ['personaggi']
-}
 
 """Used in map_bibliography to reconcile section names with literary genres expressed by DBpedia ontology classes"""
 BIBLIO_GENRE = {
