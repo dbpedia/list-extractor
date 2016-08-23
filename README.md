@@ -8,6 +8,7 @@
 * `collect_mode` : use `s` to specify a single resource or `a` for a class of resources in the next parameter.
 * `source`: a string representing a class of resources from DBpedia ontology (right now it works for Writer and Actor), or a single Wikipedia page of an actor/writer.
 * `language`: a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried (it currently accepts only `en` or `it`).
+
 (examples: `python listExtractor.py a Writer it`  | `python listExtractor.py s William_Gibson en`)
 
 If successful, a .ttl file containing RDF statements about the specified source is created inside a subdirectory called 'extracted'.
@@ -34,6 +35,6 @@ If successful, a .ttl file containing RDF statements about the specified source 
 When used in single resource mode, the extractor asks the endpoint for every _rdf:type_ associated to it and tries to apply every matching mapping (for example, if a person is both a writer and an actor, it will look for both lists related to bibliography and filmography). On the other hand, if using all resources mode, it will apply the related class mapping to each collected resource.
 For writers, a bibliography mapping is applied to form triples having the literary work as subject, related to its author (the examined resource), publication year and ISBN if present.
 For actors, a filmography mapping is applied to form triples having the movie as subject, related to its type (Film, Cartoon, TV show..), its release year and to the resource by specifying the part took in it (starring, director, producer...)
-The `mapping_rules.py` file can be easily extended with new mappings, both to reach new languages and domains or to add new section keywords, thus extending the potential of List Extractor. For a new domain to be added, it is also necessary to write a new mapping function in `mapper.py`, which must be in the form of _map\_[value_from_MAPPING]_.
-The first and foremost dictionary is called MAPPING and links each class to its mapping; for each value in MAPPING there is another dictionary with the same name containing the specific key-words for that domain divided by language, to be matched with section titles of interest. Other dictionaries sharing the same structure are used to extract further properties from section names, like the literary genre of a written work. 
+The `mapping_rules.py` file can be easily extended with new mappings, both to reach new languages and domains or to add new section keywords, thus extending the potential of List Extractor. For a new domain to be added, it is also necessary to write a new mapping function in `mapper.py`, which must be in the form of map_[ValueFromMAPPING].
+The first and foremost dictionary is called MAPPING and links each class to its mapping topic; for each value in MAPPING there is another dictionary with the same name containing the specific key-words for that domain divided by language, to be matched with section titles of interest. Other dictionaries sharing the same structure are used to extract further properties from section names, like the literary genre of a written work. 
 
