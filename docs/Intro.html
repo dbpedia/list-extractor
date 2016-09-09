@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>Intro &#8212; List-Extractor 1.0 documentation</title>
+
+    <link rel="stylesheet" href="_static/agogo.css" type="text/css"/>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css"/>
+
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="List-Extractor 1.0 documentation" href="index.html"/>
+    <link rel="next" title="About the Extraction" href="About the Extraction.html"/>
+    <link rel="prev" title="Welcome to List-Extractor’s documentation!" href="index.html"/>
+</head>
+<body role="document">
+<div class="header-wrapper" role="banner">
+    <div class="header">
+        <div class="headertitle"><a
+                href="index.html">List-Extractor 1.0 documentation</a></div>
+        <div class="rel" role="navigation" aria-label="related navigation">
+            <a href="index.html" title="Welcome to List-Extractor’s documentation!"
+               accesskey="P">previous</a> |
+            <a href="About the Extraction.html" title="About the Extraction"
+               accesskey="N">next</a> |
+            <a href="genindex.html" title="General Index"
+               accesskey="I">index</a>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <div class="document">
+
+            <div class="documentwrapper">
+                <div class="bodywrapper">
+                    <div class="body" role="main">
+
+                        <div class="section" id="intro">
+                            <h1>Intro<a class="headerlink" href="#intro" title="Permalink to this headline">¶</a></h1>
+                            <div class="section" id="abstract">
+                                <h2>Abstract<a class="headerlink" href="#abstract"
+                                               title="Permalink to this headline">¶</a></h2>
+                                <p><em>The project focuses on the extraction of relevant but hidden data which lies
+                                    inside lists in Wikipedia pages. The information is unstructured and thus cannot be
+                                    easily used to form semantic statements and be integrated in the DBpedia ontology.
+                                    Hence, the main task consists in creating a tool which can take one or more
+                                    Wikipedia pages with lists within as an input and then construct appropriate
+                                    mappings to be inserted in a DBpedia dataset. The extractor must prove to work well
+                                    on a given domain and to have the ability to be expanded to reach
+                                    generalization.</em></p>
+                            </div>
+                            <div class="section" id="general-info">
+                                <h2>General Info<a class="headerlink" href="#general-info"
+                                                   title="Permalink to this headline">¶</a></h2>
+                                <p>I created this project while participating in the <a class="reference external"
+                                                                                        href="https://summerofcode.withgoogle.com/">Google
+                                    Summer of Code</a> program between May and August 2016, for <a
+                                        class="reference external" href="http://wiki.dbpedia.org/">DBpedia</a> .
+                                    You can have a look at my progress page <a class="reference external"
+                                                                               href="https://github.com/dbpedia/extraction-framework/wiki/GSoC_2016_Progress_Federica">here</a>.
+                                </p>
+                                <p>The program is written in Python and is composed of 5 independent modules, for which
+                                    you can find the description in <a class="reference internal"
+                                                                       href="Modules.html"><span
+                                            class="doc">Modules</span></a> section. The final output consists in a .ttl
+                                    file containing semantic RDF triples about the lists from a single Wikipedia page or
+                                    from a class of pages.
+                                    Please refer to the <a class="reference external"
+                                                           href="https://github.com/dbpedia/list-extractor/blob/master/README.md">README</a>
+                                    file for run instructions.</p>
+                                <p>You can also email me at <a class="reference external"
+                                                               href="mailto:feddiebai&#37;&#52;&#48;gmail&#46;com">feddiebai<span>&#64;</span>gmail<span>&#46;</span>com</a>
+                                    for any question or problem.</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar">
+            <h3>Table Of Contents</h3>
+            <ul class="current">
+                <li class="toctree-l1 current"><a class="current reference internal" href="#">Intro</a></li>
+                <li class="toctree-l1"><a class="reference internal" href="About the Extraction.html">About the
+                    Extraction</a></li>
+                <li class="toctree-l1"><a class="reference internal" href="Modules.html">Modules</a></li>
+                <li class="toctree-l1"><a class="reference internal" href="Mapping Process.html">Mapping Process</a>
+                </li>
+                <li class="toctree-l1"><a class="reference internal" href="Goals and Challenges.html">Goals and
+                    Challenges</a></li>
+            </ul>
+
+            <div role="search">
+                <h3 style="margin-top: 1.5em;">Search</h3>
+                <form class="search" action="search.html" method="get">
+                    <input type="text" name="q"/>
+                    <input type="submit" value="Go"/>
+                    <input type="hidden" name="check_keywords" value="yes"/>
+                    <input type="hidden" name="area" value="default"/>
+                </form>
+            </div>
+        </div>
+        <div class="clearer"></div>
+    </div>
+</div>
+
+<div class="footer-wrapper">
+    <div class="footer">
+        <div class="left">
+            <div role="navigation" aria-label="related navigaton">
+                <a href="index.html" title="Welcome to List-Extractor’s documentation!"
+                >previous</a> |
+                <a href="About the Extraction.html" title="About the Extraction"
+                >next</a> |
+                <a href="genindex.html" title="General Index"
+                >index</a>
+            </div>
+            <div role="note" aria-label="source link">
+                <br/>
+                <a href="_sources/Intro.txt"
+                   rel="nofollow">Show Source</a>
+            </div>
+        </div>
+
+        <div class="right">
+
+            <div class="footer" role="contentinfo">
+                &#169; Copyright 2016, FedBai.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+            </div>
+        </div>
+        <div class="clearer"></div>
+    </div>
+</div>
+
+</body>
+</html>
