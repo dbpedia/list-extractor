@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+
 import utilities
 import time
+import json
 
 last_sec_title = ""  # last section title parsed
 header_title = ""  # last header (main section) title parsed
@@ -16,17 +18,20 @@ def main_parser(language, resource):
     :param resource: Resource name, needed by JSONpedia
     :return: a dictionary containing section names as keys and featured lists as values, without empty fields
     '''
+
     lists = {}  # initialize dictionary
     global header_title  # used to concatenate sections and subsections titles
-    result = jsonpedia_convert(language, resource)  # result obtained from JSONpedia in the form of a list of sections
+    result = jsonpedia_convert(language, resource)  # result obtained from JSONpedia in form of a list of sections
     if result == []:  #if the result is empty, try again looking for page redirects
         new_resource = find_page_redirects(resource, language)
         result = jsonpedia_convert(language, new_resource)
+    
     for res in result:  # iterate on every section
         if '@type' in res and res['@type'] == 'section':
             parsed_sect = parse_section(res)
             lists.update(parsed_sect)
     cleanlists = utilities.clean_dictionary(lists)  #clean resulting dictionary and leave only meaningful keys
+    
     return cleanlists
 
 
@@ -38,10 +43,12 @@ def parse_section(section):
     :param title: a string used to concatenate names of nested sections
     :return: a dictionary element representing the section
     '''
-    section_lists = {}  #initializing dictionary
+    
     global last_sec_lev
     global last_sec_title
     global header_title
+    
+    section_lists = {}  #initializing dictionary
     if ('content' in section and section['content'] != ""):  # parse only if there is available content
         # checks current level to know whether to concatenate the title or not
         if section['level'] == 0:  #this is a 'header title'
@@ -54,11 +61,13 @@ def parse_section(section):
         else:
             #just concatenate its title with current 'header'
             title = header_title + " - " + section['title']
+        
         last_sec_title = title
         last_sec_lev = section['level']
         content = section['content'].values()  # don't consider keys since they are non-relevant (e.g. @an0, @an1,..)
         sect_list = []  # will contain the list extracted from current section
         """Extract section content - values inside dictionary inside 'content' key """
+        
         for val in content:
             if ('@type' in val):
                 if (val['@type'] == 'list'):  # look for lists inside current section

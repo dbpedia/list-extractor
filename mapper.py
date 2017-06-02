@@ -1,4 +1,5 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
+
 import urllib2
 import json
 import re
@@ -55,6 +56,69 @@ def select_mapping(resDict, res, lang, res_class, g):
                 mapped = True  # prevents the same section to be mapped again
     return res_elems
 
+
+
+def map_discography(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles albums list present inside a section containing a match with DISCOGRAPHY.
+
+    Adds RDF statement about the album, its artist (the current resource) and the year launched.
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_discography(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+            
+            if uri and uri != "":
+                elems += 1
+                year = year_mapper(elem)
+                if year:
+                    g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+    return elems
 
 def map_filmography(elem_list, sect_name, res, lang, g, elems):
     '''Handles lists related to filmography inside a section containing a match with FILMOGRAPHY.
@@ -253,6 +317,15 @@ def year_mapper(list_elem):
 
     return match_num
 
+
+def musgenre_mapper(sect_name, lang):
+    ''' Find the Genre of related artist 
+
+    m_genres = MUSIC_GENRE[lang]
+    for mg in m_genres.keys():
+        
+    '''
+    pass
 
 def litgenre_mapper(sect_name, lang):
     '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
