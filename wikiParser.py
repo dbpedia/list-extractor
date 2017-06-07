@@ -19,9 +19,10 @@ def main_parser(language, resource):
     :return: a dictionary containing section names as keys and featured lists as values, without empty fields
     '''
 
-    lists = {}  # initialize dictionary
     global header_title  # used to concatenate sections and subsections titles
+    lists = {}  # initialize dictionary
     result = jsonpedia_convert(language, resource)  # result obtained from JSONpedia in form of a list of sections
+    
     if result == []:  #if the result is empty, try again looking for page redirects
         new_resource = find_page_redirects(resource, language)
         result = jsonpedia_convert(language, new_resource)
@@ -130,16 +131,19 @@ def jsonpedia_convert(language, resource):
     :param resource:  name of the resource
     :return: a JSON with significant info about the resource
     '''
-    input = language + "%3A" + resource
+    res = language + "%3A" + resource
     # JSONpedia call to obtain sections  - in this way I get both section titles and their lists
-    jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + input + "?filter=@type:section&procs=Structure"
+    jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + res + "?filter=@type:section&procs=Structure"
+    
     try:
         sections = utilities.json_req(jsonpediaURL_sect)
+    
     except (IOError):
         print('Network Error - please check your connection and try again')
         raise
     except (ValueError):
         raise
+    
     else:
         if 'success' in sections and sections['success'] == "false":
             if sections['message'] == 'Invalid page metadata.':
@@ -153,6 +157,7 @@ def jsonpedia_convert(language, resource):
                       "Error: " + sections['message'])
                 time.sleep(1)  # wait one second before retrying
                 return jsonpedia_convert(language, resource)  #try again JSONpedia call
+        
         else:
             result = sections['result']  #JSON index with actual content
             return result

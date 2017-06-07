@@ -1,5 +1,18 @@
 # -*- coding: utf-8 -*-
 
+'''
+#################
+### mapper.py ###
+#################
+
+* This module contains all the methods/functions that use dictionaries from `mapping_rules.py`
+  and produce respective triplets.
+
+* This module contains 
+
+
+'''
+
 import urllib2
 import json
 import re
@@ -40,20 +53,25 @@ def select_mapping(resDict, res, lang, res_class, g):
             return 0
     else:
         return 0
+    
     mapped_domains.append(domain)  #this domain won't be used again for mapping
+    
     if lang != 'en':  # correct dbpedia resource domain for non-english language
         global dbr
         dbr = rdflib.Namespace("http://" + lang + ".dbpedia.org/resource/")
     db_res = rdflib.URIRef(dbr + res.decode('utf-8'))
     res_elems = 0
+    
     for res_key in resDict.keys():  # iterate on resource dictionary keys
         mapped = False
+        
         for dk in domain_keys:  # search for resource keys related to the selected domain
             # if the section hasn't been mapped yet and the title match, apply domain related mapping
             if not mapped and re.search(dk, res_key, re.IGNORECASE):
                 mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
                 res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
                 mapped = True  # prevents the same section to be mapped again
+
     return res_elems
 
 
@@ -77,6 +95,7 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
             map_discography(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
         else:
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
@@ -139,16 +158,19 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
         if type(elem) == list:  #for nested lists (recursively call this function)
             elems += 1
             map_filmography(elem, sect_name, res, lang, g, elems)
+        
         else:
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)  # Try to extract italic formatted text (more precise)
+            
             if res_name:
                 elem = elem.replace(res_name, "")  #delete occurence of matched text for further extraction
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
                 g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
+            
             else:  #if unsuccessful, apply general mapping (lower accuracy)
                 uri_name = general_mapper(elem)
                 if (uri_name and uri_name != "" and uri_name != res):
@@ -156,6 +178,7 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
                     uri_name = urllib2.quote(uri_name)
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
                     g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
+            
             if uri and uri != "":
                 elems += 1
                 year = year_mapper(elem)
@@ -163,6 +186,7 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
                 if film_particip:
                     g.add((rdflib.URIRef(uri), dbo + rdflib.URIRef(film_particip), res))
+    
     return elems
 
 
@@ -184,6 +208,7 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
             map_bibliography(elem, sect_name, res, lang, g, elems)
+        
         else:
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
@@ -194,14 +219,17 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
                 g.add((rdflib.URIRef(uri), dbo.author, res))
+            
             else:
                 ref = reference_mapper(elem)  # look for resource references
                 if ref:  # current element contains a reference
                     uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
                     if uri:
                         dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
                         if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
                             uri = dbpedia_uri
+                    
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
                         elem = elem.replace(ref,
@@ -210,6 +238,7 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
                     g.add((rdflib.URIRef(uri), dbo.author, res))
+                
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
                     if (uri_name and uri_name != "" and uri_name != res):
@@ -217,6 +246,7 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
                         g.add((rdflib.URIRef(uri), dbo.author, res))
+            
             if uri and uri != "":
                 elems += 1
                 isbn = isbn_mapper(elem)
@@ -224,69 +254,72 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                     g.add((rdflib.URIRef(uri), dbo.isbn, rdflib.Literal(isbn, datatype=rdflib.XSD.string)))
                     elem = elem.replace(isbn, "")
                 year = year_mapper(elem)
+                
                 if year:
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
                 if lit_genre:
                     g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbr + rdflib.URIRef(lit_genre)))
+    
     return elems
 
+def map_band_members(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles lists related to members inside a section containing a match with BAND_MEMBERS.
 
-def italic_mapper(list_elem):
-    '''Extracts italic text inside the list element, mapped by ''..'' in Wikipedia.
-
-    This is the first mapping to be applied since it's very precise.
-    If this fails, more geneal mappings are applied.
-    :param list_elem: current list element
-    :return: a match if found, None object otherwise
+    Adds RDF statement about the band, its members
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name 
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
     '''
-    # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
-    match_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
-    if match_italic:
-        match_italic = match_italic.group(0)
-        match_italic = list_elem_clean(match_italic)
-    return match_italic
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_members(elem, sect_name, res, lang, g, elems)
 
-
-def reference_mapper(list_elem):
-    '''Looks for a reference inside the element, which has been marked with {{...}} by wikiParser,
-
-    It also ignores date references because they are non-relevant
-    :param list_elem: current list element
-    :return: a match if found, excluding number references
-    '''
-    match_ref = re.search(r'\{\{.*?\}\}', list_elem)
-    if match_ref:
-        match_ref = match_ref.group()
-        match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
-        if match_num:  # date references must be ignored for this mapping
-            num = match_num.group()
-            new_ref = re.sub(r'\{\{.*\}\}', "", num, count=1)  # delete the number part
-            match_ref = reference_mapper(new_ref)  #call again reference_mapper passing the new reference
-    return match_ref
-
-
-def general_mapper(list_elem):
-    ''' Called when other text mappers fail, extract all text different from number until a punctuation mark is found
-
-    Applies a regex to find the main concept and cuts off numbers and punctuation marks
-    :param list_elem: current list element
-    :return: a match if found
-    '''
-    list_elem = list_elem_clean(list_elem)
-    # look for strings cutting numbers and punctuation
-    match_str = re.search(r"[^0-9][^,|:|：|–|(*|\[*|《*]+", list_elem, re.IGNORECASE)
-    if match_str != None:
-        match_str = match_str.group()
-        match_str = list_elem_clean(match_str)
-        match_str = match_str.lstrip('\'')
-        match_str = match_str.lstrip('\'')
-        match_str = match_str.rstrip('\'')
-        match_str = match_str.lstrip(':')
-        match_str = match_str.lstrip('-')
-        match_str = match_str.lstrip('–')
-        match_str = match_str.lstrip('(')
-        match_str = match_str.lstrip(',')
-    return match_str
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), dbo.bandMember, res))
+                elems += 1
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref,
+                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo.bandMember, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.bandMember, res))
+                elems += 1
+                
+    return elems
 
 
 def isbn_mapper(list_elem):
@@ -301,6 +334,7 @@ def isbn_mapper(list_elem):
     if match_isbn != None:
         match_isbn = match_isbn.group()
         match_isbn = match_isbn.replace('ISBN ', "")
+    
     return match_isbn
 
 
@@ -317,15 +351,6 @@ def year_mapper(list_elem):
 
     return match_num
 
-
-def musgenre_mapper(sect_name, lang):
-    ''' Find the Genre of related artist 
-
-    m_genres = MUSIC_GENRE[lang]
-    for mg in m_genres.keys():
-        
-    '''
-    pass
 
 def litgenre_mapper(sect_name, lang):
     '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
@@ -345,6 +370,7 @@ def litgenre_mapper(sect_name, lang):
                 if other_bg != bg and re.search(other_bg, sect_name,
                                                 re.IGNORECASE):  #if another genre also matches the current section
                     return None
+            
             return b_genres[bg]
 
 
@@ -360,6 +386,7 @@ def filmpart_mapper(sect_name, lang):
     for fp in f_parts.keys():
         if re.search(fp, sect_name, re.IGNORECASE):
             film_particip = f_parts[fp]
+    
     return film_particip
 
 
@@ -376,7 +403,21 @@ def filmtype_mapper(sect_name, lang):
     for ft in f_types.keys():
         if re.search(ft, sect_name, re.IGNORECASE):
             filmtype = f_types[ft]
+    
     return filmtype
+
+
+
+##########################
+
+'''
+
+#########################
+### UTILITY FUNCTIONS ###
+#########################
+
+Contains some of the helper modules that are required by the mapping functions.
+'''
 
 
 def lookup_call(keyword):
@@ -393,9 +434,11 @@ def lookup_call(keyword):
         resp = urllib2.urlopen(call)
         answer = resp.read()
         parsed_ans = json.loads(answer)
+    
     except:
-        print ("Dbpedia Lookup error")
+        print ("Dbpedia Lookup error.")
         raise
+    
     return parsed_ans
 
 
@@ -417,12 +460,15 @@ def wikidataAPI_call(res, lang):
         if result == []:  # no URis found
             return None
         uri = result[0]['concepturi']
+    
     except urllib2.URLError:  # sometimes the host can refuse too many connections and returns a socket error
         time.sleep(5)  #wait 5 seconds and then retry
         print("retrying Wikidata API call...")
         wikidataAPI_call(res, lang)
+    
     except:
         print ("Wikidata API error on request " + req)
+    
     else:
         return uri
 
@@ -437,14 +483,17 @@ def find_DBpedia_uri(wk_uri, lang):
     query = "select distinct ?s where {?s <http://www.w3.org/2002/07/owl#sameAs> <" + wk_uri + "> }"
     try:
         json = utilities.sparql_query(query, lang)
+    
     except IOError:
         time.sleep(5)
         print("retrying DBpedia API call...")
         find_DBpedia_uri(wk_uri, lang)
+    
     try:
         result = json['results']['bindings'][0]['s']['value']
     except:
         result = None
+    
     return result
 
 
@@ -472,4 +521,69 @@ def list_elem_clean(list_elem):
     list_elem = list_elem.replace("#", "")
     list_elem = list_elem.lstrip()
     list_elem = list_elem.rstrip()
+    
     return list_elem
+
+
+### Below are the methods that extract list items from the JSON resource and form the resource dictionary
+ 
+def italic_mapper(list_elem):
+    '''Extracts italic text inside the list element, mapped by ''..'' in Wikipedia.
+
+    This is the first mapping to be applied since it's very precise.
+    If this fails, more geneal mappings are applied.
+    :param list_elem: current list element
+    :return: a match if found, None object otherwise
+    '''
+    # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
+    match_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
+    if match_italic:
+        match_italic = match_italic.group(0)
+        match_italic = list_elem_clean(match_italic)
+    
+    return match_italic
+
+
+def reference_mapper(list_elem):
+    '''Looks for a reference inside the element, which has been marked with {{...}} by wikiParser,
+
+    It also ignores date references because they are non-relevant
+    :param list_elem: current list element
+    :return: a match if found, excluding number references
+    '''
+    match_ref = re.search(r'\{\{.*?\}\}', list_elem)
+    if match_ref:
+        match_ref = match_ref.group()
+        match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
+        if match_num:  # date references must be ignored for this mapping
+            num = match_num.group()
+            new_ref = re.sub(r'\{\{.*\}\}', "", num, count=1)  # delete the number part
+            match_ref = reference_mapper(new_ref)  #call again reference_mapper passing the new reference
+    
+    return match_ref
+
+
+def general_mapper(list_elem):
+    ''' Called when other text mappers fail, extract all text different from number until a punctuation mark is found
+
+    Applies a regex to find the main concept and cuts off numbers and punctuation marks
+    :param list_elem: current list element
+    :return: a match if found
+    '''
+    list_elem = list_elem_clean(list_elem)
+    # look for strings cutting numbers and punctuation
+    match_str = re.search(r"[^0-9][^,|:|：|–|(*|\[*|《*]+", list_elem, re.IGNORECASE)
+    if match_str != None:
+        match_str = match_str.group()
+        match_str = list_elem_clean(match_str)
+        match_str = match_str.lstrip('\'')
+        match_str = match_str.lstrip('\'')
+        match_str = match_str.rstrip('\'')
+        match_str = match_str.lstrip(':')
+        match_str = match_str.lstrip('-')
+        match_str = match_str.lstrip('–')
+        match_str = match_str.lstrip('(')
+        match_str = match_str.lstrip(',')
+    
+    return match_str
+

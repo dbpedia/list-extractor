@@ -72,9 +72,9 @@ def main():
                         help="Select resource to extract lists from. Options are:"
                             "\nSingle Wikipedia page (example: William_Gibson) "
                             "\nDBpedia ontology class (example: Writer)\n ")
-    parser.add_argument('language', type=str, choices=['en', 'it'], default='en',
+    parser.add_argument('language', type=str, choices=['en', 'it', 'de'], default='en',
                         help="Language prefix of Wikipedia pages to analyze."
-                            "\nen: English (Default)\nit: Italian\n")
+                            "\nen: English (Default)\nit: Italian\nde: German\n")
     args = parser.parse_args()
 
     # initialize RDF graph which will contain the triples

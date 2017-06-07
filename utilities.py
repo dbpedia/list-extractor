@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+'''
+####################
+### utilities.py ###
+####################
+
+* This module contains all the utility methods/functions that are commonly used by all mapping functions.
+
+'''
+
 import time
 import datetime
 import os
@@ -7,6 +16,8 @@ import urllib
 import csv
 import json
 import sys
+from mapping_rules import EXCLUDED_SECTIONS
+
 
 def readResFile(resName):
     ''' Reads the file called resName in resources directory and returns it as a dictionary
@@ -22,6 +33,7 @@ def readResFile(resName):
         out_file = open(path, "r")
         text = out_file.read()
         out_file.close()
+    
     except:
         print("Oops! Something went wrong with file reading (" + resName + ")")
         raise
@@ -94,7 +106,8 @@ def clean_dictionary(listDict) :
     for key in listDict.keys() :
         if listDict[key] == '' :
             listDict.pop(key)
-
+        if key in EXCLUDED_SECTIONS:
+            listDict.pop(key)
         else:
             listDict[key] = remove_symbols(listDict[key])
 
@@ -113,7 +126,7 @@ def remove_symbols(listDict_key):
             value=remove_symbols(value)
         else:
             listDict_key[i] = value.replace('&nbsp;','')
-        # print '----', listDict_key[i] 
+
     return listDict_key
 
 
@@ -220,8 +233,8 @@ def get_resource_type(lang, resource):
     types = []
     for res in results:
         full_uri = res['t']['value']  # e.g. http://dbpedia.org/ontology/Person
-        type = full_uri.split("/")[-1]  # e.g Person
-        types.append(type)
+        class_type = full_uri.split("/")[-1]  # e.g Person
+        types.append(class_type)
     return types
 
 
@@ -253,5 +266,5 @@ def evaluate(lang, source, tot_extracted_elems, tot_elems):
     print "Accuracy:", accuracy
 
     with open('evaluation.csv', 'a') as csvfile:
-        spamwriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        spamwriter.writerow([lang, source, tot_extracted_elems, tot_elems, accuracy])
+        filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        filewriter.writerow([lang, source, tot_extracted_elems, tot_elems, accuracy])
