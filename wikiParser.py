@@ -31,7 +31,7 @@ def main_parser(language, resource):
         if '@type' in res and res['@type'] == 'section':
             parsed_sect = parse_section(res)
             lists.update(parsed_sect)
-    cleanlists = utilities.clean_dictionary(lists)  #clean resulting dictionary and leave only meaningful keys
+    cleanlists = utilities.clean_dictionary(language, lists)  #clean resulting dictionary and leave only meaningful keys
     
     return cleanlists
 

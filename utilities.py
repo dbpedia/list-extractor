@@ -97,7 +97,7 @@ def makeReadable (res_dict) :
     return encoded
 
 
-def clean_dictionary(listDict) :
+def clean_dictionary(language, listDict) :
     ''' Deletes all entries with an empty values, thus 'cleaning' the dictionary
 
     :param listDict: dictionary obtained from parsing
@@ -106,7 +106,7 @@ def clean_dictionary(listDict) :
     for key in listDict.keys() :
         if listDict[key] == '' :
             listDict.pop(key)
-        if key in EXCLUDED_SECTIONS:
+        if key in EXCLUDED_SECTIONS[language]:
             listDict.pop(key)
         else:
             listDict[key] = remove_symbols(listDict[key])

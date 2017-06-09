@@ -8,7 +8,8 @@
 * This module contains all the methods/functions that use dictionaries from `mapping_rules.py`
   and produce respective triplets.
 
-* This module contains 
+* This module contains all the mapping functions that are used by the extractor based on rules present
+  in mapping_rules.py
 
 
 '''
@@ -43,37 +44,44 @@ def select_mapping(resDict, res, lang, res_class, g):
     '''
     global mapped_domains
     global resource_class
+    res_elems = 0
+
     if res_class in MAPPING and MAPPING[res_class] not in mapped_domains:
-        domain = MAPPING[res_class]  # e.g. BIBLIOGRAPHY
+        if lang != 'en':  # correct dbpedia resource domain for non-english language
+            global dbr
+            dbr = rdflib.Namespace("http://" + lang + ".dbpedia.org/resource/")
+        db_res = rdflib.URIRef(dbr + res.decode('utf-8'))
+        
+        domains = MAPPING[res_class]  # e.g. ['BIBLIOGRAPHY', 'FILMOGRAPHY']
+        domain_keys = []
         resource_class = res_class
-        if lang in eval(domain):
-            domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
-        else:
-            print("The language provided is not available yet for this mapping")
-            return 0
+
+        for domain in domains:
+            if domain in mapped_domains:
+                continue
+            if lang in eval(domain):
+                domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
+            else:
+                print("The language provided is not available yet for this mapping")
+                #return 0
+
+            mapped_domains.append(domain)  #this domain won't be used again for mapping
+    
+            for res_key in resDict.keys():  # iterate on resource dictionary keys
+                mapped = False
+        
+                for dk in domain_keys:  # search for resource keys related to the selected domain
+                    # if the section hasn't been mapped yet and the title match, apply domain related mapping
+                    dk = dk.decode('utf-8') #make sure utf-8 mismatches don't skip sections 
+                    if not mapped and re.search(dk, res_key, re.IGNORECASE):
+                        mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
+                        res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
+                        mapped = True  # prevents the same section to be mapped again
+
     else:
         return 0
-    
-    mapped_domains.append(domain)  #this domain won't be used again for mapping
-    
-    if lang != 'en':  # correct dbpedia resource domain for non-english language
-        global dbr
-        dbr = rdflib.Namespace("http://" + lang + ".dbpedia.org/resource/")
-    db_res = rdflib.URIRef(dbr + res.decode('utf-8'))
-    res_elems = 0
-    
-    for res_key in resDict.keys():  # iterate on resource dictionary keys
-        mapped = False
-        
-        for dk in domain_keys:  # search for resource keys related to the selected domain
-            # if the section hasn't been mapped yet and the title match, apply domain related mapping
-            if not mapped and re.search(dk, res_key, re.IGNORECASE):
-                mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
-                res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
-                mapped = True  # prevents the same section to be mapped again
 
     return res_elems
-
 
 
 def map_discography(elem_list, sect_name, res, lang, g, elems):
@@ -106,6 +114,7 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
                 g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             else:
@@ -122,6 +131,7 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
                     g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
@@ -130,6 +140,7 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
                         g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             if uri and uri != "":
@@ -138,6 +149,78 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                 if year:
                     g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
     return elems
+
+
+
+def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles albums list present inside a section containing a match with CONCERT_TOURS.
+
+    Adds RDF statement about the tour, its artist (the current resource) and the year launched.
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_concert_tours(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
+                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
+                    g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
+                        g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
+            
+            if uri and uri != "":
+                elems += 1
+                year = year_mapper(elem)
+                if year:
+                    g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+    return elems
+
+
+
+
 
 def map_filmography(elem_list, sect_name, res, lang, g, elems):
     '''Handles lists related to filmography inside a section containing a match with FILMOGRAPHY.
@@ -321,6 +404,22 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                 
     return elems
 
+
+
+def alumni_profession(list_elem):
+    '''Applies a regex to look for a profession, returns a match if found
+
+    Profession is expected to present after the resource name, seperated by either a hyphen or comma
+    :param list_elem: current list element
+    :return: a match for profession, if present
+    '''
+    profession = re.search(r'[^-|,]+$', list_elem)
+    if profession != None:
+        profession = profession.group()
+        profession = profession.replace("{{", "").replace("}}","")
+        if profession[0] == " ": profession = profession[1:]
+    
+    return profession
 
 def isbn_mapper(list_elem):
     '''Applies a regex to look for a isbn number, returns a match if found

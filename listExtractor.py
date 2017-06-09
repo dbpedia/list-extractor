@@ -72,9 +72,9 @@ def main():
                         help="Select resource to extract lists from. Options are:"
                             "\nSingle Wikipedia page (example: William_Gibson) "
                             "\nDBpedia ontology class (example: Writer)\n ")
-    parser.add_argument('language', type=str, choices=['en', 'it', 'de'], default='en',
+    parser.add_argument('language', type=str, choices=['en', 'it', 'de', 'es'], default='en',
                         help="Language prefix of Wikipedia pages to analyze."
-                            "\nen: English (Default)\nit: Italian\nde: German\n")
+                            "\nen: English (Default)\nit: Italian\nde: German\nes: Spanish\n")
     args = parser.parse_args()
 
     # initialize RDF graph which will contain the triples
@@ -87,7 +87,10 @@ def main():
         try:
             resource = args.source.encode('utf-8')  # apply utf-8 encoding
             resDict = wikiParser.main_parser(args.language, resource)  # create a dict representing the resource
-            print (resDict)
+            
+            for key in resDict:
+                print key, ":", resDict[key]
+                print ''
             
             ''' Decomment the line below to create a file inside a resources folder containing the dictionary'''
             utilities.createResFile(resDict, args.language, resource)
@@ -103,6 +106,7 @@ def main():
         for t in rdf_type:  # for each type found, look for a suitable mapping and apply it
             list_elems += mapper.select_mapping(resDict, resource, args.language, t,
                                                 g)  # get number of elements extracted
+            #print '>>>>>', t, list_elems
         tot_list_elems = utilities.count_listelem_dict(resDict)  # count all list elements of the resource
         print("Total elements extracted: " + str(list_elems) + "/" + str(tot_list_elems))
 
@@ -133,11 +137,11 @@ def main():
                 print("Could not parse " + args.language + ":" + res)
             
             else:
-                print(">>> " + args.language + ":" + res + "  has been successfully parsed <<<")
+                print(">>> " + args.language + ":" + res + " has been successfully parsed <<<")
                 extr_elems = mapper.select_mapping(resDict, res, args.language, args.source, g)
                 mapper.mapped_domains = []  # reset domains already mapped for next resource
                 tot_extracted_elems += extr_elems
-                print(">>> Mapped " + args.language + ":" + res + ", extracted elements: " + str(extr_elems) + "  <<<")
+                print(">>> Mapped " + args.language + ":" + res + ", extracted elements: " + str(extr_elems) + "  <<<\n")
         
         utilities.evaluate(args.language, args.source, tot_extracted_elems, tot_elems)
 

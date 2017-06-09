@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 '''
 
 ########################
@@ -27,7 +26,7 @@
 
     * Add the following sections to the EXCLUDED_SECTIONS dictionary to avoid processing uninformative
       lists:
-            'External links', 'References', 'See also', 'Further reading',  #language
+            'language' : ['External links', 'References', 'See also', 'Further reading']
 
 
 '''
@@ -49,14 +48,21 @@
 
 '''
 
-MAPPING = {'Writer': 'BIBLIOGRAPHY', 'Actor': 'FILMOGRAPHY', 'MusicalArtist': 'DISCOGRAPHY',
-            'Band':'DISCOGRAPHY', 'Group':'BAND_MEMBERS'}
+MAPPING = { 
+            'Writer': ['BIBLIOGRAPHY'], 
+            'Actor': ['FILMOGRAPHY', 'DISCOGRAPHY'],
+            'MusicalArtist': ['DISCOGRAPHY','FILMOGRAPHY', 'CONCERT_TOURS'],
+            'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS'],
+            'Group':['BAND_MEMBERS'],
+            'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF']
+        }
 
-EXCLUDED_SECTIONS = [
-                        'External links', 'References', 'See also', 'Further reading',  #en
-                        'Collegamenti esterni', 'Bibliografia', 'Altri progetti', 'Voci correlate', #it
-                        'Einzelnachweise', 'Weblinks', 'Literatur', 'Siehe auch', #de
-                    ]
+EXCLUDED_SECTIONS = {
+                        'en' : ['External links', 'References', 'See also', 'Further reading'],  
+                        'it' : ['Collegamenti esterni', 'Bibliografia', 'Altri progetti', 'Voci correlate'],
+                        'de' : ['Einzelnachweise', 'Weblinks', 'Literatur', 'Siehe auch'],
+                        'es' : ['Referencias', 'Véase también', 'Enlaces externos', 'Notas']
+                    }
 
 
 #############################################################
@@ -76,28 +82,55 @@ used to express the concept.
 BIBLIOGRAPHY = {
     'en': ['bibliography', 'works', 'novels', 'books', 'publications'],
     'it': ['opere', 'romanzi', 'saggi', 'pubblicazioni', 'edizioni'],
-    'de': ['bibliographie', 'werke','arbeiten', 'bücher', 'publikationen']
+    'de': ['bibliographie', 'werke','arbeiten', 'bücher', 'publikationen'],
+    'es': ['Obras', 'Bibliografía', '']
 }
 
 FILMOGRAPHY = {
     'en': ['filmography'],
     'it': ['filmografia'],
-    'de': ['filmografie']
+    'de': ['filmografie'],
+    'es': ['Filmografía', 'Televisión']
 }
 
 DISCOGRAPHY = {
-    'en' : ['discography', 'studio', 'singles', 'soundtrack', 'compilation'],
+    'en' : ['discography', 'studio', 'singles', 'soundtrack'],
     'it' : ['discografia'],
-    'de' : ['Diskografie']
+    'de' : ['Diskografie'],
+    'es' : ['Discografía', 'Albumes'],
 }
 
 BAND_MEMBERS = {
     'en' : ['members', 'bands', 'personnel', 'team', ],
     'it' : ['Formazione','Membri', 'bande', 'personale', 'team'],
-    'de' : ['Bandmitglieder', 'Besetzung', 'Mitglieder', 'Gruppe', 'Personal']
+    'de' : ['Bandmitglieder', 'Besetzung', 'Mitglieder', 'Gruppe', 'Personal'],
+    'es' : ['Miembros', 'banda', 'grupo', 'personal'],
 }
 
+CONCERT_TOURS = {
+    'en': ['Concert', 'tours'],
+    'it': ['Tournée', 'concerto'],
+    'de': ['Tourneen', 'Konzerte', 'Konzert'],
+    'es': ['Giras musicales', 'Giras'],
+}
 
+ALUMNI = {
+    'en': ['alumni'],
+    'it': [],
+    'de': []
+}
+
+STAFF = {
+    'en': ['professors', 'Presidents', 'Faculty', 'staff', 'people', 'Principals', 'recipients'],
+    'it': [],
+    'de': []
+}
+
+PROGRAMS_OFFERED = {
+    'en': ['Programs', 'Programmes', 'Faculties', 'Academics', 'Courses', 'Departments' ],
+    'it': [],
+    'de': []
+}
 
 #############################################################
 
@@ -115,33 +148,46 @@ given section. These are used inside the mapper functions.
 BIBLIO_GENRE = {
     'en': {'Novels': 'Novel', 'Short stories': 'Short_story', 'Short Fiction': 'Short_story',
            'Comics': 'Comic', 'Articles': 'Article', 'Essays': 'Essay', 'Plays': 'Play_(theatre)',
-           'Anthologies': 'Anthology', 'Non-fiction': 'Non-fiction',
+           'Anthologies': 'Anthology', 'Non-fiction': 'Non-fiction', 'Comedy':'comedy', 'other':'other',
            'Nonfiction': 'Non-fiction', 'Poetry': 'Poetry', 'Science fiction': 'Science_fiction',
            'Biographies': 'Biography'},
 
-    'it': {'Romanzi': 'Romanzo', 'Racconti': 'Racconto', 'Antologie': 'Antologia',
-           'Audiolibri': 'Audiolibro', 'Saggi': 'Saggio', 'Poesie': 'Poesia', 'Drammi': 'Dramma'},
+    'it': {'Romanzi': 'Novel', 'Racconti': 'Story', 'Antologie': 'Anthology', 'Non-fiction': 'Non-fiction',
+           'Audiolibri': 'Audiobook', 'Saggi': 'Essay', 'Poesie': 'Poetry', 'Drammi': 'Drama', 'Altri':'other',
+           'audiolibro':'Audiobook', 'finzione':'Fiction', 'saggistica':'Non-Fiction'},
 
     'de': { 'poesie': 'Poetry', 'dramen': 'Drama', 'kurzgedichte': 'Poem', 'kurzgeschichten': 'Short_story',
             'Übersetzungen':'translator', 'erzählungen':'story','romane':'Romance', 'verfilmungen':'adaptations',
             'dokumentarfilm':'documentary', 'journal':'journal', 'gedichte':'poem', 'märchen':'fairy_tales', 
             'bühnenstücke':'Play_(theatre)', 'essays':'essay', 'gedichtbände':'poem', 'aufzeichnungen':'record', 
-            'hörbücher':'Audiobook', 'autobiografisches':'Autobiography', 'briefe':'letter'}
+            'hörbücher':'Audiobook', 'autobiografisches':'Autobiography', 'briefe':'letter'},
+
+    'es': {'Novela': 'Novel', 'Antologías':'Anthology', 'Cuentos':'story', 'Guiones':'Script', 'Películas':'Movie',
+            'Prosa':'letter', 'Tragedia':'Tragedy', 'Comedia':'comedy', 'Relatos':'story', 'No ficción':'Non-ficton',
+            'ficción':'Ficton', 'drama':'drama', 'tragedia':'drama'}
 
 }
 
 """Used in map_filmography to select a property which specifies how the given resource takes part in the movie"""
 FILMOGRAPHY_PARTICIPATION = {
-    'en': {'Actor': 'starring', 'Director': 'director', 'Producer': 'producer', 'Dubbing': 'voice'},
+    'en': {'Actor': 'starring', 'Director': 'director', 'Producer': 'producer', 'Dubbing': 'voice',
+            'Actress':'starring', 'screen Writer':'screenWriter', 'voice':'voice'},
 
     'it': {'Attore': 'starring', 'Attrice': 'starring', 'Sceneggiatore': 'screenWriter',
-           'Sceneggiatrice': 'screenwriter',
+           'Sceneggiatrice': 'screenwriter', 'Produttore': 'producer', 'Produttrice': 'producer',
            'Doppiatore': 'voice', 'Doppiatrice': 'voice', 'Regista': 'director', 'Montaggio': 'editing',
-           'Montatore': 'editing', 'Montatrice': 'editing', 'Produttore': 'producer', 'Produttrice': 'producer'}
+           'Montatore': 'editing', 'Montatrice': 'editing' },
 
     'de': {'Darsteller': 'starring', 'Spielfilme': 'starring', 'Fernsehserien':'starring', 
+            'Darstellung': 'starring', 'Kinofilme': 'starring', 'Darstellerin':'starring',
             'Schauspieler':'starring', 'Synchronsprecher':'voice', 'Produzent': 'producer', 
-            'Drehbuchautor':'screenWriter', 'Darsteller':'starring', 'Regisseur':'director' }
+            'Drehbuchautor':'screenWriter', 'Darsteller':'starring', 'Regisseur':'director',
+            'Synchronsprecherin':'voice' },
+
+    'es': {'actor':'starring', 'actriz':'starring', 'productor':'producer', 'directora':'director',
+            'productora':'producer', 'director':'director', 'Escritor':'screenWriter', 
+            'Películas':'starring' }
+
 }
 
 """Used in map_filmography to map the rdf:type of filmography elements in current section"""
@@ -149,13 +195,19 @@ FILMOGRAPHY_TYPE = {
     'en': {'TV': 'TelevisionShow', 'Television': 'TelevisionShow', 'Animation': 'Cartoon', 'Anime': 'Anime',
            'Videogame': 'Videogame', 'Video game': 'Videogame'},
 
-    'it': {'Televisione': 'TelevisionShow', 'TV': 'TelevisionShow', 'Animazione': 'Cartoon'}
+    'it': {'Televisione': 'TelevisionShow', 'TV': 'TelevisionShow', 'Animazione': 'Cartoon'},
 
     'de': {'Fernseh Show':'TelevisionShow', 'Fernsehen':'TelevisionShow', 'Trickfilm':'Cartoon',
-            'Anime':'Anime', 'Videogame': 'Videospiel', 'Videogame' : 'Videospiel'}
+            'Anime':'Anime', 'Videogame': 'Videospiel', 'Video game' : 'Videospiel'},
+
+    'es': {'Videos musicales':'MusicVideo', 'Televisión': 'TelevisionShow', 'caricatura':'cartoon',
+            'cómica':'cartoon', 'videojuego':'Videogame'}
 }
 
 
+
+
+### Potential Domains; Yet to be mapped
 FOOTBALL_CLUBS = {
     'en' : ['honors', 'honours', 'achievements', 'former', 'records', 'board', 'officials', 'staff', 'members', 
             'managers', 'players', 'honorary']
