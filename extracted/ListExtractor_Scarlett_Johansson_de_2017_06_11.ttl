@@ -1,0 +1,207 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://de.dbpedia.org/resource/%28A_Good_Woman%29> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28A_Love_Song_for_Bobby_Long%29> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28An_American_Rhapsody%29> a dbo:Film ;
+    dbo:releaseYear "2001-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Captain_America%3A_Civil_War%29> a dbo:Film ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Captain_America%3A_The_Winter_Soldier%29> a dbo:Film ;
+    dbo:releaseYear "2014-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Chef%29> a dbo:Film ;
+    dbo:releaseYear "2014-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Eight_Legged_Freaks%29> a dbo:Film ;
+    dbo:releaseYear "2002-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Girl_with_a_Pearl_Earring%29> a dbo:Film ;
+    dbo:releaseYear "2003-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28He%E2%80%99s_Just_Not_That_Into_You%29> a dbo:Film ;
+    dbo:releaseYear "2009-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Home_Alone_3%29> a dbo:Film ;
+    dbo:releaseYear "1997-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28If_Lucy_Fell%29> a dbo:Film ;
+    dbo:releaseYear "1996-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28In_Good_Company%29> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Just_Cause%29> a dbo:Film ;
+    dbo:releaseYear "1995-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28My_Brother_the_Pig%29> a dbo:Film ;
+    dbo:releaseYear "1999-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28North%29> a dbo:Film ;
+    dbo:releaseYear "1994-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28Scoop%29> a dbo:Film ;
+    dbo:releaseYear "2006-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Avengers%29> a dbo:Film ;
+    dbo:releaseYear "2012-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Horse_Whisperer%29> a dbo:Film ;
+    dbo:releaseYear "1998-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Island%29> a dbo:Film ;
+    dbo:releaseYear "2005-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Nanny_Diaries%29> a dbo:Film ;
+    dbo:releaseYear "2007-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Other_Boleyn_Girl%29> a dbo:Film ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Perfect_Score%29> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_Prestige%29> a dbo:Film ;
+    dbo:releaseYear "2006-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28The_SpongeBob_SquarePants_Movie%29> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/%28We_Bought_a_Zoo%29> a dbo:Film ;
+    dbo:releaseYear "2011-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/2008> a dbo:Film ;
+    dbo:releaseYear "2005-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/Ash> a dbo:Film ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/Kaa> a dbo:Film ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/Rhino_Records> a dbo:Album ;
+    dbo:musicalArtist <http://de.dbpedia.org/resource/Scarlett_Johansson> ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear .
+
+<http://de.dbpedia.org/resource/The_Client> a dbo:Film ;
+    dbo:releaseYear "1995-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Avengers> a dbo:Film ;
+    dbo:releaseYear "2015-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Break_Up> a dbo:Album ;
+    dbo:musicalArtist <http://de.dbpedia.org/resource/Scarlett_Johansson> ;
+    dbo:releaseYear "2009-01-01"^^xsd:gYear .
+
+<http://de.dbpedia.org/resource/_Don_Jon> a dbo:Film ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Entourage> a dbo:Film ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Fall> a dbo:Film ;
+    dbo:releaseYear "1997-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Ghost_World> a dbo:Film ;
+    dbo:releaseYear "2001-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Ghost_in_the_Shell> a dbo:Film ;
+    dbo:releaseYear "2017-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Hail> a dbo:Film ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Her> a dbo:Film ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Hitchcock> a dbo:Film ;
+    dbo:releaseYear "2012-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Iron_Man_2> a dbo:Film ;
+    dbo:releaseYear "2010-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Lost_in_Translation> a dbo:Film ;
+    dbo:releaseYear "2003-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Lucy> a dbo:Film ;
+    dbo:releaseYear "2014-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Manny_%26_Lo> a dbo:Film ;
+    dbo:releaseYear "1996-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Match_Point> a dbo:Film ;
+    dbo:releaseYear "2005-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_The_Black_Dahlia> a dbo:Film ;
+    dbo:releaseYear "2006-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_The_Man_Who_Wasn> a dbo:Film ;
+    dbo:releaseYear "2001-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_The_Spirit> a dbo:Film ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Under_the_Skin> a dbo:Film ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+
+<http://de.dbpedia.org/resource/_Vicky_Cristina_Barcelona> a dbo:Film ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear ;
+    dbo:starring <http://de.dbpedia.org/resource/Scarlett_Johansson> .
+

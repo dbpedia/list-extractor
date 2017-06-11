@@ -1,0 +1,219 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://it.dbpedia.org/resource/Blood_Diamond_-_Diamanti_di_sangue> a dbo:Film ;
+    dbo:releaseYear "2006-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Brillantina_%28serie_televisiva%29> a dbo:TelevisionShow ;
+    dbo:releaseYear "1990-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Buon_compleanno_Mr._Grape> a dbo:Film ;
+    dbo:releaseYear "1993-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Cappuccetto_rosso_sangue> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2011-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Catching_the_Sun> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2015-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Celebrity_%28film%29> a dbo:Film ;
+    dbo:releaseYear "1998-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Cowspiracy> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2015-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Critters_3> a dbo:Film ;
+    dbo:releaseYear "1991-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Django_Unchained> a dbo:Film ;
+    dbo:releaseYear "2012-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Don%27s_Plum> a dbo:Film ;
+    dbo:releaseYear "2001-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Fra_nonni_e_nipoti> a dbo:TelevisionShow ;
+    dbo:releaseYear "1990-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Gangs_of_New_York> a dbo:Film ;
+    dbo:releaseYear "2002-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Gardener_of_Eden_-_Il_giustiziere_senza_legge> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2007-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Genitori_in_blue_jeans> a dbo:TelevisionShow ;
+    dbo:releaseYear "1991-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Greensburg_%28serie_televisiva%29> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Hubble_3D> a dbo:Film ;
+    dbo:releaseYear "2010-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Il_fuoco_della_vendetta_-_Out_of_the_Furnace> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Il_grande_Gatsby_%28film_2013%29> a dbo:Film ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Inception> a dbo:Film ;
+    dbo:releaseYear "2010-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/J._Edgar> a dbo:Film ;
+    dbo:releaseYear "2011-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/La_legge_della_notte> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/La_maschera_di_ferro_%28film_1998%29> a dbo:Film ;
+    dbo:releaseYear "1998-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/La_mia_peggiore_amica> a dbo:Film ;
+    dbo:releaseYear "1992-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/La_stanza_di_Marvin> a dbo:Film ;
+    dbo:releaseYear "1996-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Lassie_%28serie_televisiva_1989%29> a dbo:TelevisionShow ;
+    dbo:releaseYear "1989-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Le_idi_di_marzo_%28film%29> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2011-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Nessuna_verit%C3%A0> a dbo:Film ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Orphan> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2009-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Pappa_e_ciccia_%28serie_televisiva%29> a dbo:TelevisionShow ;
+    dbo:releaseYear "1991-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Poeti_dall%27inferno> a dbo:Film ;
+    dbo:releaseYear "1995-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Pronti_a_morire> a dbo:Film ;
+    dbo:releaseYear "1995-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Prova_a_prendermi> a dbo:Film ;
+    dbo:releaseYear "2002-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Punto_di_non_ritorno_-_Before_the_Flood> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Revenant_-_Redivivo> a dbo:Film ;
+    dbo:releaseYear "2015-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Revolutionary_Road_%28film%29> a dbo:Film ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Ritorno_dal_nulla> a dbo:Film ;
+    dbo:releaseYear "1995-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Romeo_%2B_Giulietta_di_William_Shakespeare> a dbo:Film ;
+    dbo:releaseYear "1996-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Runner%2C_Runner> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Santa_Barbara_%28soap_opera%29> a dbo:TelevisionShow ;
+    dbo:releaseYear "1990-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Shutter_Island> a dbo:Film ;
+    dbo:releaseYear "2010-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_11th_Hour_-_L%27undicesima_ora> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2007-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Assassination> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/The_Audition_%28film_2015%29> a dbo:Film ;
+    dbo:releaseYear "2015-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Aviator> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2004-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Beach> a dbo:Film ;
+    dbo:releaseYear "2000-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Departed_-_Il_bene_e_il_male> a dbo:Film ;
+    dbo:releaseYear "2006-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Foot_Shooting_Party> a dbo:Film ;
+    dbo:releaseYear "1994-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/The_Ivory_Game> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/The_Wolf_of_Wall_Street> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2013-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Titanic_%28film_1997%29> a dbo:Film ;
+    dbo:releaseYear "1997-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
+<http://it.dbpedia.org/resource/Virunga_%28film%29> a dbo:Film ;
+    dbo:producer <http://it.dbpedia.org/resource/Leonardo_DiCaprio> ;
+    dbo:releaseYear "2014-01-01"^^xsd:gYear .
+
+<http://it.dbpedia.org/resource/Voglia_di_ricominciare> a dbo:Film ;
+    dbo:releaseYear "1993-01-01"^^xsd:gYear ;
+    dbo:starring <http://it.dbpedia.org/resource/Leonardo_DiCaprio> .
+
