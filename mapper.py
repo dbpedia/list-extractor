@@ -147,9 +147,9 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
                 year = year_mapper(elem)
                 if year:
-                    g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
     return elems
-
 
 
 def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
@@ -215,9 +215,396 @@ def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
                 year = year_mapper(elem)
                 if year:
-                    g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
     return elems
 
+
+def map_alumni(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles albums list present inside a section containing a match with ALUMNI.
+
+    Adds RDF statement about the person and its assosiation with the resource(organisation).
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_alumni(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), dbo.alumni, res))
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo.alumni, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.alumni, res))
+            
+            if uri and uri != "":
+                elems += 1
+                work = alumni_profession_mapper(elem)
+                if work:
+                    g.add((rdflib.URIRef(uri), dbo.notableWork, rdflib.Literal(work, datatype=rdflib.XSD.string)))
+    return elems
+
+
+def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles list present inside a section containing a match with PROGRAMS_OFFERED.
+
+    Adds RDF statement about the program offered by the resource(organisation).
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_programs_offered(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
+            elems+=1
+            
+    return elems
+
+
+def map_honors(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles lists related to awards and honors given to people inside a section containing a match with HONORS.
+
+    Adds RDF statements about the awards, and its details(if present) and the recipient.
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name, used to reconcile literary genre
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
+    '''
+    
+    award_status = award_status_mapper(sect_name, lang)  #award is the same for every element of the sublist
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_honors(elem, sect_name, res, lang, g, elems)
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            elem = elem.replace("Winner","").replace("Won","").replace("Nominated","").replace("Nominee","")
+            for_entity = awarded_for(elem,lang)
+            year = year_mapper(elem)
+            if year: 
+                for y in year:
+                    elem = elem.replace(y,"")
+                    if elem[0] in [',','-',':']: elem = elem[2:]
+                elem = elem.strip()
+
+            if True:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref,
+                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo.awardedTo, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo.awardedTo, res))
+            
+            if uri and uri != "":
+                elems += 1
+                g.add((rdflib.URIRef(uri), dbo.awardStatus, dbo + rdflib.URIRef(award_status)))
+                if year:
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.AwardedIn, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                if for_entity:
+                    g.add((rdflib.URIRef(uri), dbo.AwardedFor, dbr + rdflib.URIRef(for_entity)))
+    
+    return elems
+
+
+def map_staff(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles list present inside a section containing a match with STAFF.
+
+    Adds RDF statement about the staff member and the institution.
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_staff(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0 and \
+                    len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0: # if already mapped
+                    g.add((rdflib.URIRef(uri), dbo.staff, res))
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0 and \
+                        len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0:
+                        g.add((rdflib.URIRef(uri), dbo.staff, res))
+                
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0and \
+                            len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0:
+                            g.add((rdflib.URIRef(uri), dbo.staff, res))
+    return elems
+
+def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles list present inside a section containing a match with OTHER.
+
+    Adds RDF statement about the unclassified sections in Person domain.
+    
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+   
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_other_person_details(elem, sect_name, res, lang, g, elems)   # handle recursive lists
+        
+        else:
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            res_name = italic_mapper(elem)
+            
+            other_details = None
+            for other_type in OTHER_PERSON_DETAILS[lang]:
+                if other_type.decode('utf-8').lower() in sect_name.decode('utf-8').lower():
+                    other_details = other_type
+
+            if other_details == None:   #No possible mapping found; leave the element
+                return 0
+            
+            p = PERSON_DETAILS[lang][other_details]
+            
+            if res_name:
+                elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                res_name = res_name.replace(' ', '_')
+                res_name = urllib2.quote(res_name)  ###
+                uri = dbr + res_name.decode('utf-8', errors='ignore')
+                g.add((rdflib.URIRef(uri), dbo[p], res))
+                elems+=1
+            
+            else:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo[p], res))
+                    elems+=1
+
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        g.add((rdflib.URIRef(uri), dbo[p], res))
+                        elems+=1
+
+    return elems
+
+
+
+
+def map_career(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles lists related to awards and honors given to people inside a section containing a match with HONORS.
+
+    Adds RDF statements about the awards, and its details(if present) and the recipient.
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name, used to reconcile literary genre
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
+    '''
+    
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_career(elem, sect_name, res, lang, g, elems)
+        
+        else:
+            year = year_mapper(elem)
+            if year: 
+                for y in year:
+                    elem = elem.replace(y,"").strip()
+                    if elem[0] in [',','-',':']: elem = elem[2:]
+                elem = elem.strip()
+            
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+
+            other_details = None
+            for other_type in CAREER[lang]:
+                if other_type.decode('utf-8').lower() in sect_name.decode('utf-8').lower():
+                    other_details = other_type
+
+            if other_details == None:   #No possible mapping found; leave the element
+                return 0
+            
+            p = PERSON_DETAILS[lang][other_details]
+            
+            if True:
+                uri_name = general_mapper(elem)
+                if (uri_name and uri_name != "" and uri_name != res):
+                    uri_name = uri_name.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)  ###
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo[p], res))
+            
+            if uri and uri != "":
+                elems += 1
+                if year:
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                
+    return elems
 
 
 
@@ -266,7 +653,8 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
                 year = year_mapper(elem)
                 if year:
-                    g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
                 if film_particip:
                     g.add((rdflib.URIRef(uri), dbo + rdflib.URIRef(film_particip), res))
     
@@ -307,7 +695,6 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                 ref = reference_mapper(elem)  # look for resource references
                 if ref:  # current element contains a reference
                     uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
-                    
                     if uri:
                         dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
                         if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
@@ -339,9 +726,10 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                 year = year_mapper(elem)
                 
                 if year:
-                    g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(year, datatype=rdflib.XSD.gYear)))
+                    for y in year:
+                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
                 if lit_genre:
-                    g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbr + rdflib.URIRef(lit_genre)))
+                    g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbo + rdflib.URIRef(lit_genre)))
     
     return elems
 
@@ -404,9 +792,7 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                 
     return elems
 
-
-
-def alumni_profession(list_elem):
+def alumni_profession_mapper(list_elem):
     '''Applies a regex to look for a profession, returns a match if found
 
     Profession is expected to present after the resource name, seperated by either a hyphen or comma
@@ -436,7 +822,6 @@ def isbn_mapper(list_elem):
     
     return match_isbn
 
-
 def year_mapper(list_elem):
     '''Looks for a set of exactly 4 digits which would likely represent the year of publication of a work
 
@@ -444,12 +829,13 @@ def year_mapper(list_elem):
     :return: a numeric match if found
     '''
     # select an occurance of a 4 digit number as the (publication) year
-    match_num = re.search(r'[0-9]{4}', list_elem)
-    if match_num != None:
-        match_num = match_num.group()
+    # match_num = re.search(r'[0-9]{4}', list_elem)
+    # if match_num != None:
+    #     match_num = match_num.group()
 
+    match_num = re.findall(r'[0-9]{4}', list_elem)
+    if len(match_num) == 0: return None
     return match_num
-
 
 def litgenre_mapper(sect_name, lang):
     '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
@@ -472,7 +858,6 @@ def litgenre_mapper(sect_name, lang):
             
             return b_genres[bg]
 
-
 def filmpart_mapper(sect_name, lang):
     ''' Returns the part the person took in that movie as a property (e.g. starring, director, etc...)
 
@@ -487,7 +872,6 @@ def filmpart_mapper(sect_name, lang):
             film_particip = f_parts[fp]
     
     return film_particip
-
 
 def filmtype_mapper(sect_name, lang):
     ''' Returns the type of Filmography elements in current list as a class (TelevisionShow, Cartoon, etc...)
@@ -505,6 +889,36 @@ def filmtype_mapper(sect_name, lang):
     
     return filmtype
 
+def award_status_mapper(sect_name, lang):
+    ''' Returns the status of the award to the recipient; default is Winnig, i.e. Awarded
+
+    :param sect_name: section and sub-section name to compare with a regex
+    :param lang: page language
+    :return: a class if there is a match, None otherwise
+    '''
+    status = "Winner"
+    s_types = AWARD_STATUS_TYPE[lang]
+    for st in s_types.keys():
+        if re.search(st, sect_name, re.IGNORECASE):
+            status = s_types[st]
+    
+    return status
+
+def awarded_for(elem,lang):
+    ''' Returns the entity (if any) for which the award is awarded to the recipient
+
+    :param elem: dictionary element entry
+    :param lang: page language
+    :return: an entity if there is a match, None otherwise
+    '''
+    entity = None
+    term = TRANSLATIONS['for'][lang]
+    val = re.split(term,elem)
+    if len(val)>1:
+        entity = val[-1]
+        entity = entity.replace("{{","").replace("}}","").replace("\'\'","").strip().replace(" ","_")
+        entity = urllib2.quote(entity).decode('utf-8', errors='ignore')
+    return entity
 
 
 ##########################

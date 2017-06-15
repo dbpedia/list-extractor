@@ -49,10 +49,12 @@
 '''
 
 MAPPING = { 
-            'Writer': ['BIBLIOGRAPHY'], 
-            'Actor': ['FILMOGRAPHY', 'DISCOGRAPHY'],
-            'MusicalArtist': ['DISCOGRAPHY','FILMOGRAPHY', 'CONCERT_TOURS'],
-            'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS'],
+            'Person': ['FILMOGRAPHY', 'DISCOGRAPHY', 'BIBLIOGRAPHY', 'HONORS','OTHER_PERSON_DETAILS', 'CAREER'],
+            'Athlete': ['HONORS'],
+            'Writer': ['BIBLIOGRAPHY', 'HONORS'], 
+            'Actor': ['FILMOGRAPHY', 'DISCOGRAPHY', 'HONORS'],
+            'MusicalArtist': ['DISCOGRAPHY','FILMOGRAPHY', 'CONCERT_TOURS', 'HONORS'],
+            'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS', 'HONORS'],
             'Group':['BAND_MEMBERS'],
             'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF']
         }
@@ -87,9 +89,9 @@ BIBLIOGRAPHY = {
 }
 
 FILMOGRAPHY = {
-    'en': ['filmography'],
+    'en': ['filmography','shows'],
     'it': ['filmografia'],
-    'de': ['filmografie'],
+    'de': ['Filmografie'],
     'es': ['Filmografía', 'Televisión']
 }
 
@@ -115,7 +117,7 @@ CONCERT_TOURS = {
 }
 
 ALUMNI = {
-    'en': ['alumni'],
+    'en': ['alumni', 'pupil'],
     'it': [],
     'de': []
 }
@@ -131,6 +133,20 @@ PROGRAMS_OFFERED = {
     'it': [],
     'de': []
 }
+
+HONORS = {
+    'en': ['Recognition','awards','honors','honours', 'legacy','titles', 'accomplishments']
+}
+
+CAREER = {
+    'en': ['works', 'work', 'career','expeditions',]
+}
+
+
+OTHER_PERSON_DETAILS = {
+    'en': ['family','marriages']
+}
+
 
 #############################################################
 
@@ -164,7 +180,7 @@ BIBLIO_GENRE = {
 
     'es': {'Novela': 'Novel', 'Antologías':'Anthology', 'Cuentos':'story', 'Guiones':'Script', 'Películas':'Movie',
             'Prosa':'letter', 'Tragedia':'Tragedy', 'Comedia':'comedy', 'Relatos':'story', 'No ficción':'Non-ficton',
-            'ficción':'Ficton', 'drama':'drama', 'tragedia':'drama'}
+            'ficción':'Ficton', 'drama':'drama', 'tragedia':'drama', 'otros':'other'}
 
 }
 
@@ -204,6 +220,24 @@ FILMOGRAPHY_TYPE = {
             'cómica':'cartoon', 'videojuego':'Videogame'}
 }
 
+"""Used in award_status_mapper to map the rdf:type of awards in current section"""
+AWARD_STATUS_TYPE = {
+    'en': {'Wins':'Winner', 'Won':'Winner', 'Nominated':'Nominated', 'Nominations':'Nominated', 
+            'Nominee': 'Nominated'}
+}
+
+PERSON_DETAILS = {
+    'en': {'family': 'relative', 'marriages':'spouse', 'works': 'notableWork', 'career': 'Employer', 
+            'expeditions':'notableWork', 'work': 'notableWork'}
+}
+
+TRANSLATIONS = {
+    ### key: english word; val: dict of translation of words in diff lang; lang:translation
+    ### ADD SPACES BEFORE AND AFTER THE ENTRY 
+    'for': {'en':' for ', 'it':' per '}
+}
+
+
 
 
 
@@ -242,6 +276,7 @@ MUSIC_GENRE = {
 
     'it': {}
 }
+
 
 
 CONTRIBUTION_TYPE = {

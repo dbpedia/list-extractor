@@ -1,0 +1,231 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dbr:All-NBA_Team dbo:AwardedIn "2005-01-01"^^xsd:gYear,
+        "2006-01-01"^^xsd:gYear,
+        "2007-01-01"^^xsd:gYear,
+        "2008-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear,
+        "2010-01-01"^^xsd:gYear,
+        "2011-01-01"^^xsd:gYear,
+        "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear,
+        "2014-01-01"^^xsd:gYear,
+        "2015-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear,
+        "2017-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:American_Airlines_Arena dbo:AwardedIn "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Associated_Press_Athlete_of_the_Year dbo:AwardedIn "2013-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:EA_Sports dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:ESPY_Award dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:FIBA_Americas_Championship dbo:AwardedIn "2007-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:FIBA_World_Championship dbo:AwardedIn "2006-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Gatorade_Player_of_the_Year_awards dbo:AwardedIn "2002-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Hickok_Belt dbo:AwardedIn "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Jordan_Capital_Classic_MVP dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:List_of_National_Basketball_Association_season_scoring_leaders dbo:AwardedIn "2008-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:List_of__all-decade_Sports_Illustrated_awards_and_honorsNBA_All-Decade_Team dbo:AwardedIn "2000-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+<http://dbpedia.org/resource/McDonald%27s_All-American_Game> dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+<http://dbpedia.org/resource/McDonald%27s_High_School_All-American> dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+<http://dbpedia.org/resource/McDonald%27s_National_Player_of_the_Year> dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NAACP_Image_Awards dbo:AwardedIn "2017-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_All-Defensive_Team dbo:AwardedIn "2009-01-01"^^xsd:gYear,
+        "2010-01-01"^^xsd:gYear,
+        "2011-01-01"^^xsd:gYear,
+        "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear,
+        "2014-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_All-Rookie_First_Team dbo:AwardedIn "2004-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_All-Star_Game dbo:AwardedIn "2005-01-01"^^xsd:gYear,
+        "2006-01-01"^^xsd:gYear,
+        "2007-01-01"^^xsd:gYear,
+        "2008-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear,
+        "2010-01-01"^^xsd:gYear,
+        "2011-01-01"^^xsd:gYear,
+        "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear,
+        "2014-01-01"^^xsd:gYear,
+        "2015-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear,
+        "2017-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_All-Star_Game_MVP dbo:AwardedIn "2006-01-01"^^xsd:gYear,
+        "2008-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_Champion dbo:AwardedIn "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_Finals_MVP dbo:AwardedIn "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_Most_Valuable_Player dbo:AwardedIn "2009-01-01"^^xsd:gYear,
+        "2010-01-01"^^xsd:gYear,
+        "2012-01-01"^^xsd:gYear,
+        "2013-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:NBA_Rookie_of_the_Year dbo:AwardedIn "2004-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Naismith_Prep_Player_of_the_Year_Award dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:National_Champion dbo:AwardedIn "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Number_23_retired_by_St._Vincent-St._Mary dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:OHSAA dbo:AwardedIn "2000-01-01"^^xsd:gYear,
+        "2001-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Ohio_Mr._Basketball dbo:AwardedIn "2001-01-01"^^xsd:gYear,
+        "2002-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Olympic_Bronze_Medal_winner dbo:AwardedIn "2004-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Olympic_Gold_Medal dbo:AwardedIn "2008-01-01"^^xsd:gYear,
+        "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Six-story_commemorative_banner_in_downtown_Akron dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:South_Main_Street_in_downtown_Akron_renamed_King_James_Way dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Sporting_News dbo:AwardedIn "2004-01-01"^^xsd:gYear,
+        "2006-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Sporting_NewsAthlete_of_the_Year dbo:AwardedIn "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Sports_Illustrated dbo:AwardedIn "2012-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:St._Vincent-St._Mary_Hall_of_Fame dbo:AwardedIn "2011-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:St._Vincent-St._Mary_home_basketball_court_named_The_LeBron_James_Arena dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+<http://dbpedia.org/resource/Template%3AUSA_Basketball_Male_Athlete_of_the_Year> dbo:AwardedIn "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Three-time_Cleveland_Sports_Awards_Professional_Athlete_of_the_Year dbo:AwardedIn "2009-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear,
+        "2017-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Two-time_PARADE_High_School_Player_of_the_Year dbo:AwardedIn "2002-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:Two-time_USA_Today_High_School_Player_of_the_Year dbo:AwardedIn "2002-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:USA_Today_All-USA_high_school_basketball_team dbo:AwardedIn "2001-01-01"^^xsd:gYear,
+        "2002-01-01"^^xsd:gYear,
+        "2003-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
+dbr:downtown_Cleveland dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:LeBron_James .
+
