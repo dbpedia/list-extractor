@@ -56,7 +56,8 @@ MAPPING = {
             'MusicalArtist': ['DISCOGRAPHY','FILMOGRAPHY', 'CONCERT_TOURS', 'HONORS'],
             'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS', 'HONORS'],
             'Group':['BAND_MEMBERS'],
-            'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF']
+            'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF'],
+            'PeriodicalLiterature': ['CONTRIBUTORS', 'OTHER_LITERATURE_DETAILS', 'HONORS']
         }
 
 EXCLUDED_SECTIONS = {
@@ -139,12 +140,21 @@ HONORS = {
 }
 
 CAREER = {
-    'en': ['works', 'work', 'career','expeditions',]
+    'en': ['works', 'work', 'career','expeditions','tree']
 }
 
 
 OTHER_PERSON_DETAILS = {
-    'en': ['family','marriages']
+    'en': ['family','marriages','restaurants', 'memberships']
+}
+
+CONTRIBUTORS = {
+    'en': ['contributors', 'staff' , 'covers', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
+            'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter' ]
+}
+
+OTHER_LITERATURE_DETAILS = {
+    'en': ['editions', 'edition', 'reprints', ]
 }
 
 
@@ -228,7 +238,8 @@ AWARD_STATUS_TYPE = {
 
 PERSON_DETAILS = {
     'en': {'family': 'relative', 'marriages':'spouse', 'works': 'notableWork', 'career': 'Employer', 
-            'expeditions':'notableWork', 'work': 'notableWork'}
+            'expeditions':'notableWork', 'work': 'notableWork', 'restaurants': 'owner', 
+            'tree':'colleague', 'memberships':'member'}
 }
 
 TRANSLATIONS = {
@@ -247,17 +258,6 @@ FOOTBALL_CLUBS = {
             'managers', 'players', 'honorary']
 }
 
-EDUCATIONAL_INSTITUTES = {
-    'en' : ['organisation', 'organization', 'alumni', 'scholarships', 'faculty', 'administration', 
-            'institutions', 'research', 'academics', 'principals', 'courses', 'campuses'],
-    'it' : []   
-}
-
-MAGAZINE_CONTRIBUTION = {
-    'en' : ['contributor', 'contributors', 'mastheads', 'staff', 'ex-staff', 'winners', 'editors', 
-            'members', 'team', 'columnists', 'correspondents', 'reporters'],
-    'it' : []
-}
 
 NEWSPAPER_CONTRIBUTION = {
     'en' : ['contributor', 'contributors', 'mastheads', 'staff', 'ex-staff', 'writers', 'editors', 

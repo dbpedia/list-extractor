@@ -1,0 +1,23 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dbr:Bank_of_America_Corporation dbo:member dbr:Mukesh_Ambani .
+
+dbr:Chairman dbo:member dbr:Mukesh_Ambani .
+
+dbr:Indian_Petrochemicals_Corporation_Limited dbo:member dbr:Mukesh_Ambani .
+
+dbr:Institute_of_Chemical_Technology dbo:member dbr:Mukesh_Ambani .
+
+dbr:Pandit_Deendayal_Petroleum_University dbo:member dbr:Mukesh_Ambani .
+
+dbr:Reliance_Industries_Limited dbo:member dbr:Mukesh_Ambani .
+
+dbr:Reliance_Petroleum dbo:member dbr:Mukesh_Ambani .
+
+dbr:Reliance_Retail_Limited dbo:member dbr:Mukesh_Ambani .
+

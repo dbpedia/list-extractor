@@ -511,6 +511,7 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                 return 0
             
             p = PERSON_DETAILS[lang][other_details]
+            print p
             
             if res_name:
                 elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
@@ -521,6 +522,16 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                 elems+=1
             
             else:
+                uri_name = quote_mapper(elem)
+                if (uri_name and uri_name != "" and uri_name != res):
+                    uri_name = uri_name.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)  ###
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                    g.add((rdflib.URIRef(uri), dbo[p], res))
+                    elems+=1
+                    continue
+
+
                 ref = reference_mapper(elem)  # look for resource references
                 if ref:  # current element contains a reference
                     uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
@@ -582,7 +593,8 @@ def map_career(elem_list, sect_name, res, lang, g, elems):
 
             other_details = None
             for other_type in CAREER[lang]:
-                if other_type.decode('utf-8').lower() in sect_name.decode('utf-8').lower():
+                #print other_type
+                if other_type.encode('utf-8').lower() in sect_name.encode('utf-8').lower():
                     other_details = other_type
 
             if other_details == None:   #No possible mapping found; leave the element
@@ -1099,4 +1111,26 @@ def general_mapper(list_elem):
         match_str = match_str.lstrip(',')
     
     return match_str
+
+
+def quote_mapper(list_elem):
+    '''Looks for a quotation marks inside the element and returns
+
+    It also ignores date references because they are non-relevant
+    :param list_elem: current list element
+    :return: a match if found, excluding number references
+    '''
+    match_ref = re.search(r'\".*?\"', list_elem)
+    if match_ref:
+        match_ref = match_ref.group()
+        match_ref = match_ref.replace('"',"")
+        match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
+        if match_num:  # date references must be ignored for this mapping
+            num = match_num.group()
+            new_ref = re.sub(r'\".*?\"', "", num, count=1)  # delete the number part
+            match_ref = quote_mapper(new_ref)  #call again reference_mapper passing the new reference
+    
+    return match_ref
+
+
 
