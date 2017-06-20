@@ -57,7 +57,9 @@ MAPPING = {
             'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS', 'HONORS'],
             'Group':['BAND_MEMBERS'],
             'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF'],
-            'PeriodicalLiterature': ['CONTRIBUTORS', 'OTHER_LITERATURE_DETAILS', 'HONORS']
+            'PeriodicalLiterature': ['CONTRIBUTORS', 
+                                        #'OTHER_LITERATURE_DETAILS', 
+                                        'HONORS', 'BIBLIOGRAPHY']
         }
 
 EXCLUDED_SECTIONS = {
@@ -149,7 +151,7 @@ OTHER_PERSON_DETAILS = {
 }
 
 CONTRIBUTORS = {
-    'en': ['contributors', 'staff' , 'covers', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
+    'en': ['contributors', 'staff' , 'cover', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
             'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter' ]
 }
 
@@ -248,7 +250,15 @@ TRANSLATIONS = {
     'for': {'en':' for ', 'it':' per '}
 }
 
+CONTRIBUTION_TYPE = {
+    'en': { 'covers':'coverArtist', 'editor':'chiefEditor', 'publisher':'Publisher', 'producer':'Producer',
+            'celebrity':'coverArtist', 'mastheads':'Writers', 'columnist':'Journalist', 'correspondent':'Journalist',
+            'reporter':'Journalist', 'writer':'writer', 'celebrities':'coverArtist'},
+}
 
+MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',
+            'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
+            'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
 
 
 
@@ -276,15 +286,3 @@ MUSIC_GENRE = {
 
     'it': {}
 }
-
-
-
-CONTRIBUTION_TYPE = {
-    'en': {
-
-    },
-
-    'it': {
-    }
-}
-

@@ -1,0 +1,169 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dbr:Alessandra_Ambrosio dbo:activeYear "2015-12-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Alice_Eve dbo:activeYear "2010-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Alyssa_Milano dbo:activeYear "2013-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Amanda_Bynes dbo:activeYear "2010-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Amber_Heard dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Amy_Weber dbo:activeYear "2010-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+<http://dbpedia.org/resource/Ashley_Graham_%28model%29> dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Avril_Lavigne dbo:activeYear "2008-01-01"^^xsd:gYearMonth,
+        "2010-11-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Britney_Spears dbo:activeYear "2011-01-01"^^xsd:gYear,
+        "2010-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Brittany_Murphy dbo:activeYear "2001-01-01"^^xsd:gYearMonth,
+        "2005-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Candice_Swanepoel dbo:activeYear "2015-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Christina_Aguilera dbo:activeYear "2003-01-01"^^xsd:gYearMonth,
+        "2007-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Cobie_Smulders dbo:activeYear "2010-12-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Danneel_Harris dbo:activeYear "2008-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Elisha_Cuthbert dbo:activeYear "2013-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Eliza_Dushku dbo:activeYear "2001-01-01"^^xsd:gYearMonth,
+        "2009-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Elsa_Hosk dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Emily_DiDonato dbo:activeYear "2015-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+<http://dbpedia.org/resource/Fergie_%28singer%29> dbo:activeYear "2009-01-01"^^xsd:gYear ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+<http://dbpedia.org/resource/Hannah_Davis_%28model%29> dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Helena_Bonham_Carter dbo:activeYear "2001-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Hilary_Duff dbo:activeYear "2007-01-01"^^xsd:gYearMonth,
+        "2009-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Irina_Shayk dbo:activeYear "2014-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Jenna_Jenovich dbo:activeYear "2013-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Jennifer_Love_Hewitt dbo:activeYear "1999-11-01"^^xsd:gYearMonth,
+        "2005-01-01"^^xsd:gYearMonth,
+        "2009-01-01"^^xsd:gYearMonth,
+        "2012-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Jessica_Alba dbo:activeYear "2000-10-01"^^xsd:gYearMonth,
+        "2003-11-01"^^xsd:gYearMonth,
+        "2014-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Kaley_Cuoco dbo:activeYear "2010-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Kourtney_Kardashian dbo:activeYear "2009-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Kristen_Bell dbo:activeYear "2006-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Lady_Gaga dbo:activeYear "2009-01-01"^^xsd:gYear ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Lana_Del_Rey dbo:activeYear "2014-12-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Laura_Prepon dbo:activeYear "2001-01-01"^^xsd:gYearMonth,
+        "2004-11-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Lily_Aldridge dbo:activeYear "2015-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Louise_Cliffe dbo:activeYear "2007-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Lucy_Liu dbo:activeYear "2002-01-01"^^xsd:gYearMonth,
+        "2003-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Marion_Raven dbo:activeYear "2009-01-01"^^xsd:gYear ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Mary_Elizabeth_Winstead dbo:activeYear "2007-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Michelle_Branch dbo:activeYear "2004-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Milla_Jovovich dbo:activeYear "2004-01-01"^^xsd:gYearMonth,
+        "2009-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Priyanka_Chopra dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Rebecca_Romijn dbo:activeYear "1998-01-01"^^xsd:gYearMonth,
+        "2000-01-01"^^xsd:gYearMonth,
+        "2002-11-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Sara_Sampaio dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Shannon_Elizabeth dbo:activeYear "2000-01-01"^^xsd:gYearMonth,
+        "2003-12-01"^^xsd:gYearMonth,
+        "2008-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Shawnee_Smith dbo:activeYear "2001-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Sophia_Bush dbo:activeYear "2006-11-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Stella_Maxwell dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Taylor_Swift dbo:activeYear "2015-01-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+
+dbr:Yvonne_Strahovski dbo:activeYear "2011-10-01"^^xsd:gYearMonth ;
+    dbo:coverArtist <http://dbpedia.org/resource/Maxim_(magazine)> .
+

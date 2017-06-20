@@ -477,6 +477,7 @@ def map_staff(elem_list, sect_name, res, lang, g, elems):
                             g.add((rdflib.URIRef(uri), dbo.staff, res))
     return elems
 
+
 def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
     ''' Handles list present inside a section containing a match with OTHER.
 
@@ -560,8 +561,6 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
     return elems
 
 
-
-
 def map_career(elem_list, sect_name, res, lang, g, elems):
     ''' Handles lists related to awards and honors given to people inside a section containing a match with HONORS.
 
@@ -617,8 +616,6 @@ def map_career(elem_list, sect_name, res, lang, g, elems):
                         g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
                 
     return elems
-
-
 
 
 def map_filmography(elem_list, sect_name, res, lang, g, elems):
@@ -745,6 +742,7 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
     
     return elems
 
+
 def map_band_members(elem_list, sect_name, res, lang, g, elems):
     ''' Handles lists related to members inside a section containing a match with BAND_MEMBERS.
 
@@ -804,6 +802,119 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                 
     return elems
 
+
+def map_contributors(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles lists related to contributions made by person inside a section containing a 
+        match with CONTRIBUTORS.
+
+    Adds RDF statement about the band, its members
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name 
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
+    '''
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_contributors(elem, sect_name, res, lang, g, elems)
+
+        else:
+            contrib_type = None
+            for t in CONTRIBUTION_TYPE[lang].keys():
+                if re.search(t, sect_name, flags=re.IGNORECASE):
+                    contrib_type = CONTRIBUTION_TYPE[lang][t]
+                    break
+
+            if contrib_type == None:
+                feature = bracket_feature_mapper(elem)
+                for t in CONTRIBUTION_TYPE[lang]:
+                    if re.search(t, feature, re.IGNORECASE):
+                        contrib_type = CONTRIBUTION_TYPE[lang][t]
+                        break
+
+            year = month_year_mapper(elem)
+            if year: 
+                for y in year:
+                    if type(y) == list:
+                        for yy in y:
+                            elem= elem.replace(re.split(r'\^',yy)[-1], "")
+
+                    else:
+                        elem= elem.replace(re.split(r'\^',y)[-1], "")
+                    
+                elem = elem.strip()
+
+
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            
+            if True:
+                ref = reference_mapper(elem)  # look for resource references
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref,
+                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+
+                    if contrib_type:
+                        g.add((rdflib.URIRef(uri), dbo[contrib_type], res))
+                    else:
+                        g.add((rdflib.URIRef(uri), dbo.ContributedTo, res))
+
+                else:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        if contrib_type:
+                            g.add((rdflib.URIRef(uri), dbo[contrib_type], res))
+                        else:
+                            g.add((rdflib.URIRef(uri), dbo.ContributedTo, res))
+
+                if year:
+                    for y in year:
+                        if type(y) != list:
+                            if "^" in y:
+                                d = y.replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                        else:
+                            start_period, end_period = y[0], y[1]
+                            if "^" in y[0]:
+                                d = y[0].replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
+
+                            if "^" in y[1]:
+                                d = y[1].replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+
+                elems += 1
+                
+    return elems
+
+
+
 def alumni_profession_mapper(list_elem):
     '''Applies a regex to look for a profession, returns a match if found
 
@@ -848,6 +959,81 @@ def year_mapper(list_elem):
     match_num = re.findall(r'[0-9]{4}', list_elem)
     if len(match_num) == 0: return None
     return match_num
+
+def month_year_mapper(list_elem):
+    '''Looks for any kind of date formats; years, month+year or actual date and returns list of dates
+
+    :param list_elem: current list element
+    :return: a numeric match if found
+    '''
+    month_list = { r'(january\s?)\d{4}':'1^', r'\W(jan\s?)\d{4}':'1^', r'(february\s?)\d{4}':'2^', r'\W(feb\s?)\d{4}':'2^',
+                    r'(march\s?)\d{4}':'3^', r'\W(mar\s?)\d{4}':'3^',r'(april\s?)\d{4}':'4^',r'\W(apr\s?)\d{4}':'4^', 
+                    r'(may\s?)\d{4}':'5^', r'\W(may\s?)\d{4}':'5^',r'(june\s?)\d{4}':'6^',r'\W(jun\s?)\d{4}':'6^',
+                    r'(july\s?)\d{4}':'7^',r'\W(jul\s?)\d{4}':'7^', r'(august\s?)\d{4}':'8^', r'\W(aug\s?)\d{4}':'8^', 
+                    r'(september\s?)\d{4}':'9^', r'\W(sep\s?)\d{4}':'9^',r'\W(sept\s?)\d{4}':'9^', r'(october\s?)\d{4}':'10^',
+                    r'\W(oct\s?)\d{4}':'10^',r'(november\s?)\d{4}':'11^', r'\W(nov\s?)\d{4}':'11^' ,
+                    r'(december\s?)\d{4}':'12^', r'\W(dec\s?)\d{4}':'12^'}
+    
+    month_present = False
+    period_dates = False
+
+    for mon in month_list:
+        if re.search(mon, list_elem, re.IGNORECASE):
+            rep = re.search(mon, list_elem, re.IGNORECASE).group(1)
+            list_elem = re.sub(rep, month_list[mon], list_elem, flags=re.I)
+            month_present = True
+
+    period_regex = ur'(?:\d{1,2}\^)?\s?\d{4}\s?(?:–|-)\s?(?:\d{1,2}\^)?\s?\d{4}'  #regex for checking if its a single year or period
+
+    if re.search(period_regex, list_elem, flags=re.IGNORECASE):
+        period_dates = True
+
+    if month_present == False and period_dates == False:
+        return year_mapper(list_elem)
+    
+    years = []
+    
+    if month_present == False and period_dates == True:
+        match_num =  re.findall(period_regex, list_elem, flags=re.IGNORECASE)
+        if len(match_num) == 0: return year_mapper(list_elem)
+        
+        for y in match_num:
+            year = re.split(ur'\s?[–-]\s?', y)
+            years.append([year[0], year[1]])
+        
+        for x in match_num:
+            list_elem = list_elem.replace(x,"")
+
+        single_years = year_mapper(list_elem)   
+        if single_years != None: years.extend(single_years)
+        return years
+        
+    if month_present == True and period_dates == False:
+        match_num = re.findall(r'[0-9]{1,2}\^\s?[0-9]{4}', list_elem)
+        for x in match_num:
+            list_elem = list_elem.replace(x,"")
+            x = x.replace(" ","")
+            z = "^".join(x.split('^')[::-1])
+            years.append(z)
+
+        single_years = year_mapper(list_elem)
+        if single_years != None: years.extend(single_years)
+        return years
+
+    else:
+        match_num = re.findall(period_regex, list_elem, flags=re.IGNORECASE)
+        if len(match_num) == 0: return year_mapper(list_elem)
+
+        for y in match_num:
+            year = re.split(r'\s?(–|-)\s?', y)
+            list_elem = list_elem.replace(y,"")
+            years.append(["^".join(year[0].replace(" ","").split("^")[::-1]), "^".join(year[2].replace(" ","").split("^")[::-1])])
+
+        single_years = year_mapper(list_elem)
+        if single_years != None: years.extend(single_years)
+        return years
+
+
 
 def litgenre_mapper(sect_name, lang):
     '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
@@ -930,6 +1116,20 @@ def awarded_for(elem,lang):
         entity = val[-1]
         entity = entity.replace("{{","").replace("}}","").replace("\'\'","").strip().replace(" ","_")
         entity = urllib2.quote(entity).decode('utf-8', errors='ignore')
+    return entity
+
+def bracket_feature_mapper(elem):
+    ''' Returns the entity (if any) which is found inside brackets in an element
+
+    :param elem: dictionary element entry
+    :param lang: page language
+    :return: an entity if there is a match, None otherwise
+    '''
+    entity = None
+    val = re.search('\(.*\)', elem, re.IGNORECASE)
+    if val:
+        val = val.group()
+        entity = val.replace('(',"").replace(')',"").strip()
     return entity
 
 
