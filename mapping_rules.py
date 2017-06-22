@@ -57,9 +57,7 @@ MAPPING = {
             'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS', 'HONORS'],
             'Group':['BAND_MEMBERS'],
             'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF'],
-            'PeriodicalLiterature': ['CONTRIBUTORS', 
-                                        #'OTHER_LITERATURE_DETAILS', 
-                                        'HONORS', 'BIBLIOGRAPHY']
+            'PeriodicalLiterature': ['CONTRIBUTORS', 'OTHER_LITERATURE_DETAILS', 'HONORS', 'BIBLIOGRAPHY']
         }
 
 EXCLUDED_SECTIONS = {
@@ -152,11 +150,14 @@ OTHER_PERSON_DETAILS = {
 
 CONTRIBUTORS = {
     'en': ['contributors', 'staff' , 'cover', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
-            'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter' ]
+            'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter', 'personalities', 'personnel',
+            'personal' ]
 }
 
 OTHER_LITERATURE_DETAILS = {
-    'en': ['editions', 'edition', 'reprints', ]
+    'en': {'edition':'edition', 'reprints':'edition', 'publication':'publisher', 'Columns':'Article',
+            'feature':'features', 'supplement':'sisterNewspaper', 'papers':'researchPaper', 
+            'Characters':'FictionalCharacter', 'adaptations':'Adaptation'}
 }
 
 
@@ -251,9 +252,10 @@ TRANSLATIONS = {
 }
 
 CONTRIBUTION_TYPE = {
-    'en': { 'covers':'coverArtist', 'editor':'chiefEditor', 'publisher':'Publisher', 'producer':'Producer',
+    'en': { 'covers':'coverArtist', 'publisher':'Publisher', 'producer':'Producer', 'Journalist':'Journalist',  
             'celebrity':'coverArtist', 'mastheads':'Writers', 'columnist':'Journalist', 'correspondent':'Journalist',
-            'reporter':'Journalist', 'writer':'writer', 'celebrities':'coverArtist'},
+            'reporter':'Journalist', 'writer':'writer', 'celebrities':'coverArtist', 'president':'president',
+            'cartoonist':'artist', 'director':'director', 'Satirist':'Journalist', 'editor':'chiefEditor'},
 }
 
 MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',

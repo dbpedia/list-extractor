@@ -822,18 +822,25 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
             map_contributors(elem, sect_name, res, lang, g, elems)
 
         else:
-            contrib_type = None
+            contrib_type, subsection = None, None
+            search_str = sect_name
+            try: subsection = sect_name.split('-')[1].strip()
+            except: pass
+            
             for t in CONTRIBUTION_TYPE[lang].keys():
-                if re.search(t, sect_name, flags=re.IGNORECASE):
+                if subsection: search_str = subsection
+                if re.search(t, search_str, flags=re.IGNORECASE):
                     contrib_type = CONTRIBUTION_TYPE[lang][t]
                     break
 
             if contrib_type == None:
                 feature = bracket_feature_mapper(elem)
                 for t in CONTRIBUTION_TYPE[lang]:
-                    if re.search(t, feature, re.IGNORECASE):
-                        contrib_type = CONTRIBUTION_TYPE[lang][t]
-                        break
+                    try:
+                        if re.search(t, feature, re.IGNORECASE):
+                            contrib_type = CONTRIBUTION_TYPE[lang][t]
+                            break
+                    except: continue
 
             year = month_year_mapper(elem)
             if year: 
@@ -846,7 +853,6 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
                         elem= elem.replace(re.split(r'\^',y)[-1], "")
                     
                 elem = elem.strip()
-
 
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
@@ -914,6 +920,131 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
     return elems
 
 
+
+def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
+    ''' Handles lists related to literature details inside a section containing a 
+        match with OTHER_LITERATURE_DETAILS.
+
+    Adds RDF statement about the band, its members
+    :param elem_list: list of elements to be mapped
+    :param sect_name: section name 
+    :param res: current resource
+    :param lang: resource language
+    :param g: RDF graph to be constructed
+    :param elems: a counter to keep track of the number of list elements extracted
+    :return number of list elements extracted
+    '''
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_other_literature_details(elem, sect_name, res, lang, g, elems)
+
+        else:
+            detail_type = None
+            for t in OTHER_LITERATURE_DETAILS[lang].keys():
+                if re.search(t, sect_name, flags=re.IGNORECASE):
+                    detail_type = OTHER_LITERATURE_DETAILS[lang][t]
+                    break
+
+            if detail_type == None:
+                feature = bracket_feature_mapper(elem)
+                for t in OTHER_LITERATURE_DETAILS[lang]:
+                    if re.search(t, feature, re.IGNORECASE):
+                        detail_type = OTHER_LITERATURE_DETAILS[lang][t]
+                        break
+
+            year = month_year_mapper(elem)
+            if year: 
+                for y in year:
+                    if type(y) == list:
+                        for yy in y:
+                            elem= elem.replace(re.split(r'\^',yy)[-1], "")
+
+                    else:
+                        elem= elem.replace(re.split(r'\^',y)[-1], "")
+                    
+                elem = elem.strip()
+
+
+            uri = None
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            
+            if True:
+                ref = reference_mapper(elem)  # look for resource references
+                map_failed = True
+
+                if ref:  # current element contains a reference
+                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        ref = list_elem_clean(ref)
+                        elem = elem.replace(ref,
+                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = ref.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+
+                    if detail_type:
+                        g.add((rdflib.URIRef(uri), dbo[detail_type], res))
+                    else:
+                        g.add((rdflib.URIRef(uri), dbo.other, res))
+
+                elif (ref is not None):  # no reference found, try general mapping (less accurate)
+                    uri_name = quote_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        map_failed = False
+                        if detail_type:
+                            g.add((rdflib.URIRef(uri), dbo[detail_type], res))
+                        else:
+                            g.add((rdflib.URIRef(uri), dbo.other, res))
+
+
+                if map_failed:  # no reference found, try general mapping (less accurate)
+                    uri_name = general_mapper(elem)
+                    if (uri_name and uri_name != "" and uri_name != res):
+                        uri_name = uri_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+                        if detail_type:
+                            g.add((rdflib.URIRef(uri), dbo[detail_type], res))
+                        else:
+                            g.add((rdflib.URIRef(uri), dbo.other, res))
+
+                if year:
+                    for y in year:
+                        if type(y) != list:
+                            if "^" in y:
+                                d = y.replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                        else:
+                            start_period, end_period = y[0], y[1]
+                            if "^" in y[0]:
+                                d = y[0].replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
+
+                            if "^" in y[1]:
+                                d = y[1].replace("^","-")
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+                            else:    
+                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+
+                elems += 1
+                
+    return elems
 
 def alumni_profession_mapper(list_elem):
     '''Applies a regex to look for a profession, returns a match if found
@@ -1032,8 +1163,6 @@ def month_year_mapper(list_elem):
         single_years = year_mapper(list_elem)
         if single_years != None: years.extend(single_years)
         return years
-
-
 
 def litgenre_mapper(sect_name, lang):
     '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
