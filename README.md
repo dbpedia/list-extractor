@@ -12,9 +12,9 @@
 
     * use `s` to specify a single resource or `a` for a class of resources in the next parameter.
 
-* `source`: a string representing a class of resources from DBpedia ontology (right now it works for `Writer` and `Actor`), or a single Wikipedia page of an actor/writer.
+* `source`: a string representing a class of resources from DBpedia ontology (find supported domains below), or a single Wikipedia page of an actor/writer.
 
-* `language`: `en` or `it`
+* `language`: `en`, `it`, `de`, `es` (for now, available only for selected domains)
 
     * a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried.
 
@@ -24,6 +24,18 @@
 * `python listExtractor.py s William_Gibson en`
 
 If successful, a .ttl file containing RDF statements about the specified source is created inside a subdirectory called `extracted`.
+
+### Supported Domains(In progress):
+
+* English (`en`):
+    * **Person**: `Writer`, `Actor`, `MusicalArtist`, `Athelete`, `Polititcian`, `Manager`, `Coach`, `Celebrity` etc.
+    * **EducationalInstitution**: `University`, `School`, `College`, `Library`
+    * **PeriodicalLiterature**: `Magazines`, `Newspapers`, `AcademicJournals`
+    * **Group**: `Band`
+
+* Other (`it`, `de`, `es`):
+    * `Writer`, `Actor`, `MusicalArtist`
+
 
 ### Requirements
 * [Python 2.7](https://www.python.org/download/releases/2.7/) and [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)
