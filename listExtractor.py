@@ -61,7 +61,7 @@ def main():
     
     # initialize argparse parameters
     parser = argparse.ArgumentParser(description='Extract data from lists in Wikipedia pages and serialize it in RDF.'
-                                                 '\nExample: `python listextractor.py -a Writer en.`',
+                                                 '\nExample: `python listExtractor.py a Writer en.`',
                                     formatter_class = argparse.RawTextHelpFormatter,
                                     usage="listExtractor.py [--help] collection_mode resource language "
                                     "\nUse listExtractor.py -h for more details.\n ")

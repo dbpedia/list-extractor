@@ -49,7 +49,7 @@
 '''
 
 MAPPING = { 
-            'Person': ['FILMOGRAPHY', 'DISCOGRAPHY', 'BIBLIOGRAPHY', 'HONORS','OTHER_PERSON_DETAILS', 'CAREER'],
+            'Person': ['FILMOGRAPHY', 'DISCOGRAPHY', 'BIBLIOGRAPHY', 'HONORS','OTHER_PERSON_DETAILS', 'CAREER', 'CONCERT_TOURS'],
             'Athlete': ['HONORS'],
             'Writer': ['BIBLIOGRAPHY', 'HONORS'], 
             'Actor': ['FILMOGRAPHY', 'DISCOGRAPHY', 'HONORS'],
@@ -236,7 +236,7 @@ FILMOGRAPHY_TYPE = {
 """Used in award_status_mapper to map the rdf:type of awards in current section"""
 AWARD_STATUS_TYPE = {
     'en': {'Wins':'Winner', 'Won':'Winner', 'Nominated':'Nominated', 'Nominations':'Nominated', 
-            'Nominee': 'Nominated'}
+            'Nominee': 'Nominated', 'win':'Winner', 'winner':'winner', 'honorary':'HonoraryDegree'}
 }
 
 PERSON_DETAILS = {
@@ -248,7 +248,8 @@ PERSON_DETAILS = {
 TRANSLATIONS = {
     ### key: english word; val: dict of translation of words in diff lang; lang:translation
     ### ADD SPACES BEFORE AND AFTER THE ENTRY 
-    'for': {'en':' for ', 'it':' per '}
+    'for': {'en':' for ', 'it':' per '},
+    'from': {'en': ' from '}
 }
 
 CONTRIBUTION_TYPE = {
@@ -268,23 +269,4 @@ MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'ap
 FOOTBALL_CLUBS = {
     'en' : ['honors', 'honours', 'achievements', 'former', 'records', 'board', 'officials', 'staff', 'members', 
             'managers', 'players', 'honorary']
-}
-
-
-NEWSPAPER_CONTRIBUTION = {
-    'en' : ['contributor', 'contributors', 'mastheads', 'staff', 'ex-staff', 'writers', 'editors', 
-            'members', 'personalitites','team', 'columnists', 'cartoonists', 'alumni', 'correspondents', 'reporters'],
-    'it' : []
-}
-
-MUSIC_GENRE = {
-    'en': { 'Blues':'Blues', 'Folk': 'Folk', 'Classical': 'Classical', 'Ballet': 'Ballet', 'Opera': 'Opera',
-            'Country': 'Country', 'Alternative': 'Alternative', 'Electronic': 'Electronic', 'Ambient': 'Ambient',
-            'Dance': 'Dance', 'Trance': 'Trance', 'Hip Hop': 'Hip_Hop', 'Indie': 'Hip Hop', 'Jazz': 'Jazz',
-            'Latin': 'Latin', 'Acoustic': 'Acoustic', 'Pop': 'Pop', 'R&B/Soul': 'R&B',
-            'Rock': 'Rock', 'Grunge': 'Grunge', 'Hard Rock': 'Hard_Rock', 'Metal': 'Metal', 'Reggae':'Reggae',
-            'Rap': 'Rap' 
-        },
-
-    'it': {}
 }

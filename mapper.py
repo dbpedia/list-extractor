@@ -98,24 +98,24 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
    
     :return number of list elements extracted
     '''
-    
+
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
             map_discography(elem, sect_name, res, lang, g, elems)   # handle recursive lists
         
         else:
+            year = month_year_mapper(elem)
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)
+            if res_name == None: res_name = quote_mapper(elem)
             
             if res_name:
                 elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
-                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -131,8 +131,6 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
-                    g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -140,15 +138,14 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
-                        g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             if uri and uri != "":
+                g.add((rdflib.URIRef(uri), rdf.type, dbo.Album))
+                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 elems += 1
-                year = year_mapper(elem)
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
+
     return elems
 
 
@@ -173,17 +170,17 @@ def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
             map_concert_tours(elem, sect_name, res, lang, g, elems)   # handle recursive lists
         
         else:
+            year = month_year_mapper(elem)
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)
-            
+            if res_name == None: res_name = quote_mapper(elem)
+           
             if res_name:
                 elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
-                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -199,8 +196,6 @@ def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
-                    g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -208,15 +203,14 @@ def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
-                        g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
             
             if uri and uri != "":
+                g.add((rdflib.URIRef(uri), rdf.type, dbo.concertTour))
+                g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 elems += 1
-                year = year_mapper(elem)
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
+
     return elems
 
 
@@ -250,7 +244,6 @@ def map_alumni(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), dbo.alumni, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -266,7 +259,6 @@ def map_alumni(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo.alumni, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -274,9 +266,9 @@ def map_alumni(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo.alumni, res))
             
             if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo.alumni, res))
                 elems += 1
                 work = alumni_profession_mapper(elem)
                 if work:
@@ -314,7 +306,6 @@ def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -330,7 +321,6 @@ def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -338,8 +328,10 @@ def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
-            elems+=1
+            
+            if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo.academicDiscipline, res))
+                elems+=1
             
     return elems
 
@@ -357,7 +349,7 @@ def map_honors(elem_list, sect_name, res, lang, g, elems):
     :return number of list elements extracted
     '''
     
-    award_status = award_status_mapper(sect_name, lang)  #award is the same for every element of the sublist
+    award_status = award_status_mapper(sect_name, lang)  # if award status is found in the section name.
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
@@ -365,51 +357,49 @@ def map_honors(elem_list, sect_name, res, lang, g, elems):
         
         else:
             uri = None
+            if award_status == None: award_status = award_status_mapper(elem, lang)
+            if award_status == None: award_status = "Winner" #if no information is found, assume winner.
+
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             elem = elem.replace("Winner","").replace("Won","").replace("Nominated","").replace("Nominee","")
-            for_entity = awarded_for(elem,lang)
-            year = year_mapper(elem)
-            if year: 
-                for y in year:
-                    elem = elem.replace(y,"")
-                    if elem[0] in [',','-',':']: elem = elem[2:]
-                elem = elem.strip()
+            for_entity = sentence_splitter(elem,"for",lang)
+            from_entity = sentence_splitter(elem,"from",lang)
+            year = month_year_mapper(elem)
 
-            if True:
-                ref = reference_mapper(elem)  # look for resource references
-                if ref:  # current element contains a reference
-                    uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+            ref = reference_mapper(elem)  # look for resource references
+            if ref:  # current element contains a reference
+                uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
                     
-                    if uri:
-                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
-                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
-                            uri = dbpedia_uri
+                if uri:
+                    dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                    if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                        uri = dbpedia_uri
                     
-                    else:  # Take the reference name anyway if you can't reconcile it
-                        ref = list_elem_clean(ref)
-                        elem = elem.replace(ref,
-                                            "")  #subtract reference part from list element, to facilitate further parsing
-                        uri_name = ref.replace(' ', '_')
-                        uri_name = urllib2.quote(uri_name)  ###
-                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo.awardedTo, res))
-                
-                else:  # no reference found, try general mapping (less accurate)
-                    uri_name = general_mapper(elem)
-                    if (uri_name and uri_name != "" and uri_name != res):
-                        uri_name = uri_name.replace(' ', '_')
-                        uri_name = urllib2.quote(uri_name)  ###
-                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo.awardedTo, res))
+                else:  # Take the reference name anyway if you can't reconcile it
+                    ref = list_elem_clean(ref)
+                    elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                    uri_name = ref.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)  ###
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
+            else:
+                uri_name = quote_mapper(elem)  #try finding awards in quotes
+                if uri_name == None: uri_name = general_mapper(elem)  # no reference found, try general mapping (less accurate
+                if (uri_name and uri_name != "" and uri_name != res):
+                    uri_name = uri_name.replace(' ', '_')
+                    uri_name = urllib2.quote(uri_name)  ###
+                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
             
             if uri and uri != "":
-                elems += 1
+                g.add((rdflib.URIRef(uri), dbo.awardedTo, res))
                 g.add((rdflib.URIRef(uri), dbo.awardStatus, dbo + rdflib.URIRef(award_status)))
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.AwardedIn, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
                 if for_entity:
                     g.add((rdflib.URIRef(uri), dbo.AwardedFor, dbr + rdflib.URIRef(for_entity)))
+                if from_entity:
+                    g.add((dbo + rdflib.URIRef(award_status), dbo.AwardedBy, dbr + rdflib.URIRef(from_entity)))
+
+                elems += 1
     
     return elems
 
@@ -444,9 +434,6 @@ def map_staff(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0 and \
-                    len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0: # if already mapped
-                    g.add((rdflib.URIRef(uri), dbo.staff, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -462,9 +449,6 @@ def map_staff(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0 and \
-                        len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0:
-                        g.add((rdflib.URIRef(uri), dbo.staff, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -472,9 +456,12 @@ def map_staff(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0and \
-                            len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0:
-                            g.add((rdflib.URIRef(uri), dbo.staff, res))
+                
+            if uri and uri != "":
+                if len(list(g.triples((rdflib.URIRef(uri), dbo.alumni, res)))) == 0 and \
+                    len(list(g.triples((rdflib.URIRef(uri), dbo.academicDiscipline, res)))) ==0: # if already mapped
+                    g.add((rdflib.URIRef(uri), dbo.staff, res))
+    
     return elems
 
 
@@ -512,15 +499,12 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                 return 0
             
             p = PERSON_DETAILS[lang][other_details]
-            print p
             
             if res_name:
                 elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), dbo[p], res))
-                elems+=1
             
             else:
                 uri_name = quote_mapper(elem)
@@ -528,12 +512,9 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                     uri_name = uri_name.replace(' ', '_')
                     uri_name = urllib2.quote(uri_name)  ###
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo[p], res))
-                    elems+=1
-                    continue
 
-
-                ref = reference_mapper(elem)  # look for resource references
+                ref = None
+                if uri == None: ref = reference_mapper(elem)  # look for resource references
                 if ref:  # current element contains a reference
                     uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
                     if uri:
@@ -546,8 +527,6 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo[p], res))
-                    elems+=1
 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -555,8 +534,10 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo[p], res))
-                        elems+=1
+
+            if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo[p], res))
+                elems+=1
 
     return elems
 
@@ -580,13 +561,7 @@ def map_career(elem_list, sect_name, res, lang, g, elems):
             map_career(elem, sect_name, res, lang, g, elems)
         
         else:
-            year = year_mapper(elem)
-            if year: 
-                for y in year:
-                    elem = elem.replace(y,"").strip()
-                    if elem[0] in [',','-',':']: elem = elem[2:]
-                elem = elem.strip()
-            
+            year = month_year_mapper(elem)            
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
 
@@ -601,20 +576,18 @@ def map_career(elem_list, sect_name, res, lang, g, elems):
             
             p = PERSON_DETAILS[lang][other_details]
             
-            if True:
-                uri_name = general_mapper(elem)
-                if (uri_name and uri_name != "" and uri_name != res):
-                    uri_name = uri_name.replace(' ', '_')
-                    uri_name = urllib2.quote(uri_name)  ###
-                    uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo[p], res))
+            uri_name = quote_mapper(elem)
+            if uri_name == None or uri_name == res: uri_name = general_mapper(elem)
+            if (uri_name and uri_name != "" and uri_name != res):
+                uri_name = uri_name.replace(' ', '_')
+                uri_name = urllib2.quote(uri_name)  ###
+                uri = dbr + uri_name.decode('utf-8', errors='ignore')
             
             if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo[p], res))
                 elems += 1
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
-                
+                    add_years_to_graph(g,uri, year)                
     return elems
 
 
@@ -639,6 +612,7 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
             map_filmography(elem, sect_name, res, lang, g, elems)
         
         else:
+            year = month_year_mapper(elem)
             uri = None
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)  # Try to extract italic formatted text (more precise)
@@ -648,24 +622,22 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
             
             else:  #if unsuccessful, apply general mapping (lower accuracy)
-                uri_name = general_mapper(elem)
+                uri_name = quote_mapper(elem)  #try finding names in quotes
+                if uri_name == None: uri_name = general_mapper(elem)  # no reference found, try general mapping (less accurate
                 if (uri_name and uri_name != "" and uri_name != res):
                     uri_name = uri_name.replace(' ', '_')
                     uri_name = urllib2.quote(uri_name)
                     uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
             
             if uri and uri != "":
-                elems += 1
-                year = year_mapper(elem)
+                g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
                 if film_particip:
                     g.add((rdflib.URIRef(uri), dbo + rdflib.URIRef(film_particip), res))
+                elems += 1
     
     return elems
 
@@ -691,6 +663,7 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
         
         else:
             uri = None
+            year = month_year_mapper(elem)
             elem = elem.encode('utf-8')  # apply utf-8 encoding
             res_name = italic_mapper(elem)
             if res_name:
@@ -698,7 +671,6 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), dbo.author, res))
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -711,32 +683,28 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
                     
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
-                        elem = elem.replace(ref,
-                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        elem = elem.replace(ref,"")  #subtract reference part from list element, to facilitate further parsing
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo.author, res))
                 
-                else:  # no reference found, try general mapping (less accurate)
-                    uri_name = general_mapper(elem)
+                else:
+                    uri_name = quote_mapper(elem)  #try finding awards in quotes
+                    if uri_name == None or uri_name == res: uri_name = general_mapper(elem)  # no reference found, try general mapping (less accurate
                     if (uri_name and uri_name != "" and uri_name != res):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo.author, res))
             
             if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo.author, res))
                 elems += 1
                 isbn = isbn_mapper(elem)
                 if isbn:
                     g.add((rdflib.URIRef(uri), dbo.isbn, rdflib.Literal(isbn, datatype=rdflib.XSD.string)))
-                    elem = elem.replace(isbn, "")
-                year = year_mapper(elem)
-                
+                    elem = elem.replace(isbn, "")  
                 if year:
-                    for y in year:
-                        g.add((rdflib.URIRef(uri), dbo.releaseYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
                 if lit_genre:
                     g.add((rdflib.URIRef(uri), dbo.literaryGenre, dbo + rdflib.URIRef(lit_genre)))
     
@@ -769,8 +737,6 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                 res_name = res_name.replace(' ', '_')
                 res_name = urllib2.quote(res_name)  ###
                 uri = dbr + res_name.decode('utf-8', errors='ignore')
-                g.add((rdflib.URIRef(uri), dbo.bandMember, res))
-                elems += 1
             
             else:
                 ref = reference_mapper(elem)  # look for resource references
@@ -784,12 +750,10 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                     
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
-                        elem = elem.replace(ref,
-                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        elem = elem.replace(ref,"")  #subtract reference part from list element to facilitate further parsing
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                    g.add((rdflib.URIRef(uri), dbo.bandMember, res))
                 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -797,7 +761,9 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        g.add((rdflib.URIRef(uri), dbo.bandMember, res))
+
+            if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo.bandMember, res))
                 elems += 1
                 
     return elems
@@ -848,7 +814,6 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
                     if type(y) == list:
                         for yy in y:
                             elem= elem.replace(re.split(r'\^',yy)[-1], "")
-
                     else:
                         elem= elem.replace(re.split(r'\^',y)[-1], "")
                     
@@ -869,16 +834,10 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
                     
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
-                        elem = elem.replace(ref,
-                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        elem = elem.replace(ref,"")  #subtract reference part from list element, to facilitate further parsing
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-
-                    if contrib_type:
-                        g.add((rdflib.URIRef(uri), dbo[contrib_type], res))
-                    else:
-                        g.add((rdflib.URIRef(uri), dbo.ContributedTo, res))
 
                 else:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -886,39 +845,18 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        if contrib_type:
-                            g.add((rdflib.URIRef(uri), dbo[contrib_type], res))
-                        else:
-                            g.add((rdflib.URIRef(uri), dbo.ContributedTo, res))
 
+            if uri and uri != "":
+                if contrib_type:
+                    g.add((rdflib.URIRef(uri), dbo[contrib_type], res))
+                else:
+                    g.add((rdflib.URIRef(uri), dbo.ContributedTo, res))
                 if year:
-                    for y in year:
-                        if type(y) != list:
-                            if "^" in y:
-                                d = y.replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
-                        else:
-                            start_period, end_period = y[0], y[1]
-                            if "^" in y[0]:
-                                d = y[0].replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
-
-                            if "^" in y[1]:
-                                d = y[1].replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
 
                 elems += 1
                 
     return elems
-
 
 
 def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
@@ -934,6 +872,10 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
     :param elems: a counter to keep track of the number of list elements extracted
     :return number of list elements extracted
     '''
+    for c in CONTRIBUTORS[lang]:
+        if re.search(c, sect_name, re.I):   #Already mapped
+            return 0
+
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
             elems += 1
@@ -983,16 +925,10 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                     
                     else:  # Take the reference name anyway if you can't reconcile it
                         ref = list_elem_clean(ref)
-                        elem = elem.replace(ref,
-                                            "")  #subtract reference part from list element, to facilitate further parsing
+                        elem = elem.replace(ref,"")  #subtract reference part from list element, to facilitate further parsing
                         uri_name = ref.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-
-                    if detail_type:
-                        g.add((rdflib.URIRef(uri), dbo[detail_type], res))
-                    else:
-                        g.add((rdflib.URIRef(uri), dbo.other, res))
 
                 elif (ref is not None):  # no reference found, try general mapping (less accurate)
                     uri_name = quote_mapper(elem)
@@ -1001,11 +937,6 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
                         map_failed = False
-                        if detail_type:
-                            g.add((rdflib.URIRef(uri), dbo[detail_type], res))
-                        else:
-                            g.add((rdflib.URIRef(uri), dbo.other, res))
-
 
                 if map_failed:  # no reference found, try general mapping (less accurate)
                     uri_name = general_mapper(elem)
@@ -1013,38 +944,52 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                         uri_name = uri_name.replace(' ', '_')
                         uri_name = urllib2.quote(uri_name)  ###
                         uri = dbr + uri_name.decode('utf-8', errors='ignore')
-                        if detail_type:
-                            g.add((rdflib.URIRef(uri), dbo[detail_type], res))
-                        else:
-                            g.add((rdflib.URIRef(uri), dbo.other, res))
 
+            if uri and uri != "":
+                if detail_type:
+                    g.add((rdflib.URIRef(uri), dbo[detail_type], res))
+                else:
+                    g.add((rdflib.URIRef(uri), dbo.other, res))
                 if year:
-                    for y in year:
-                        if type(y) != list:
-                            if "^" in y:
-                                d = y.replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
-                        else:
-                            start_period, end_period = y[0], y[1]
-                            if "^" in y[0]:
-                                d = y[0].replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
-
-                            if "^" in y[1]:
-                                d = y[1].replace("^","-")
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-
-                            else:    
-                                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+                    add_years_to_graph(g, uri, year)
 
                 elems += 1
                 
     return elems
+
+
+
+def add_years_to_graph(g, uri, year):
+    '''Adds all the years related to the uri to the graph g. Does not return anything; appends existing graph
+
+    :param g: current graph
+    :param uri: resource related to the years list.
+    :param year: contains a list of years that need to be mapped.
+    '''
+    for y in year:
+        if type(y) != list:
+            if "^" in y:
+                d = y.replace("^","-")
+                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+            else:    
+                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+        else:
+            start_period, end_period = y[0], y[1]
+            if "^" in y[0]:
+                d = y[0].replace("^","-")
+                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+            else:    
+                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
+
+            if "^" in y[1]:
+                d = y[1].replace("^","-")
+                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+            else:    
+                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+
+    return
 
 def alumni_profession_mapper(list_elem):
     '''Applies a regex to look for a profession, returns a match if found
@@ -1114,7 +1059,7 @@ def month_year_mapper(list_elem):
             list_elem = re.sub(rep, month_list[mon], list_elem, flags=re.I)
             month_present = True
 
-    period_regex = ur'(?:\d{1,2}\^)?\s?\d{4}\s?(?:–|-)\s?(?:\d{1,2}\^)?\s?\d{4}'  #regex for checking if its a single year or period
+    period_regex = ur'(?:\(?\d{1,2}\^)?\s?\d{4}\s?(?:–|-)\s?(?:\d{1,2}\^)?\s?\d{4}(?:\))?'  #regex for checking if its a single year or period
 
     if re.search(period_regex, list_elem, flags=re.IGNORECASE):
         period_dates = True
@@ -1123,7 +1068,7 @@ def month_year_mapper(list_elem):
         return year_mapper(list_elem)
     
     years = []
-    
+
     if month_present == False and period_dates == True:
         match_num =  re.findall(period_regex, list_elem, flags=re.IGNORECASE)
         if len(match_num) == 0: return year_mapper(list_elem)
@@ -1223,7 +1168,7 @@ def award_status_mapper(sect_name, lang):
     :param lang: page language
     :return: a class if there is a match, None otherwise
     '''
-    status = "Winner"
+    status = None
     s_types = AWARD_STATUS_TYPE[lang]
     for st in s_types.keys():
         if re.search(st, sect_name, re.IGNORECASE):
@@ -1231,7 +1176,7 @@ def award_status_mapper(sect_name, lang):
     
     return status
 
-def awarded_for(elem,lang):
+def sentence_splitter(elem,word,lang):
     ''' Returns the entity (if any) for which the award is awarded to the recipient
 
     :param elem: dictionary element entry
@@ -1239,12 +1184,32 @@ def awarded_for(elem,lang):
     :return: an entity if there is a match, None otherwise
     '''
     entity = None
-    term = TRANSLATIONS['for'][lang]
+    term = TRANSLATIONS[word][lang]
     val = re.split(term,elem)
     if len(val)>1:
         entity = val[-1]
-        entity = entity.replace("{{","").replace("}}","").replace("\'\'","").strip().replace(" ","_")
-        entity = urllib2.quote(entity).decode('utf-8', errors='ignore')
+
+        ref = reference_mapper(entity)  # look for resource references
+        if ref:  # current element contains a reference
+            uri = wikidataAPI_call(ref, lang)  #try to reconcile resource with Wikidata API
+                    
+            if uri:
+                dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                    uri = dbpedia_uri
+                    
+            else:  # Take the reference name anyway if you can't reconcile it
+                ref = list_elem_clean(ref)
+                elem = elem.replace(ref, "")  #subtract reference part from list element, to facilitate further parsing
+                uri_name = ref.replace(' ', '_')
+                uri_name = urllib2.quote(uri_name).decode('utf-8', errors='ignore')
+                entity = uri_name
+
+        else:
+            entity = entity.replace("{{","").replace("}}","").replace("\'\'","").strip().replace(" ","_")
+            entity = urllib2.quote(entity).decode('utf-8', errors='ignore')
+
+
     return entity
 
 def bracket_feature_mapper(elem):
@@ -1449,10 +1414,9 @@ def quote_mapper(list_elem):
     :param list_elem: current list element
     :return: a match if found, excluding number references
     '''
-    match_ref = re.search(r'\".*?\"', list_elem)
+    match_ref = re.search(r'\"(.*?)\"', list_elem)
     if match_ref:
-        match_ref = match_ref.group()
-        match_ref = match_ref.replace('"',"")
+        match_ref = match_ref.group(0)
         match_num = re.search(r'[0-9]{4}', match_ref)  # check if this reference is a date
         if match_num:  # date references must be ignored for this mapping
             num = match_num.group()
