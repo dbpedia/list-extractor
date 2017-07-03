@@ -1,0 +1,19 @@
+{
+    "EXCLUDED_SECTIONS": {
+        "de": ["Einzelnachweise", "Weblinks", "Literatur", "Siehe auch"],
+        "en": ["External links", "References", "See also", "Further reading"],
+        "it": ["Collegamenti esterni", "Bibliografia", "Altri progetti", "Voci correlate"],
+        "es": ["Referencias", "V\u00e9ase tambi\u00e9n", "Enlaces externos", "Notas"]
+    },
+    "MAPPING": {
+        "Writer": ["BIBLIOGRAPHY", "HONORS"],
+        "Group": ["BAND_MEMBERS"],
+        "Person": ["FILMOGRAPHY", "DISCOGRAPHY", "BIBLIOGRAPHY", "HONORS", "OTHER_PERSON_DETAILS", "CAREER", "CONCERT_TOURS"],
+        "Athlete": ["HONORS"],
+        "EducationalInstitution": ["ALUMNI", "PROGRAMS_OFFERED", "STAFF"],
+        "Actor": ["FILMOGRAPHY", "DISCOGRAPHY", "HONORS"],
+        "Band": ["DISCOGRAPHY", "CONCERT_TOURS", "BAND_MEMBERS", "HONORS"],
+        "PeriodicalLiterature": ["CONTRIBUTORS", "OTHER_LITERATURE_DETAILS", "HONORS", "BIBLIOGRAPHY"],
+        "MusicalArtist": ["DISCOGRAPHY", "FILMOGRAPHY", "CONCERT_TOURS", "HONORS"]
+    }
+}

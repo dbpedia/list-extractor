@@ -263,10 +263,3 @@ MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'ap
             'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
             'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
 
-
-
-### Potential Domains; Yet to be mapped
-FOOTBALL_CLUBS = {
-    'en' : ['honors', 'honours', 'achievements', 'former', 'records', 'board', 'officials', 'staff', 'members', 
-            'managers', 'players', 'honorary']
-}
