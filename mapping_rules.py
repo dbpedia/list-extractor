@@ -48,26 +48,12 @@
 
 '''
 
-MAPPING = { 
-            'Person': ['FILMOGRAPHY', 'DISCOGRAPHY', 'BIBLIOGRAPHY', 'HONORS','OTHER_PERSON_DETAILS', 'CAREER', 'CONCERT_TOURS'],
-            'Athlete': ['HONORS'],
-            'Writer': ['BIBLIOGRAPHY', 'HONORS'], 
-            'Actor': ['FILMOGRAPHY', 'DISCOGRAPHY', 'HONORS'],
-            'MusicalArtist': ['DISCOGRAPHY','FILMOGRAPHY', 'CONCERT_TOURS', 'HONORS'],
-            'Band':['DISCOGRAPHY', 'CONCERT_TOURS', 'BAND_MEMBERS', 'HONORS'],
-            'Group':['BAND_MEMBERS'],
-            'EducationalInstitution': ['ALUMNI', 'PROGRAMS_OFFERED', 'STAFF'],
-            'PeriodicalLiterature': ['CONTRIBUTORS', 'OTHER_LITERATURE_DETAILS', 'HONORS', 'BIBLIOGRAPHY']
-        }
-
 EXCLUDED_SECTIONS = {
-                        'en' : ['External links', 'References', 'See also', 'Further reading'],  
-                        'it' : ['Collegamenti esterni', 'Bibliografia', 'Altri progetti', 'Voci correlate'],
-                        'de' : ['Einzelnachweise', 'Weblinks', 'Literatur', 'Siehe auch'],
-                        'es' : ['Referencias', 'Véase también', 'Enlaces externos', 'Notas']
-                    }
-
-
+        "de": ["Einzelnachweise", "Weblinks", "Literatur", "Siehe auch"],
+        "en": ["External links", "References", "See also", "Further reading"],
+        "it": ["Collegamenti esterni", "Bibliografia", "Altri progetti", "Voci correlate"],
+        "es": ["Referencias", "V\u00e9ase tambi\u00e9n", "Enlaces externos", "Notas"]
+    }
 #############################################################
 
 

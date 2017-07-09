@@ -28,6 +28,9 @@ rdf = rdflib.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 mapped_domains = []  # used to prevent duplicate mappings
 resource_class = ""
+MAPPING = dict()
+CUSTOM_MAPPERS = dict()
+
 
 def select_mapping(resDict, res, lang, res_class, g):
     ''' Calls mapping functions for each matching section of the resource, thus constructing the associated RDF graph.
@@ -42,8 +45,15 @@ def select_mapping(resDict, res, lang, res_class, g):
     :param g: RDF graph to be created
     :return number of list elements actually mapped in th graph
     '''
+    global MAPPING
     global mapped_domains
     global resource_class
+    global CUSTOM_MAPPERS
+    
+    if len(MAPPING) == 0: 
+        MAPPING = utilities.load_settings()
+        CUSTOM_MAPPERS = utilities.load_custom_mappers()
+     
     res_elems = 0
 
     if res_class in MAPPING and MAPPING[res_class] not in mapped_domains:
@@ -59,11 +69,23 @@ def select_mapping(resDict, res, lang, res_class, g):
         for domain in domains:
             if domain in mapped_domains:
                 continue
-            if lang in eval(domain):
-                domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
-            else:
-                print("The language provided is not available yet for this mapping")
-                #return 0
+            
+            # <========>
+            is_custom_map_fn = False
+            try:
+                if lang in eval(domain):
+                    domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
+                else:
+                    print("The language provided is not available yet for this mapping")
+                    return 0
+            except NameError:  #key not found(predefined mappers)
+                if domain not in CUSTOM_MAPPERS.keys():
+                    print "Cannot find the domain's mapper function!!"
+                    print 'You can add a mapper function for this mapping using rulesGenerator.py and try again...\n'
+                    return 0
+                else:
+                    is_custom_map_fn = True
+                    domain_keys = CUSTOM_MAPPERS[domain]["headers"][lang]
 
             mapped_domains.append(domain)  #this domain won't be used again for mapping
     
@@ -74,11 +96,19 @@ def select_mapping(resDict, res, lang, res_class, g):
                     # if the section hasn't been mapped yet and the title match, apply domain related mapping
                     dk = dk.decode('utf-8') #make sure utf-8 mismatches don't skip sections 
                     if not mapped and re.search(dk, res_key, re.IGNORECASE):
-                        mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
-                        res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
-                        mapped = True  # prevents the same section to be mapped again
+                        if is_custom_map_fn == False:
+                            #use the pre-defined mapper functions
+                            mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
+                            res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
+                            mapped = True  # prevents the same section to be mapped again
+                        else:
+                            mapper = map_user_defined_mappings(domain, resDict[res_key], res_key, db_res, lang, g, 0)
+                            res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
+                            mapped = True  # prevents the same section to be mapped again
 
     else:
+        print 'This domain has not been mapped yet!'
+        print 'You can add a mapping for this domain using rulesGenerator.py and try again...\n'
         return 0
 
     return res_elems
@@ -956,6 +986,29 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
                 
     return elems
+
+
+
+
+
+
+
+
+def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g, elems):
+    
+    pass
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
