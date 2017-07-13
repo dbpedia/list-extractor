@@ -1,0 +1,91 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://dbpedia.org/resource/Agrippa_%28A_Book_of_the_Dead%29> dbo:activeYear "1992-01-01"^^xsd:gYear ;
+    dbo:fiction dbr:William_Gibson .
+
+<http://dbpedia.org/resource/All_Tomorrow%27s_Parties_%28novel%29> dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1999-01-01"^^xsd:gYear .
+
+dbr:Bridge_trilogy dbo:Novel dbr:William_Gibson .
+
+dbr:Burning_Chrome dbo:activeYear "1982-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+<http://dbpedia.org/resource/Burning_Chrome_%28short_story_collection%29> dbo:activeYear "1986-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Count_Zero dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1986-01-01"^^xsd:gYear .
+
+dbr:Distrust_That_Particular_Flavor dbo:activeYear "2012-01-01"^^xsd:gYear ;
+    dbo:fiction dbr:William_Gibson .
+
+<http://dbpedia.org/resource/Dogfight_%28short_story%29> dbo:activeYear "1985-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Fragments_of_a_Hologram_Rose dbo:activeYear "1977-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+<http://dbpedia.org/resource/Hinterlands_%28short_story%29> dbo:activeYear "1981-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Hubertus_Bigend dbo:Novel dbr:William_Gibson .
+
+dbr:Idoru dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1996-01-01"^^xsd:gYear .
+
+dbr:Johnny_Mnemonic dbo:activeYear "1981-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Mona_Lisa_Overdrive dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1988-01-01"^^xsd:gYear .
+
+dbr:Neuromancer dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1984-01-01"^^xsd:gYear .
+
+dbr:New_Rose_Hotel dbo:activeYear "1981-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+<http://dbpedia.org/resource/Pattern_Recognition_%28novel%29> dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "2003-01-01"^^xsd:gYear .
+
+<http://dbpedia.org/resource/Red_Star%2C_Winter_Orbit> dbo:activeYear "1983-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+<http://dbpedia.org/resource/Skinner%27s_Room> dbo:activeYear "1991-11-01"^^xsd:gYearMonth ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Spook_Country dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "2007-01-01"^^xsd:gYear .
+
+dbr:Sprawl_trilogy dbo:Novel dbr:William_Gibson .
+
+dbr:The_Belonging_Kind dbo:activeYear "1981-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:The_Difference_Engine dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1990-01-01"^^xsd:gYear .
+
+dbr:The_Gernsback_Continuum dbo:activeYear "1981-01-01"^^xsd:gYear ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:The_Peripheral dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "2014-01-01"^^xsd:gYear .
+
+dbr:The_Winter_Market dbo:activeYear "1985-11-01"^^xsd:gYearMonth ;
+    dbo:shortStory dbr:William_Gibson .
+
+dbr:Virtual_Light dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "1993-01-01"^^xsd:gYear .
+
+<http://dbpedia.org/resource/Wired_%28magazine%29> dbo:activeYear "1993-01-01"^^xsd:gYear ;
+    dbo:fiction dbr:William_Gibson .
+
+dbr:Zero_History dbo:Novel dbr:William_Gibson ;
+    dbo:activeYear "2010-01-01"^^xsd:gYear .
+

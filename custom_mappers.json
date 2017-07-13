@@ -1,1 +1,46 @@
-{"TEST": {"years": true, "headers": {"de": ["asdasda", "asdasdsad"], "en": ["kk", "asdas", "asdas", "asd"]}, "ontology": {"de": {"dasfda": "fdds"}, "en": {"azd": "ads", "asdsad": "daf"}}, "extractors": ["2"]}}
+{
+	"CUSTOM_ARTIST_MAPPER": {
+		"headers": {
+			"en": ["Discography", "Tours"]
+		},
+		"extractors": [1, 2, 3, 4],
+		"ontology": {
+			"en": {
+				"tours": "concertTour",
+				"discography": "musicalArtist"
+			}
+		},
+		"years": "Yes"
+	},
+	"CUSTOM_BIBLIOGRAPHY_MAPPER": {
+		"headers": {
+			"en": ["bibliography"]
+		},
+		"extractors": [1, 2, 3, 4],
+		"ontology": {
+			"en": { 
+				"Novel": "Novel",
+				"Stories": "ShortStory",
+				"fiction": "Fiction"
+			}
+		},
+		"years": "Yes"
+	},
+	"MUSIC_GENRE_MAPPER": {
+		"headers": {
+			"en": ["bands", "artists"]
+		},
+		"extractors": [1, 2, 3, 4],
+		"ontology": {
+			"en": {
+				"default": "notableArtist",
+				"artist": "notableArtist",
+				"band": "notableBand",
+				"Subgenre" : "SubGenre",
+				"division" : "SubGenre",
+				"festivals" : "relatedFestivals"
+			}
+		},
+		"years": "Yes"
+	}
+}

@@ -153,17 +153,24 @@ def add_mapper_fn():
                         "4. General Mapper\n" \
                         "\nRefer docs for more information about extractors: "
     extractors = raw_input(extractor_fn_str).split(',')
-    extractors = [extractor.strip() for extractor in extractors]
+    extractors = [int(extractor.strip()) for extractor in extractors]
 
     ontology_mappings = dict()
 
     print '\nNow adding mapping properties (dbr:<property>) ....'
+    
+    default_property = raw_input("Input the default key's value (Input None for no default mapping: ") 
+    if default_property in ["None","none","NONE"]:
+        ontology_mappings["default"]="None"
+    else:
+        ontology_mappings["default"]=default_property
+
     while True:
         add_more = raw_input("Do you want to add more properties(Y/N): ")
         if add_more not in ['y', 'Y', 'yes', 'Yes']:
             break
         try:
-            key_value = raw_input("Input a key value pair (\"header\":\"Property\"): ").split(":")
+            key_value = raw_input("Input a key value pair (header:Property): ").split(":")
             key = key_value[0].strip()
             value = key_value[1].strip()
             ontology_mappings[key]=value
@@ -171,8 +178,8 @@ def add_mapper_fn():
             print 'Invalid entry!!'
     
     choose_year_str = raw_input('Does the list have year/time-period (Y/N): ')
-    if choose_year_str in ['y', 'Y', 'yes', 'Yes']: choose_year = True
-    else: choose_year = False
+    if choose_year_str in ['y', 'Y', 'yes', 'Yes']: choose_year = "Yes"
+    else: choose_year = "No"
     
     mapper_function['years'] = choose_year
     mapper_function['extractors'] = extractors
