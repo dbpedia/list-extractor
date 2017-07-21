@@ -107,8 +107,8 @@ def select_mapping(resDict, res, lang, res_class, g):
                             mapped = True  # prevents the same section to be mapped again
 
     else:
-        print 'This domain has not been mapped yet!'
-        print 'You can add a mapping for this domain using rulesGenerator.py and try again...\n'
+        # print 'This domain has not been mapped yet!'
+        # print 'You can add a mapping for this domain using rulesGenerator.py and try again...\n'
         return 0
 
     return res_elems

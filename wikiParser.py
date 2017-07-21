@@ -3,6 +3,8 @@
 import utilities
 import time
 import json
+import sys
+import subprocess
 
 last_sec_title = ""  # last section title parsed
 header_title = ""  # last header (main section) title parsed
@@ -163,6 +165,58 @@ def jsonpedia_convert(language, resource):
             return result
 
 
+# def jsonpedia_convert(language, resource):
+#     ''' Uses the JSONpedia wrapper to use the JSONpedia library to get a JSON representation of the 
+#         Wikipedia page divided in sections.
+
+#     :param language: language of the resource we want to parse (e.g. it, en, fr...)
+#     :param resource:  name of the resource
+#     :return: a JSON with significant info about the resource
+#     '''
+#     try:
+#         proc = subprocess.Popen(['java','-jar','jsonpedia_wrapper.jar','-l', language, 
+#                             '-r', resource, '-p', 'Structure', '-f', 'section'], stdout=subprocess.PIPE)
+#         section = unicode(proc.stdout.flush())
+#         print type(section)
+#         print section
+#         sections = json.loads(section)
+#         proc.kill()
+#         print 'working bro~!'
+
+#     except (IOError):
+#         print('Network Error - please check your connection and try again')
+#         raise
+#     except (ValueError):
+#         raise
+#     except (OSError):
+#         print('Error spawning process!')
+#         raise
+    
+#     else:
+#         if 'success' in sections and sections['success'] == "false":
+#             if sections['message'] == 'Invalid page metadata.':
+#                 print("JSONpedia error: Invalid wiki page."),
+#                 raise
+#             elif 'Expected DocumentElement found' in sections['message']:
+#                 print(("JSONpedia error: something went wrong (DocumentElement expected).")),
+#                 raise
+#             else:
+#                 print("JSONpedia error! - the web service may be currently overloaded, retrying... "
+#                       "Error: " + sections['message'])
+#                 time.sleep(1)  # wait one second before retrying
+#                 return jsonpedia_convert(language, resource)  #try again JSONpedia call
+        
+#         else:
+#             result = sections['result']  #JSON index with actual content
+#             return result
+
+#     pass
+
+
+    
+
+
+
 def find_page_redirects(res, lang):
     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
 
@@ -180,3 +234,14 @@ def find_page_redirects(res, lang):
             new_res = dom['structure'][1]['label']
             redirect = new_res.replace(" ", "_").encode('utf-8')
     return redirect
+
+
+# def find_page_redirects(res, lang):
+#     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
+
+#     Returns the actual page if found, thus preventing from losing pages due to non-existing names
+#     :param lang: Wikipedia language of the resource
+#     :param res: initial resource name which may trigger a redirection
+#     :return: the redirection page if found
+#     '''
+#     pass

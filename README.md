@@ -55,6 +55,20 @@ Upon successful addition/modification, it will update the `settings.json` and `c
 
 * More Domains can be added using the `rulesGenerator.py` tool.
 
+### Attributions
+
+This project uses 2 other existing open source projects.
+
+* **JSonpedia**, a framework designed to simplify access at MediaWiki contents transforming everything into JSON. Such framework provides a library, a REST service and CLI tools to parse, convert, enrich and store WikiText documents. 
+
+The software is copyright of Michele Mostarda (me@michelemostarda.it) and released under Apache 2 License.
+Link : [JSONpedia](https://bitbucket.org/hardest/jsonpedia)
+
+* **JCommander**,  a very small Java framework that makes it trivial to parse command line parameters. 
+
+Contact Cédric Beust (cedric@beust.com) for more information. Released under Apache 2 License.
+Link : [JCommander](https://github.com/cbeust/jcommander)
+
 
 ### Requirements
 * [Python 2.7](https://www.python.org/download/releases/2.7/) and [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)

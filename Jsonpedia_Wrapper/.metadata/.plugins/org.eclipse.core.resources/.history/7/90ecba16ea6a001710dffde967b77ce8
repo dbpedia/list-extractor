@@ -1,0 +1,38 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
+import com.beust.jcommander.*;
+import com.beust.*;
+import com.machinelinking.main.JSONpedia;
+import com.machinelinking.main.JSONpediaException;
+import com.machinelinking.wikimedia.WikiPage;
+
+import org.codehaus.jackson.JsonNode;
+
+public class JSONpedia_Interface {
+
+	/**
+	 * @param args
+	 * @throws JSONpediaException 
+	 * @throws FileNotFoundException 
+	 */
+	public static void main(String[] args) throws JSONpediaException, FileNotFoundException {
+		ArgParser parser = new ArgParser();
+		//String[] argv = { "-log", "2", "-groups", "unit" };
+
+		JCommander jcommander = new JCommander(parser, args);
+		jcommander.setProgramName("JsonpediaInterface");
+		jcommander.parse(args);
+		
+		jcommander.usage();
+		String lang = "en", resource_name = "Taylor_Swift";
+		String resource = lang + ":" + resource_name;
+		JSONpedia jsonpedia = JSONpedia.instance();
+		JsonNode node = jsonpedia.process(resource).flags("Structure,Splitters").
+				filter("@type:section").json();
+
+		System.out.println(node);
+	}
+
+}
