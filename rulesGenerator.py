@@ -76,6 +76,7 @@ def main():
 
 
 def show_mappings(settings):
+    ''' show existing class and related mappings '''
     mappings = settings["MAPPING"]
     print 'Following are the classes whose mappings exist:'
     print 'Format: Ontology Class : \n    [ List of mapper functions ]\n'
@@ -87,12 +88,17 @@ def show_mappings(settings):
         print '\n'
 
 def show_mapper_functions():
+    ''' show available mapper functions '''
     print 'Available mapper functions (See mapping_rules.py for details):\n'
     for mapper in mappers:
         print '   ', mapper
     print ''
 
 def add_mapping_rule(settings):
+    ''' the main method for adding a user defined mapping rules.
+        Its an interactive method that asks user for class(domain) name and mapping functions 
+        to be used.
+    '''
     mappings = settings['MAPPING']
     print '\nEnter Ontology Class (Domain) name/ Custom Name: '
     class_name = raw_input().replace(" ","")
@@ -133,6 +139,10 @@ def add_mapping_rule(settings):
             return
 
 def add_mapper_fn():
+    ''' the main method for adding a user defined mapper function.
+        Its an interactive method that asks user for mapper function name, language, section headers,
+        Ontology to be used, extractor functions to be used.
+    '''
     global custom_mappers
     mapper_function = defaultdict(dict)
     mapper_name = raw_input('Enter Name of Mapper Function: ').strip().upper()
@@ -205,6 +215,8 @@ def merge_mappers():
             mappers.append(key)
 
 def dump_custom_mappers(mapper_name, mapper_function):
+    ''' save the modified custom mappers into the custom_mappers.json file and reload the 
+        custom_mappers file to reflect the changes '''
     global custom_mappers
     custom_mappers[mapper_name] = mapper_function
     custom_mappers_file = open("custom_mappers.json", "w+")
@@ -215,6 +227,7 @@ def dump_custom_mappers(mapper_name, mapper_function):
     return
 
 def load_custom_mappers():
+    ''' load custom mapper function '''
     global custom_mappers
     try:
         with open("custom_mappers.json") as custom_mappers_file:
@@ -231,6 +244,8 @@ def load_custom_mappers():
         sys.exit(1)
 
 def dump_settings(new_settings):
+    ''' save the modified settings into the setting.json file and reload the settings file to 
+        reflect the changes '''
     global settings
     settings_file = open("settings.json", "w+")
     settings_file.write(json.dumps(new_settings))
@@ -239,6 +254,7 @@ def dump_settings(new_settings):
     return
 
 def load_settings():
+    ''' load the settings '''
     global settings
     try:
         with open('settings.json') as settings_file:
@@ -250,6 +266,7 @@ def load_settings():
         sys.exit(1)
 
 def show_custom_mappers():
+    ''' displays all the mapper function created by user using rulesGenerator.py '''
     global custom_mappers
     if len(custom_mappers) == 0:
         print '\nNo custom mappings yet!!\n'

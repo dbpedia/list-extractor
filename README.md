@@ -55,7 +55,7 @@ Upon successful addition/modification, it will update the `settings.json` and `c
 
 * More Domains can be added using the `rulesGenerator.py` tool.
 
-### Attributions
+### Attributions for 3rd party tools:
 
 This project uses 2 other existing open source projects.
 
@@ -71,6 +71,7 @@ Link : [JCommander](https://github.com/cbeust/jcommander)
 
 
 ### Requirements
-* [Python 2.7](https://www.python.org/download/releases/2.7/) and [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)
+* [Python 2.7](https://www.python.org/download/releases/2.7/) 
+* [RDFlib library](http://rdflib.readthedocs.io/en/stable/gettingstarted.html)
 * Stable internet connection
 
