@@ -18,6 +18,37 @@ import json
 import sys
 from mapping_rules import EXCLUDED_SECTIONS
 
+MAPPING = dict()
+CUSTOM_MAPPERS = dict()
+
+def check_existing_class(class_name):
+    global MAPPING
+    if len(MAPPING) == 0:
+        MAPPING = load_settings()
+    if class_name in MAPPING.keys(): return True
+    else: return False 
+
+def load_settings():
+    try:
+        with open('settings.json') as settings_file:
+            global MAPPING
+            settings = json.load(settings_file)
+            MAPPING = settings['MAPPING']
+            return MAPPING
+    except IOError:
+        print "Settings files doesn't exist!!! "
+        sys.exit(1)
+
+def load_custom_mappers():
+    try:
+        with open('custom_mappers.json') as custom_mappers:
+            global CUSTOM_MAPPERS
+            CUSTOM_MAPPERS = json.load(custom_mappers) 
+            return CUSTOM_MAPPERS
+    except IOError:
+        print "Custom mappers not found!"
+        return dict()
+
 
 def readResFile(resName):
     ''' Reads the file called resName in resources directory and returns it as a dictionary
@@ -175,7 +206,7 @@ def get_resources(lang, page_type):
         offset += 1000
     if fin_list == []:  # No resource found
         print("Could not retrieve any resource")
-        raise
+        #raise
     
     return fin_list
 
@@ -251,7 +282,7 @@ def count_listelem_dict(res_dict):
             list_el_num += 1
     return list_el_num
 
-def evaluate(lang, source, tot_extracted_elems, tot_elems):
+def evaluate(lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_elems, num_statements):
     ''' Evaluates the extaction process and stores it in a csv file.
 
     :param source: resource type(dbpedia ontology type)
@@ -260,11 +291,16 @@ def evaluate(lang, source, tot_extracted_elems, tot_elems):
     '''
     print "\nEvaluation:\n===========\n"
     print "Resource Type:", lang + ":" + source
-    print "Total list elements found:", tot_elems
-    print "Total elements extracted:", tot_extracted_elems
+    print "Resources Found:", tot_res
+    print "Resources successfully processed:", tot_res_success
+    print "List elements found:", tot_elems
+    print "List elements extracted:", tot_extracted_elems
+    print "Triples Created:", num_statements
     accuracy = (1.0*tot_extracted_elems)/tot_elems
     print "Accuracy:", accuracy
+    print ""
 
     with open('evaluation.csv', 'a') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        filewriter.writerow([lang, source, tot_extracted_elems, tot_elems, accuracy])
+        filewriter.writerow([lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_elems, 
+                                num_statements, accuracy])

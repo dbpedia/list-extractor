@@ -3,6 +3,11 @@
 import utilities
 import time
 import json
+import sys
+import subprocess
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 last_sec_title = ""  # last section title parsed
 header_title = ""  # last header (main section) title parsed
@@ -124,24 +129,71 @@ def parse_list(list_elem):
     return list_content
 
 
+# def jsonpedia_convert(language, resource):
+#     ''' Calls JSONpedia online service to get a JSON representation of the Wikipedia page divided in sections
+
+#     :param language: language of the resource we want to parse (e.g. it, en, fr...)
+#     :param resource:  name of the resource
+#     :return: a JSON with significant info about the resource
+#     '''
+#     res = language + "%3A" + resource
+#     # JSONpedia call to obtain sections  - in this way I get both section titles and their lists
+#     jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + res + "?filter=@type:section&procs=Structure"
+    
+#     try:
+#         sections = utilities.json_req(jsonpediaURL_sect)
+    
+#     except (IOError):
+#         print('Network Error - please check your connection and try again')
+#         raise
+#     except (ValueError):
+#         raise
+    
+#     else:
+#         if 'success' in sections and sections['success'] == "false":
+#             if sections['message'] == 'Invalid page metadata.':
+#                 print("JSONpedia error: Invalid wiki page."),
+#                 raise
+#             elif 'Expected DocumentElement found' in sections['message']:
+#                 print(("JSONpedia error: something went wrong (DocumentElement expected).")),
+#                 raise
+#             else:
+#                 print("JSONpedia error! - the web service may be currently overloaded, retrying... "
+#                       "Error: " + sections['message'])
+#                 time.sleep(1)  # wait one second before retrying
+#                 return jsonpedia_convert(language, resource)  #try again JSONpedia call
+        
+#         else:
+#             result = sections['result']  #JSON index with actual content
+#             return result
+
+
 def jsonpedia_convert(language, resource):
-    ''' Calls JSONpedia online service to get a JSON representation of the Wikipedia page divided in sections
+    ''' Uses the JSONpedia wrapper to use the JSONpedia library to get a JSON representation of the 
+        Wikipedia page divided in sections.
 
     :param language: language of the resource we want to parse (e.g. it, en, fr...)
     :param resource:  name of the resource
     :return: a JSON with significant info about the resource
     '''
-    res = language + "%3A" + resource
-    # JSONpedia call to obtain sections  - in this way I get both section titles and their lists
-    jsonpediaURL_sect = "http://jsonpedia.org/annotate/resource/json/" + res + "?filter=@type:section&procs=Structure"
-    
     try:
-        sections = utilities.json_req(jsonpediaURL_sect)
-    
+        # spawn a new process that makes a call to the json wrapper, which creates the required
+        # json for the given resource, then load the string into a dict using json.loads()
+        proc = subprocess.Popen(['java','-jar','jsonpedia_wrapper.jar','-l', language, 
+                            '-r', resource, '-p', 'Structure', '-f', 'section'], stdout=subprocess.PIPE)
+        pipe_output = proc.stdout.read()
+        proc.kill()
+        sections = json.loads(pipe_output)
+
+        print 'working ....'
+
     except (IOError):
         print('Network Error - please check your connection and try again')
         raise
     except (ValueError):
+        raise
+    except (OSError):
+        print('Error spawning process!')
         raise
     
     else:
@@ -162,6 +214,28 @@ def jsonpedia_convert(language, resource):
             result = sections['result']  #JSON index with actual content
             return result
 
+    pass
+
+
+
+# def find_page_redirects(res, lang):
+#     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
+
+#     Returns the actual page if found, thus preventing from losing pages due to non-existing names
+#     :param lang: Wikipedia language of the resource
+#     :param res: initial resource name which may trigger a redirection
+#     :return: the redirection page if found
+#     '''
+#     redirect = []
+#     jsonpedia_req = "http://jsonpedia.org/annotate/resource/json/" + lang + ":" + res + "?&procs=Structure"
+#     result = utilities.json_req(jsonpedia_req)
+#     if 'wikitext-dom' in result:
+#         dom = result['wikitext-dom'][0]
+#         if 'structure' in dom:
+#             new_res = dom['structure'][1]['label']
+#             redirect = new_res.replace(" ", "_").encode('utf-8')
+#     return redirect
+
 
 def find_page_redirects(res, lang):
     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
@@ -171,9 +245,27 @@ def find_page_redirects(res, lang):
     :param res: initial resource name which may trigger a redirection
     :return: the redirection page if found
     '''
+    try:
+        # spawn a new process that makes a call to the json wrapper, which creates the required
+        # json for the given resource, then load the string into a dict using json.loads()
+        proc = subprocess.Popen(['java','-jar','jsonpedia_wrapper.jar','-l', language, 
+                            '-r', resource, '-p', 'Structure'], stdout=subprocess.PIPE)
+        pipe_output = proc.stdout.read()
+        proc.kill()
+        result = json.load(pipe_output)
+        
+        print 'working .....'
+
+    except (IOError):
+        print('Network Error - please check your connection and try again')
+        raise
+    except (ValueError):
+        raise
+    except (OSError):
+        print('Error spawning process!')
+        raise
+
     redirect = []
-    jsonpedia_req = "http://jsonpedia.org/annotate/resource/json/" + lang + ":" + res + "?&procs=Structure"
-    result = utilities.json_req(jsonpedia_req)
     if 'wikitext-dom' in result:
         dom = result['wikitext-dom'][0]
         if 'structure' in dom:

@@ -1,0 +1,32 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
+import com.machinelinking.main.JSONpedia;
+import com.machinelinking.main.JSONpedia.Output;
+import com.machinelinking.main.JSONpediaException;
+import com.machinelinking.wikimedia.WikiPage;
+
+import org.codehaus.jackson.JsonNode;
+
+public class JSONpedia_Interface {
+
+	/**
+	 * @param args
+	 * @throws JSONpediaException 
+	 * @throws FileNotFoundException 
+	 */
+	public static void main(String[] args) throws JSONpediaException, FileNotFoundException {
+		JSONpedia jsonpedia = JSONpedia.instance();
+		JsonNode root = jsonpedia.process("en:Taylor_Swift").flags("Structure").
+				filter("@type:section").json();
+
+		/*JsonNode[] sections = jsonpedia.applyFilter("@type:section", root);
+		String firstSectionHTML = jsonpedia.render("en:London", sections[0]);
+
+		JsonNode[] allReferencesInSections = jsonpedia.applyFilter("@type:section>@type:reference", root);
+		String allReferencesHTML = jsonpedia.render("en:London", allReferencesInSections);
+*/		System.out.println(root);
+	}
+
+}

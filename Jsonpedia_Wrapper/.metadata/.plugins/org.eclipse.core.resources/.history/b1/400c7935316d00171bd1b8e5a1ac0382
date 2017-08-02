@@ -1,0 +1,53 @@
+import java.io.FileNotFoundException;
+import java.util.List;
+
+import com.beust.jcommander.*;
+import com.beust.*;
+
+import com.machinelinking.main.JSONpedia;
+import com.machinelinking.main.JSONpediaException;
+import com.machinelinking.wikimedia.WikiPage;
+
+import org.codehaus.jackson.JsonNode;
+
+public class JSONpedia_Interface {
+	/**
+	 * @param args
+	 * @throws JSONpediaException 
+	 * @throws FileNotFoundException 
+	 */
+
+	public static void main(String[] args) throws JSONpediaException, FileNotFoundException {
+
+		ArgParser parser = new ArgParser();
+		new JCommander(parser, args);
+
+		String lang = parser.getLang();
+		String resource_name = parser.getResourceName();
+		String resource = lang + ":" + resource_name;
+		String processors = "" , filters = "";
+		List<String> procs = parser.getProcs();
+		List<String> fltr = parser.getFilters();
+		
+		for(String s: procs){
+			processors += s + ",";
+		}
+		System.out.println(processors);
+		processors = processors.substring(0, processors.length()-1);
+		if(!(fltr.isEmpty())){
+			for(String s: fltr){
+				filters += s + ",";
+			}
+		}
+		
+		System.out.println(processors + filters);
+		
+		JSONpedia jsonpedia = JSONpedia.instance();
+		JsonNode node = jsonpedia.process(resource).flags("Structure,Splitters").
+				filter("@type:section").json();
+
+		//System.out.println(node);
+	}
+
+
+}

@@ -28,6 +28,9 @@ rdf = rdflib.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 
 mapped_domains = []  # used to prevent duplicate mappings
 resource_class = ""
+MAPPING = dict()
+CUSTOM_MAPPERS = dict()
+
 
 def select_mapping(resDict, res, lang, res_class, g):
     ''' Calls mapping functions for each matching section of the resource, thus constructing the associated RDF graph.
@@ -44,6 +47,13 @@ def select_mapping(resDict, res, lang, res_class, g):
     '''
     global mapped_domains
     global resource_class
+    global MAPPING
+    global CUSTOM_MAPPERS
+    
+    if len(MAPPING) == 0: 
+        MAPPING = utilities.load_settings()
+        CUSTOM_MAPPERS = utilities.load_custom_mappers()
+     
     res_elems = 0
 
     if res_class in MAPPING and MAPPING[res_class] not in mapped_domains:
@@ -59,11 +69,23 @@ def select_mapping(resDict, res, lang, res_class, g):
         for domain in domains:
             if domain in mapped_domains:
                 continue
-            if lang in eval(domain):
-                domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
-            else:
-                print("The language provided is not available yet for this mapping")
-                #return 0
+            
+            # <========>
+            is_custom_map_fn = False
+            try:
+                if lang in eval(domain):
+                    domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
+                else:
+                    print("The language provided is not available yet for this mapping")
+                    return 0
+            except NameError:  #key not found(predefined mappers)
+                if domain not in CUSTOM_MAPPERS.keys():
+                    print "Cannot find the domain's mapper function!!"
+                    print 'You can add a mapper function for this mapping using rulesGenerator.py and try again...\n'
+                    return 0
+                else:
+                    is_custom_map_fn = True
+                    domain_keys = CUSTOM_MAPPERS[domain]["headers"][lang]
 
             mapped_domains.append(domain)  #this domain won't be used again for mapping
     
@@ -74,14 +96,129 @@ def select_mapping(resDict, res, lang, res_class, g):
                     # if the section hasn't been mapped yet and the title match, apply domain related mapping
                     dk = dk.decode('utf-8') #make sure utf-8 mismatches don't skip sections 
                     if not mapped and re.search(dk, res_key, re.IGNORECASE):
-                        mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
-                        res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
-                        mapped = True  # prevents the same section to be mapped again
+                        if is_custom_map_fn == False:
+                            #use the pre-defined mapper functions
+                            mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
+                            res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
+                            mapped = True  # prevents the same section to be mapped again
+                        else:
+                            mapper = map_user_defined_mappings(domain, resDict[res_key], res_key, db_res, lang, g, 0)
+                            res_elems += mapper  # calls the proper mapping for that domain and counts extracted elements
+                            mapped = True  # prevents the same section to be mapped again
 
     else:
+        # print 'This domain has not been mapped yet!'
+        # print 'You can add a mapping for this domain using rulesGenerator.py and try again...\n'
         return 0
 
     return res_elems
+
+
+
+
+
+
+
+def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g, elems):
+    ''' Uses the custom_mappers to find the settings assotiated with the function, and then runs the
+        mapping function according to the settings and forms the associated RDF graph.
+
+    Firstly selects the settings to apply from custom_mappers.json based on resource class (domain).
+    If a match is found, it tries to find another match between section names and key-words related to that domain.
+    Finally, it applies related mapping functions for the list elements contained in that section.
+    :param mapper_fn_name: Name of the mapper funcction from which settings are loaded
+    :param resDict: dictionary representing current resource
+    :param res: current resource name
+    :param res_class: resource class/type (e.g. Writer)
+    :param lang: resource language
+    :param g: RDF graph to be created
+    :return number of list elements actually mapped in th graph
+    '''
+    global CUSTOM_MAPPERS
+    mapper_settings = CUSTOM_MAPPERS[mapper_fn_name]
+
+    for elem in elem_list:
+        if type(elem) == list:  # for nested lists (recursively call this function)
+            elems += 1
+            map_user_defined_mappings(mapper_fn_name, elem, sect_name, res, lang, g, elems)   # handle recursive lists
+
+        else:
+            elem = elem.encode('utf-8')  # apply utf-8 encoding
+            years = []
+            if mapper_settings["years"] == "Yes":
+                years = month_year_mapper(elem)
+            
+            ontology_class = None
+            for class_type in mapper_settings["ontology"][lang]:
+                try:
+                    if class_type.decode('utf-8').lower() in sect_name.decode('utf-8').lower():
+                        ontology_class = class_type
+                except UnicodeEncodeError:
+                    break
+
+            if ontology_class == None:   #No possible mapping found; try default mapping
+                if mapper_settings["ontology"][lang]["default"] == "None": 
+                    return 0 #default wasn't allowed
+                else: 
+                    ontology_class = "default"
+                    # print 'Matching Header not found, using default ontology relation:', str(ontology_class)
+            
+            p = mapper_settings["ontology"][lang][ontology_class]
+            
+            extractor_choices = mapper_settings["extractors"]
+            uri = None
+            res_name = None
+
+            if res_name == None and 1 in extractor_choices:
+                res_name = italic_mapper(elem)
+                if res_name:
+                    elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                    res_name = res_name.replace(' ', '_')
+                    res_name = urllib2.quote(res_name)  ###
+                    uri = dbr + res_name.decode('utf-8', errors='ignore')
+
+            if res_name == None and 2 in extractor_choices:
+                res_name = reference_mapper(elem)
+                if res_name:  # current element contains a reference
+                    uri = wikidataAPI_call(res_name, lang)  #try to reconcile resource with Wikidata API
+                    if uri:
+                        dbpedia_uri = find_DBpedia_uri(uri, lang)  # try to find equivalent DBpedia resource
+                        if dbpedia_uri:  # if you can find a DBpedia res, use it as the statement subject
+                            uri = dbpedia_uri
+                    else:  # Take the reference name anyway if you can't reconcile it
+                        res_name = list_elem_clean(res_name)
+                        elem = elem.replace(res_name, "")  #subtract reference part from list element, to facilitate further parsing
+                        uri_name = res_name.replace(' ', '_')
+                        uri_name = urllib2.quote(uri_name)  ###
+                        uri = dbr + uri_name.decode('utf-8', errors='ignore')
+
+            if res_name == None and 3 in extractor_choices:
+                res_name = quote_mapper(elem)
+                if res_name:
+                    elem = elem.replace(res_name, "")  #delete resource name found from element for further mapping
+                    res_name = res_name.replace(' ', '_')
+                    res_name = urllib2.quote(res_name)  ###
+                    uri = dbr + res_name.decode('utf-8', errors='ignore')
+
+
+            if res_name == None and 4 in extractor_choices:
+                res_name = general_mapper(elem)
+                if (res_name and res_name != "" and res_name != res):
+                        res_name = res_name.replace(' ', '_')
+                        res_name = urllib2.quote(res_name)  ###
+                        uri = dbr + res_name.decode('utf-8', errors='ignore')
+
+
+            if uri and uri != "":
+                g.add((rdflib.URIRef(uri), dbo[p], res))
+                elems += 1
+                if years:
+                    add_years_to_graph(g, uri, years)
+
+    if elems == 0: print 'Could not extract any elements. Try adding more extractors....'
+    return elems
+
+
 
 
 def map_discography(elem_list, sect_name, res, lang, g, elems):
@@ -956,7 +1093,6 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                 elems += 1
                 
     return elems
-
 
 
 def add_years_to_graph(g, uri, year):
