@@ -96,15 +96,18 @@ def select_mapping(resDict, res, lang, res_class, g):
                     # if the section hasn't been mapped yet and the title match, apply domain related mapping
                     dk = dk.decode('utf-8') #make sure utf-8 mismatches don't skip sections 
                     if not mapped and re.search(dk, res_key, re.IGNORECASE):
-                        if is_custom_map_fn == False:
-                            #use the pre-defined mapper functions
-                            mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
-                            res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
-                            mapped = True  # prevents the same section to be mapped again
-                        else:
-                            mapper = map_user_defined_mappings(domain, resDict[res_key], res_key, db_res, lang, g, 0)
-                            res_elems += mapper  # calls the proper mapping for that domain and counts extracted elements
-                            mapped = True  # prevents the same section to be mapped again
+                        try:
+                            if is_custom_map_fn == False:
+                                #use the pre-defined mapper functions
+                                mapper = "map_" + domain.lower() + "(resDict[res_key], res_key, db_res, lang, g, 0)"
+                                res_elems += eval(mapper)  # calls the proper mapping for that domain and counts extracted elements
+                                mapped = True  # prevents the same section to be mapped again
+                            else:
+                                mapper = map_user_defined_mappings(domain, resDict[res_key], res_key, db_res, lang, g, 0)
+                                res_elems += mapper  # calls the proper mapping for that domain and counts extracted elements
+                                mapped = True  # prevents the same section to be mapped again
+                        except:
+                            print 'exception occured in resDict, skipping....'
 
     else:
         # print 'This domain has not been mapped yet!'
@@ -281,7 +284,7 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
                 g.add((rdflib.URIRef(uri), dbo.musicalArtist, res))
                 elems += 1
                 if year:
-                    add_years_to_graph(g, uri, year)
+                    add_years_to_graph(g, uri, year, {'activeYear':'releaseYear'})
 
     return elems
 
@@ -771,7 +774,7 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
             if uri and uri != "":
                 g.add((rdflib.URIRef(uri), rdf.type, dbo + rdflib.URIRef(filmography_type)))
                 if year:
-                    add_years_to_graph(g, uri, year)
+                    add_years_to_graph(g, uri, year, {'activeYear':'releaseYear'})
                 if film_particip:
                     g.add((rdflib.URIRef(uri), dbo + rdflib.URIRef(film_particip), res))
                 elems += 1
@@ -1086,7 +1089,7 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
                 if detail_type:
                     g.add((rdflib.URIRef(uri), dbo[detail_type], res))
                 else:
-                    g.add((rdflib.URIRef(uri), dbo.other, res))
+                    g.add((rdflib.URIRef(uri), dbo.WrittenWork, res))
                 if year:
                     add_years_to_graph(g, uri, year)
 
@@ -1095,36 +1098,52 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
     return elems
 
 
-def add_years_to_graph(g, uri, year):
+def add_years_to_graph(g, uri, year, year_ontology = {}):
     '''Adds all the years related to the uri to the graph g. Does not return anything; appends existing graph
 
     :param g: current graph
     :param uri: resource related to the years list.
     :param year: contains a list of years that need to be mapped.
+    :param year_ontology: dict containing ontologies that can be used with time periods in a particular domain;
+                            empty dict indicates default values should be taken from y_ontology
     '''
-    for y in year:
-        if type(y) != list:
-            if "^" in y:
-                d = y.replace("^","-")
-                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
 
-            else:    
-                g.add((rdflib.URIRef(uri), dbo.activeYear, rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
-        else:
-            start_period, end_period = y[0], y[1]
-            if "^" in y[0]:
-                d = y[0].replace("^","-")
-                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
-            else:    
-                g.add((rdflib.URIRef(uri), dbo.activeYearsStartDate, rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
+    #default ontologies
+    y_ontology = { 'activeYear':'activeYear', 'activeYearsStartDate': 'activeYearsStartDate',
+                       'activeYearsEndDate' : 'activeYearsEndDate'}
+    
+    #update if user provides a dictionary
+    for ontology in year_ontology.keys():
+        if ontology in y_ontology:
+            y_ontology[ontology] = year_ontology[ontology]
 
-            if "^" in y[1]:
-                d = y[1].replace("^","-")
-                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+    try:
+        for y in year:
+            if type(y) != list:
+                if "^" in y:
+                    d = y.replace("^","-")
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYear']], rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
 
-            else:    
-                g.add((rdflib.URIRef(uri), dbo.activeYearsEndDate, rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+                else:    
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYear']], rdflib.Literal(y, datatype=rdflib.XSD.gYear)))
+            else:
+                start_period, end_period = y[0], y[1]
+                if "^" in y[0]:
+                    d = y[0].replace("^","-")
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYearsStartDate']], rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+                else:    
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYearsStartDate']], rdflib.Literal(y[0], datatype=rdflib.XSD.gYear)))
 
+                if "^" in y[1]:
+                    d = y[1].replace("^","-")
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYearsEndDate']], rdflib.Literal(d, datatype=rdflib.XSD.gYearMonth)))
+
+                else:    
+                    g.add((rdflib.URIRef(uri), dbo[y_ontology['activeYearsEndDate']], rdflib.Literal(y[1], datatype=rdflib.XSD.gYear)))
+
+    except:
+        print 'Year exception! Skipping...'
+        raise
     return
 
 def alumni_profession_mapper(list_elem):

@@ -185,7 +185,7 @@ def jsonpedia_convert(language, resource):
         proc.kill()
         sections = json.loads(pipe_output)
 
-        print 'working ....'
+        print 'working convert ....'
 
     except (IOError):
         print('Network Error - please check your connection and try again')
@@ -254,7 +254,7 @@ def find_page_redirects(res, lang):
         proc.kill()
         result = json.load(pipe_output)
         
-        print 'working .....'
+        print 'working redirect.....'
 
     except (IOError):
         print('Network Error - please check your connection and try again')
