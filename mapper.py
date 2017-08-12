@@ -131,11 +131,6 @@ def select_mapping(resDict, res, lang, res_class, g):
     return res_elems
 
 
-
-
-
-
-
 def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g, elems):
     ''' Uses the CUSTOM_MAPPERS dict to find the settings assotiated with the domain, and then runs the
         mapping function according to the settings and adds the associated triples in the RDF graph.
@@ -250,8 +245,6 @@ def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g
 
     if elems == 0: print 'Could not extract any elements. Try adding more extractors....'
     return elems
-
-
 
 
 def map_discography(elem_list, sect_name, res, lang, g, elems):
@@ -1187,6 +1180,8 @@ def add_years_to_graph(g, uri, year, year_ontology = {}):
     :param year: contains a list of years that need to be mapped.
     :param year_ontology: dict containing ontologies that can be used with time periods in a particular domain;
                             empty dict indicates default values should be taken from y_ontology.
+    
+    :return void
     '''
 
     #default ontologies
@@ -1723,6 +1718,3 @@ def quote_mapper(list_elem):
             match_ref = quote_mapper(new_ref)  #call again reference_mapper passing the new reference
     
     return match_ref
-
-
-

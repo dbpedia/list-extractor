@@ -117,33 +117,6 @@ def main():
         else:
             rdf_type = [classes.strip() for classes in args.classname.split(',')]
             #print rdf_type
-        
-
-
-
-
-        # try:
-        #     resource = args.source.encode('utf-8')  # apply utf-8 encoding
-        #     resDict = wikiParser.main_parser(args.language, resource)  # create a dict representing the resource
-            
-        #     for key in resDict:
-        #         print key, ":", resDict[key]
-        #         print ''
-            
-        #     ''' Decomment the line below to create a file inside a resources folder containing the dictionary'''
-        #     utilities.createResFile(resDict, args.language, resource)
-            
-        #     # Asks the endpoint for a list of types/classes associated to the resource
-        #     if args.classname == None:
-        #         rdf_type = utilities.get_resource_type(args.language, resource)
-        #     else:
-        #         rdf_type = [classes.strip() for classes in args.classname.split(',')]
-        #     #print rdf_type
-        
-        # except:
-        #     print("Could not find specified resource: " + args.source)
-        #     sys.exit(0)
-
 
         list_elems = 0  # Used to keep trace of the number of list elements extracted
         for t in rdf_type:  # for each type found, look for a suitable mapping and apply it
