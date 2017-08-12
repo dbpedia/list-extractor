@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
 
+
+'''
+#####################
+### wikiParser.py ###
+#####################
+
+* This module contains all the utility methods/functions that are used to process and parse the wikipedia 
+  articles.
+
+* This module also contains methods that process the information from wikipedia (using JSONpedia) and return 
+  the appropriate JSON output to the mapper functions so that they could be easily processed to extract triples.
+
+* Also contains methods that form the uri's from the string elements by making wikidata queries.
+
+'''
+
 import utilities
 import time
 import json
 import sys
 import subprocess
 
+#set default encoding
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -19,8 +36,10 @@ def main_parser(language, resource):
 
     Asks JSONpedia for the JSON representing the resource and parses the result looking for lists in sections.
     Returns final dictionary containing all lists and their section names from given resource in given language
+    
     :param language: Language of Wikipedia page, needed by JSONpedia to identify the resource
     :param resource: Resource name, needed by JSONpedia
+    
     :return: a dictionary containing section names as keys and featured lists as values, without empty fields
     '''
 
@@ -44,9 +63,11 @@ def main_parser(language, resource):
 def parse_section(section):
     ''' Parses each section of the Wikipedia page searching for lists and calling parse_list() in turn.
 
-    Returns a dictionary with section names as keys and their list contents as values
+    Returns a dictionary with section names as keys and their list contents as values.
+
     :param section: current section to parse in json format
     :param title: a string used to concatenate names of nested sections
+    
     :return: a dictionary element representing the section
     '''
     
@@ -96,7 +117,9 @@ def parse_list(list_elem):
     '''Parses a list element extracting relevant info and to be put in a string.
 
     It also marks references (links) with double curly brackets {{...}} in order to be recognizable for mapping
+    
     :param list_elem: current list item in json format
+
     :return: a string containing useful info from list element
     '''
     list_content = ""  # initializing output
@@ -129,11 +152,38 @@ def parse_list(list_elem):
     return list_content
 
 
+
+'''
+
+######################
+### IMPORTANT NOTE ###
+######################
+
+* The jsonpedia_convert() and find_page_redirects() functions below are the older versions which make the
+  calls to the JSONpedia Live service in order to obtain the resource's JSON representations. Since it's a
+  web-service, high traffic and consistent/frequent requests can overload the server and make the 
+  list-extractor unusable. Hence these are not used anymore.
+
+* The newer versions of these functions use the JSONpedia library instead of the web-service, which makes 
+  the list-extractor more robust and stable and is not dependent on the JSONpedia Live Service's server anymore.
+
+* To use the older live web-request version (why though :P), uncomment the following two functions, and comment 
+ the existing newer functions, in order to prevent name clashes.
+
+'''
+
+#####################
+### Older Version ###
+#####################
+
+### Uncomment the lines below to use the web-request version.
+
 # def jsonpedia_convert(language, resource):
 #     ''' Calls JSONpedia online service to get a JSON representation of the Wikipedia page divided in sections
 
 #     :param language: language of the resource we want to parse (e.g. it, en, fr...)
 #     :param resource:  name of the resource
+
 #     :return: a JSON with significant info about the resource
 #     '''
 #     res = language + "%3A" + resource
@@ -167,6 +217,32 @@ def parse_list(list_elem):
 #             result = sections['result']  #JSON index with actual content
 #             return result
 
+# def find_page_redirects(res, lang):
+#     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
+
+#     Returns the actual page if found, thus preventing from losing pages due to non-existing names.
+
+#     :param lang: Wikipedia language of the resource
+#     :param res: initial resource name which may trigger a redirection
+
+#     :return: the redirection page if found
+#     '''
+#     redirect = []
+#     jsonpedia_req = "http://jsonpedia.org/annotate/resource/json/" + lang + ":" + res + "?&procs=Structure"
+#     result = utilities.json_req(jsonpedia_req)
+#     if 'wikitext-dom' in result:
+#         dom = result['wikitext-dom'][0]
+#         if 'structure' in dom:
+#             new_res = dom['structure'][1]['label']
+#             redirect = new_res.replace(" ", "_").encode('utf-8')
+#     return redirect
+
+
+#####################
+### Newer Version ###
+#####################
+
+### Comment the lines below to use the web-request version.
 
 def jsonpedia_convert(language, resource):
     ''' Uses the JSONpedia wrapper to use the JSONpedia library to get a JSON representation of the 
@@ -174,6 +250,7 @@ def jsonpedia_convert(language, resource):
 
     :param language: language of the resource we want to parse (e.g. it, en, fr...)
     :param resource:  name of the resource
+
     :return: a JSON with significant info about the resource
     '''
     try:
@@ -181,12 +258,11 @@ def jsonpedia_convert(language, resource):
         # json for the given resource, then load the string into a dict using json.loads()
         proc = subprocess.Popen(['java','-jar','jsonpedia_wrapper.jar','-l', language, 
                             '-r', resource, '-p', 'Structure', '-f', 'section'], stdout=subprocess.PIPE)
-        pipe_output = proc.stdout.read()
-        proc.kill()
-        sections = json.loads(pipe_output)
+        pipe_output = proc.stdout.read()  #redirect the input into python variable
+        proc.kill()  #kill the spawned process
+        sections = json.loads(pipe_output) #load the string as a python dict
 
-        print 'working convert ....'
-
+    #handle different errors
     except (IOError):
         print('Network Error - please check your connection and try again')
         raise
@@ -197,6 +273,7 @@ def jsonpedia_convert(language, resource):
         raise
     
     else:
+        #JSONpedia call was succesfull
         if 'success' in sections and sections['success'] == "false":
             if sections['message'] == 'Invalid page metadata.':
                 print("JSONpedia error: Invalid wiki page."),
@@ -216,33 +293,14 @@ def jsonpedia_convert(language, resource):
 
     pass
 
-
-
-# def find_page_redirects(res, lang):
-#     '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
-
-#     Returns the actual page if found, thus preventing from losing pages due to non-existing names
-#     :param lang: Wikipedia language of the resource
-#     :param res: initial resource name which may trigger a redirection
-#     :return: the redirection page if found
-#     '''
-#     redirect = []
-#     jsonpedia_req = "http://jsonpedia.org/annotate/resource/json/" + lang + ":" + res + "?&procs=Structure"
-#     result = utilities.json_req(jsonpedia_req)
-#     if 'wikitext-dom' in result:
-#         dom = result['wikitext-dom'][0]
-#         if 'structure' in dom:
-#             new_res = dom['structure'][1]['label']
-#             redirect = new_res.replace(" ", "_").encode('utf-8')
-#     return redirect
-
-
 def find_page_redirects(res, lang):
-    '''Calls JSONpedia to find out whether the resource name provided redirects to another Wikipedia page
+    '''Calls JSONpedia wrapper to find out whether the resource name provided redirects to 
+    another Wikipedia page. Returns the actual page if found, thus preventing from losing pages 
+    due to non-existing names.
 
-    Returns the actual page if found, thus preventing from losing pages due to non-existing names
     :param lang: Wikipedia language of the resource
     :param res: initial resource name which may trigger a redirection
+    
     :return: the redirection page if found
     '''
     try:
@@ -250,12 +308,11 @@ def find_page_redirects(res, lang):
         # json for the given resource, then load the string into a dict using json.loads()
         proc = subprocess.Popen(['java','-jar','jsonpedia_wrapper.jar','-l', language, 
                             '-r', resource, '-p', 'Structure'], stdout=subprocess.PIPE)
-        pipe_output = proc.stdout.read()
-        proc.kill()
-        result = json.load(pipe_output)
+        pipe_output = proc.stdout.read()   #redirect the input into python variable
+        proc.kill()  #kill the spawned process
+        result = json.load(pipe_output)  #load the string as a python dict
         
-        print 'working redirect.....'
-
+    #handle different exceptions
     except (IOError):
         print('Network Error - please check your connection and try again')
         raise
@@ -266,6 +323,7 @@ def find_page_redirects(res, lang):
         raise
 
     redirect = []
+    #find  if any redirects are present, if yes, return the redirect.
     if 'wikitext-dom' in result:
         dom = result['wikitext-dom'][0]
         if 'structure' in dom:
