@@ -18,21 +18,34 @@ import json
 import sys
 from mapping_rules import EXCLUDED_SECTIONS
 
+# These would contain the mapping rules and the custom defined mapping functions that would be used by the
+# mapper functions.
 MAPPING = dict()
 CUSTOM_MAPPERS = dict()
 
 def check_existing_class(class_name):
+    ''' This function checks if there exists mapping rules for the domain name provided in the parameter.
+
+    :param class_name: the domain to check if its present in the settings.json
+
+    :return: boolean result
+    '''
     global MAPPING
     if len(MAPPING) == 0:
         MAPPING = load_settings()
-    if class_name in MAPPING.keys(): return True
+    if class_name in MAPPING.keys():  #check if the domain present in MAPPING dict
+        return True
     else: return False 
 
 def load_settings():
+    ''' This function loads the mapping rules from the settngs.json file into MAPPING dict.
+
+    :return: latest MAPPING dict
+    '''
     try:
         with open('settings.json') as settings_file:
             global MAPPING
-            settings = json.load(settings_file)
+            settings = json.load(settings_file)  #load settings from file into the dict
             MAPPING = settings['MAPPING']
             return MAPPING
     except IOError:
@@ -40,14 +53,19 @@ def load_settings():
         sys.exit(1)
 
 def load_custom_mappers():
+    ''' This function loads the user defined mapping functions from the custom_mappers.json 
+    file into CUSTOM_MAPPERS dict.
+
+    :return: Custom mapper function settings dict
+    '''
     try:
         with open('custom_mappers.json') as custom_mappers:
             global CUSTOM_MAPPERS
-            CUSTOM_MAPPERS = json.load(custom_mappers) 
+            CUSTOM_MAPPERS = json.load(custom_mappers)  #load mappers from file into the dict
             return CUSTOM_MAPPERS
     except IOError:
         print "Custom mappers not found!"
-        return dict()
+        return dict()  #in case of failure, assume no user defined mappers and return empty dict
 
 
 def readResFile(resName):
@@ -72,7 +90,10 @@ def readResFile(resName):
     return eval(text)
 
 def getDate():
-    """ Returns current date in format YYYY_MM_DD, used for naming dataset."""
+    """ Returns current date in format YYYY_MM_DD, used for naming dataset.
+
+    :return: date stamp
+    """
     timestmp = time.time()
     date = datetime.datetime.fromtimestamp(timestmp).strftime('%Y_%m_%d')
     return date
@@ -82,6 +103,8 @@ def createResFile(file_content, lang, resName):
 
     :param file_content: parsed data to be stored
     :param resName: name_of_resource
+
+    :return: void
     '''
     title = resName + " [" + lang.upper() + "] - " + getDate() + ".txt"
     path = get_subdirectory('resources', title)
@@ -102,6 +125,7 @@ def get_subdirectory(dirname, filename):
 
     :param dirname: subdirectory name
     :param filename: new file name
+
     :return: final path
     '''
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -114,9 +138,10 @@ def get_subdirectory(dirname, filename):
 
 def makeReadable (res_dict) :
     ''' Used to make more decipherable the dictionaries stored in 'resources' directory
-
     Converts the dictionary in a string, sorts by key, and makes it more readable to be stored in a file
+ 
     :param res_dict: dictionary obtained fro resource
+
     :return: readable string
     '''
     finalString = ""
@@ -132,12 +157,13 @@ def clean_dictionary(language, listDict) :
     ''' Deletes all entries with an empty values, thus 'cleaning' the dictionary
 
     :param listDict: dictionary obtained from parsing
+
     :return: a dictionary without empty values
     '''
     for key in listDict.keys() :
         if listDict[key] == '' :
             listDict.pop(key)
-        if key in EXCLUDED_SECTIONS[language]:
+        if key in EXCLUDED_SECTIONS[language]:  #remove excluded sections
             listDict.pop(key)
         else:
             listDict[key] = remove_symbols(listDict[key])
@@ -149,13 +175,14 @@ def remove_symbols(listDict_key):
     ''' removes other sybols are garbage characters that pollute the values to be inserted 
 
     :param listDict_key: dictionary entries(values) obtained from parsing
+
     :return: a dictionary without empty values
     '''
     for i in range(len(listDict_key)):
         value = listDict_key[i]
-        if type(value)==list:
+        if type(value)==list:   #handle recursive list elements
             value=remove_symbols(value)
-        else:
+        else: #replace this symbol from list values; as it broke the code in some cases
             listDict_key[i] = value.replace('&nbsp;','')
 
     return listDict_key
@@ -166,6 +193,7 @@ def sparql_query(query, lang):
 
     :param query: string containing the query
     :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..)
+
     :return: json result obtained from the endpoint
     '''
     if lang == 'en':
@@ -185,8 +213,10 @@ def get_resources(lang, page_type):
 
     Firstly computes the number of resources from given type, then performs (tot_res modulo 1000) calls
     to the endpoint and construct the final list containing all of them.
+
     :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..)
     :param page_type: a string containing the ontology class to query
+
     :return: resource list
     '''
     tot_res = int(count_query(lang, page_type))
@@ -205,7 +235,7 @@ def get_resources(lang, page_type):
             fin_list.append(fin_res)
         offset += 1000
     if fin_list == []:  # No resource found
-        print("Could not retrieve any resource")
+        print("Could not retrieve any resource! Check if the domain exists in the dbpedia ontology!")
         #raise
     
     return fin_list
@@ -216,6 +246,7 @@ def count_query(lang, page_type):
 
     :param lang: endpoint
     :param page_type: for example "<http://dbpedia.org/ontology/Writer>"
+
     :return: endpoint answer as a number
     '''
     where_clause = "?s a <http://dbpedia.org/ontology/" + page_type + \
@@ -231,9 +262,10 @@ def count_query(lang, page_type):
 
 
 def json_req(req):
-    ''' Performs a request to an online service and returns the answer in JSON
+    ''' Performs a request to an online service and returns the answer in JSON.
 
     :param req: URL representing the request
+
     :return: a JSON representation of data obtained from a call to an online service
     '''
     try:
@@ -252,6 +284,7 @@ def get_resource_type(lang, resource):
 
     :param resource: current resource with unknown type
     :param lang: language/endpoint
+
     :return: a list containing all types associated to the resource in the local endpoint
     '''
     if lang == 'en':
@@ -274,6 +307,7 @@ def count_listelem_dict(res_dict):
 
     It's used to know how many list elements in a page are actually extracted.
     :param res_dict: dictionary representing the resource (Wikipedia page)
+
     :return: total list elements
     '''
     list_el_num = 0
@@ -288,19 +322,25 @@ def evaluate(lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_el
     :param source: resource type(dbpedia ontology type)
     :param tot_extracted_elems: number of list elements extracted in the resources.
     :param tot_elems: total number of list elements present in the resources.
-    '''
-    print "\nEvaluation:\n===========\n"
-    print "Resource Type:", lang + ":" + source
-    print "Resources Found:", tot_res
-    print "Resources successfully processed:", tot_res_success
-    print "List elements found:", tot_elems
-    print "List elements extracted:", tot_extracted_elems
-    print "Triples Created:", num_statements
-    accuracy = (1.0*tot_extracted_elems)/tot_elems
-    print "Accuracy:", accuracy
-    print ""
 
-    with open('evaluation.csv', 'a') as csvfile:
-        filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        filewriter.writerow([lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_elems, 
-                                num_statements, accuracy])
+    :return: void
+    '''
+    try:
+        print "\nEvaluation:\n===========\n"
+        print "Resource Type:", lang + ":" + source
+        print "Resources Found:", tot_res
+        print "Resources successfully processed:", tot_res_success
+        print "List elements found:", tot_elems
+        print "List elements extracted:", tot_extracted_elems
+        print "Triples Created:", num_statements
+        accuracy = (1.0*tot_extracted_elems)/tot_elems
+        print "Accuracy:", accuracy
+        print ""
+
+        #write the evaluation results in evaluation.csv
+        with open('evaluation.csv', 'a') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            filewriter.writerow([lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_elems, 
+                                    num_statements, accuracy])
+    except ZeroDivisionError:
+        print '\nNo elements extracted!'

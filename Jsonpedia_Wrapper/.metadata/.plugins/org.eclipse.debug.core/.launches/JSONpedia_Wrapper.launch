@@ -7,6 +7,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="JSONpedia_Wrapper"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-l en  -r Taylor_Swift -f section"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-l en  -r Avicii -f section"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ListExtractor_JSONpedia_Interface"/>
 </launchConfiguration>

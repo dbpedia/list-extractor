@@ -28,6 +28,20 @@
       lists:
             'language' : ['External links', 'References', 'See also', 'Further reading']
 
+      
+
+      ######################
+      ### IMPORTANT NOTE ###
+      ###################### 
+      
+    * THE MAPPING DICTIONARY IS NOW SHIFTED INTO SETTINGS.JSON, TO ALLOW IT TO BE USED BY
+      RULES_GENERATOR. MAKE A MANUAL ENTRY THERE OR USE RULES_GENERATOR.PY
+
+    * NEW MAPPING FUNCTIONS AND ALL RELATED RULES USING THE RULES_GENERATOR ARE STORED IN
+      CUSTOM_MAPPERS.JSON. ALL THE RULES CREATED USING RULES_GENERATOR WOULD BE STORED INSIDE
+      CUSTOM_MAPPERS.JSON AND NOT HERE. HOWEVER, THIS FILE CAN STILL BE USED IF YOU WISH TO 
+      MANUALLY ADD HEADERS AND ONTOLOGY CLASSES FOR ANY MAPPER FUNCTION.
+
 
 '''
 
@@ -43,6 +57,8 @@
   key represents a class of resources from DBpedia ontology, while values MUST correspond to mapping 
   methods in mapper.py and begin with 'map_'
 
+  NOTE: MAPPING HAS BEEN MOVED TO SETTINGS.JSON
+
 * Add entries in the format 
     OntologyClass : SectionDictionary
 
@@ -54,6 +70,7 @@ EXCLUDED_SECTIONS = {
         "it": ["Collegamenti esterni", "Bibliografia", "Altri progetti", "Voci correlate"],
         "es": ["Referencias", "V\u00e9ase tambi\u00e9n", "Enlaces externos", "Notas"]
     }
+
 #############################################################
 
 
@@ -62,10 +79,17 @@ EXCLUDED_SECTIONS = {
 ### SECTION DICTIONARIES ###
 ############################
 
-Contains the substrings or keywords to be searched inside section names in order to relate a list to the topic.
-The name of the dictionary describes the topic and MUST be a value from MAPPING.
-Keys correspond to language prefix from the page to be extracted, their values to a list of section titles
-used to express the concept.
+* Contains the substrings or keywords to be searched inside section names in order to relate a list 
+  to the topic (Section headers).
+
+* The name of the dictionary describes the topic and MUST be a value from MAPPING.
+
+* Keys correspond to language prefix from the page to be extracted, their values to a list of section titles
+  used to express the concept.
+
+* Support for new languages can be added by adding the corresponding language code in each of the following
+  dictionaries and the adding the possible section headers in the list inside values.
+
 '''
 
 BIBLIOGRAPHY = {
@@ -134,16 +158,14 @@ OTHER_PERSON_DETAILS = {
     'en': ['family','marriages','restaurants', 'memberships']
 }
 
+MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',
+            'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
+            'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
+
 CONTRIBUTORS = {
     'en': ['contributors', 'staff' , 'cover', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
             'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter', 'personalities', 'personnel',
             'personal' ]
-}
-
-OTHER_LITERATURE_DETAILS = {
-    'en': {'edition':'edition', 'reprints':'edition', 'publication':'publisher', 'Columns':'Article',
-            'feature':'features', 'supplement':'sisterNewspaper', 'papers':'researchPaper', 
-            'Characters':'FictionalCharacter', 'adaptations':'Adaptation'}
 }
 
 
@@ -155,7 +177,8 @@ OTHER_LITERATURE_DETAILS = {
 ##############################
 
 Contains dictionaries that contains various properties that a particular resource can have, inside the 
-given section. These are used inside the mapper functions.
+given section. These are used inside the mapper functions. These are used as the ontology classes/properties
+that are used in the triples that are extracted.
 
 '''
 
@@ -205,6 +228,13 @@ FILMOGRAPHY_PARTICIPATION = {
 
 }
 
+
+OTHER_LITERATURE_DETAILS = {
+    'en': {'edition':'edition', 'reprints':'edition', 'publication':'publisher', 'Columns':'Article',
+            'feature':'features', 'supplement':'sisterNewspaper', 'papers':'researchPaper', 
+            'Characters':'FictionalCharacter', 'adaptations':'Adaptation'}
+}
+
 """Used in map_filmography to map the rdf:type of filmography elements in current section"""
 FILMOGRAPHY_TYPE = {
     'en': {'TV': 'TelevisionShow', 'Television': 'TelevisionShow', 'Animation': 'Cartoon', 'Anime': 'Anime',
@@ -225,6 +255,7 @@ AWARD_STATUS_TYPE = {
             'Nominee': 'Nominated', 'win':'Winner', 'winner':'winner', 'honorary':'HonoraryDegree'}
 }
 
+"""Used by mapper functions that extract list elements about people """
 PERSON_DETAILS = {
     'en': {'family': 'relative', 'marriages':'spouse', 'works': 'notableWork', 'career': 'Employer', 
             'expeditions':'notableWork', 'work': 'notableWork', 'restaurants': 'owner', 
@@ -238,14 +269,10 @@ TRANSLATIONS = {
     'from': {'en': ' from '}
 }
 
+"""Used by mapper functions that extract list elements about people's work and their contribution """
 CONTRIBUTION_TYPE = {
     'en': { 'covers':'coverArtist', 'publisher':'Publisher', 'producer':'Producer', 'Journalist':'Journalist',  
             'celebrity':'coverArtist', 'mastheads':'Writers', 'columnist':'Journalist', 'correspondent':'Journalist',
             'reporter':'Journalist', 'writer':'writer', 'celebrities':'coverArtist', 'president':'president',
             'cartoonist':'artist', 'director':'director', 'Satirist':'Journalist', 'editor':'chiefEditor'},
 }
-
-MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',
-            'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
-            'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
-

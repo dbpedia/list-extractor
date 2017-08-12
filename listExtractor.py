@@ -2,17 +2,24 @@
 # -*- coding: utf-8 -*-
 
 """
+########################
+### listExtractor.py ###
+########################
+
+--------------------------------------------------
 List-extractor - Extract Data from Wikipedia Lists
 --------------------------------------------------
 
 This program is used to create RDF triples from wikipedia lists so that they can be inserted into the
 DBpedia dataset.
 
-The program accepts three parameters: collect_mode, source and language. 
+The program accepts three parameters: collect_mode, source and language.
+
 The first one is used to discriminate between the extraction of a single page or from all the pages 
 related to a given class; the second one is the name of a single resource in the first case or a 
 class in the latter. The last one is a two-letter language prefix used by DBpedia (currently only 
 'it' and 'en' are accepted because the are mappings for italian and english.)
+
 Depending on the collection mode chosen, it either passes the source as it is to wikiParser or 
 collects first the list of resources from the given class to be passed from the endpoint.
 wikiParser returns a dictionary representing the list information inside each resource, and optionally
@@ -23,6 +30,7 @@ is serialized in a .ttl file inside a subdirectory named 'extracted'.
 
 
 ## How to run the tool
+----------------------
 
 `python listExtractor.py collect_mode source language`
 
@@ -38,10 +46,16 @@ is serialized in a .ttl file inside a subdirectory named 'extracted'.
     * a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint
      to be queried.
 
-## Examples: 
+* `-c --classname`: a string representing classnames you want to associate your resource with. 
+   Applicable only for `collect_mode="s"`. 
 
+
+## Examples: 
+------------
 * `python listExtractor.py a Writer it` 
 * `python listExtractor.py s William_Gibson en`
+* `python listExtractor.py s William_Gibson en -c CUSTOM_WRITER` : Uses the `CUSTOM_WRITER` mapping only to 
+   extract list elements.
 
 """
 
@@ -90,11 +104,11 @@ def main():
         resource = args.source.encode('utf-8')  # apply utf-8 encoding
         resDict = wikiParser.main_parser(args.language, resource)  # create a dict representing the resource
             
-        for key in resDict:
+        for key in resDict:  #print data present in the resDict
             print key, ":", resDict[key]
             print ''
             
-            ''' Decomment the line below to create a file inside a resources folder containing the dictionary'''
+        ''' Decomment the line below to create a file inside a resources folder containing the dictionary'''
         utilities.createResFile(resDict, args.language, resource)
             
         # Asks the endpoint for a list of types/classes associated to the resource
@@ -130,6 +144,7 @@ def main():
         #     print("Could not find specified resource: " + args.source)
         #     sys.exit(0)
 
+
         list_elems = 0  # Used to keep trace of the number of list elements extracted
         for t in rdf_type:  # for each type found, look for a suitable mapping and apply it
             list_elems += mapper.select_mapping(resDict, resource, args.language, t,
@@ -139,7 +154,7 @@ def main():
         print("Total elements extracted: " + str(list_elems) + "/" + str(tot_list_elems))
 
     elif args.collect_mode == 'a':  # extract lists from a class of resources from DBpedia ontology (e.g. 'Writer')
-        if utilities.check_existing_class(args.source) == True:
+        if utilities.check_existing_class(args.source) == True: #Check if the domain has already been mapped (in settings.json)
             try:
                 resources = utilities.get_resources(args.language, args.source)
                 res_num = len(resources)  # total number of resources
@@ -164,12 +179,12 @@ def main():
                 '''Decomment the line below to create a file inside a resources folder containing the dictionary'''
                 # utilities.createResFile(resDict, args.language, res)
             
-            except:
+            except:  #handle parsing errors; no dict found or no relevant sections found
                 print("Could not parse " + args.language + ":" + res)
                 total_res_failed +=1
                 curr_num+=1
             
-            else:
+            else:  #succesfully parsed; proceed and form triples
                 curr_num += 1
                 print(">>> " + args.language + ":" + res + " has been successfully parsed <<<")
                 extr_elems = mapper.select_mapping(resDict, res, args.language, args.source, g)
@@ -177,6 +192,7 @@ def main():
                 tot_extracted_elems += extr_elems
                 print(">>> Mapped " + args.language + ":" + res + ", extracted elements: " + str(extr_elems) + "  <<<\n")
         
+        # evaluation metrics for the extraction process; store relevant stats in evaluation.csv
         utilities.evaluate(args.language, args.source, res_num, res_num - total_res_failed,
                              tot_extracted_elems, tot_elems, len(g))
 
