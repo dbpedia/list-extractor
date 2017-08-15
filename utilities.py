@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 '''
-####################
-### utilities.py ###
-####################
+##########
+ Utilities
+##########
 
-* This module contains all the utility methods/functions that are commonly used by all mapping functions.
+* This module contains all the utility methods/functions that are commonly used by all mapper functions.
 
 '''
 
@@ -26,9 +26,9 @@ CUSTOM_MAPPERS = dict()
 def check_existing_class(class_name):
     ''' This function checks if there exists mapping rules for the domain name provided in the parameter.
 
-    :param class_name: the domain to check if its present in the settings.json
+    :param class_name: the domain to check if its present in the ``settings.json``.
 
-    :return: boolean result
+    :return: boolean result.
     '''
     global MAPPING
     if len(MAPPING) == 0:
@@ -38,9 +38,9 @@ def check_existing_class(class_name):
     else: return False 
 
 def load_settings():
-    ''' This function loads the mapping rules from the settngs.json file into MAPPING dict.
+    ''' This function loads the mapping rules from the settngs.json file into ``MAPPING`` dict.
 
-    :return: latest MAPPING dict
+    :return: latest ``MAPPING`` dict.
     '''
     try:
         with open('settings.json') as settings_file:
@@ -53,10 +53,10 @@ def load_settings():
         sys.exit(1)
 
 def load_custom_mappers():
-    ''' This function loads the user defined mapping functions from the custom_mappers.json 
-    file into CUSTOM_MAPPERS dict.
+    ''' This function loads the user defined mapping functions from the ``custom_mappers.json`` 
+    file into ``CUSTOM_MAPPERS`` dict.
 
-    :return: Custom mapper function settings dict
+    :return: Custom mapper function settings dict.
     '''
     try:
         with open('custom_mappers.json') as custom_mappers:
@@ -69,10 +69,10 @@ def load_custom_mappers():
 
 
 def readResFile(resName):
-    ''' Reads the file called resName in resources directory and returns it as a dictionary
+    ''' Reads the file called resName in resources directory and returns it as a dictionary.
 
-    :param resName: file name to be read
-    :return: the dictionary contained in resources/resName
+    :param resName: file name to be read.
+    :return: the dictionary contained in resources/resName.
     '''
     
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -90,19 +90,19 @@ def readResFile(resName):
     return eval(text)
 
 def getDate():
-    """ Returns current date in format YYYY_MM_DD, used for naming dataset.
+    """ Returns current date in format ``YYYY_MM_DD``, used for naming dataset.
 
-    :return: date stamp
+    :return: date stamp.
     """
     timestmp = time.time()
     date = datetime.datetime.fromtimestamp(timestmp).strftime('%Y_%m_%d')
     return date
 
 def createResFile(file_content, lang, resName):
-    '''Creates a new file named 'resName - date'.txt containing extracted info
+    '''Creates a new file named ``resName - date.txt`` containing extracted info.
 
-    :param file_content: parsed data to be stored
-    :param resName: name_of_resource
+    :param file_content: parsed data to be stored.
+    :param resName: name_of_resource.
 
     :return: void
     '''
@@ -121,12 +121,12 @@ def createResFile(file_content, lang, resName):
 
 
 def get_subdirectory(dirname, filename):
-    '''Get the absolute path of new file called 'filename' inside subdirectory 'dirname', abstracting from OS
+    '''Get the absolute path of new file called ``filename`` inside subdirectory ``dirname``, abstracting from OS.
 
-    :param dirname: subdirectory name
-    :param filename: new file name
+    :param dirname: subdirectory name.
+    :param filename: new file name.
 
-    :return: final path
+    :return: final path.
     '''
     current_dir = os.path.dirname(os.path.abspath(__file__))
     dirpath = os.path.join(current_dir, dirname)
@@ -137,12 +137,12 @@ def get_subdirectory(dirname, filename):
     return file_path
 
 def makeReadable (res_dict) :
-    ''' Used to make more decipherable the dictionaries stored in 'resources' directory
-    Converts the dictionary in a string, sorts by key, and makes it more readable to be stored in a file
+    ''' Used to make more decipherable the dictionaries stored in ``resources`` directory.
+    Converts the dictionary in a string, sorts by key, and makes it more readable to be stored in a file.
  
-    :param res_dict: dictionary obtained fro resource
+    :param res_dict: dictionary obtained from resource.
 
-    :return: readable string
+    :return: readable string.
     '''
     finalString = ""
     keys_list = list(res_dict)
@@ -154,11 +154,11 @@ def makeReadable (res_dict) :
 
 
 def clean_dictionary(language, listDict) :
-    ''' Deletes all entries with an empty values, thus 'cleaning' the dictionary
+    ''' Deletes all entries with an empty values, thus 'cleaning' the dictionary.
 
-    :param listDict: dictionary obtained from parsing
+    :param listDict: dictionary obtained from parsing.
 
-    :return: a dictionary without empty values
+    :return: a dictionary without empty values.
     '''
     for key in listDict.keys() :
         if listDict[key] == '' :
@@ -172,11 +172,11 @@ def clean_dictionary(language, listDict) :
 
 
 def remove_symbols(listDict_key):
-    ''' removes other sybols are garbage characters that pollute the values to be inserted 
+    ''' removes other sybols are garbage characters that pollute the values to be inserted .
 
-    :param listDict_key: dictionary entries(values) obtained from parsing
+    :param listDict_key: dictionary entries(values) obtained from parsing.
 
-    :return: a dictionary without empty values
+    :return: a dictionary without empty values.
     '''
     for i in range(len(listDict_key)):
         value = listDict_key[i]
@@ -189,12 +189,12 @@ def remove_symbols(listDict_key):
 
 
 def sparql_query(query, lang):
-    ''' Returns a json representation of data from a query to a given SPARQL endpoint
+    ''' Returns a JSON representation of data from a query to a given SPARQL endpoint.
 
-    :param query: string containing the query
-    :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..)
+    :param query: string containing the query.
+    :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..).
 
-    :return: json result obtained from the endpoint
+    :return: JSON result obtained from the endpoint.
     '''
     if lang == 'en':
         local = ""
@@ -209,15 +209,15 @@ def sparql_query(query, lang):
 
 
 def get_resources(lang, page_type):
-    ''' Constructs a list containing all resources from specified type/class
+    ''' Constructs a list containing all resources from specified type/class.
 
     Firstly computes the number of resources from given type, then performs (tot_res modulo 1000) calls
     to the endpoint and construct the final list containing all of them.
 
-    :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..)
-    :param page_type: a string containing the ontology class to query
+    :param lang: prefix representing the local endpoint to query (e.g. 'en', 'it'..).
+    :param page_type: a string containing the ontology class to query.
 
-    :return: resource list
+    :return: resource list.
     '''
     tot_res = int(count_query(lang, page_type))
     offset = 0
@@ -242,12 +242,12 @@ def get_resources(lang, page_type):
 
 
 def count_query(lang, page_type):
-    '''Gets the number of resources of the given type using a count query on the specified endpoint
+    '''Gets the number of resources of the given type using a count query on the specified endpoint.
 
     :param lang: endpoint
-    :param page_type: for example "<http://dbpedia.org/ontology/Writer>"
+    :param page_type: for example ``<http://dbpedia.org/ontology/Writer>``
 
-    :return: endpoint answer as a number
+    :return: endpoint answer as a number.
     '''
     where_clause = "?s a <http://dbpedia.org/ontology/" + page_type + \
                     "> .?s <http://dbpedia.org/ontology/wikiPageID> ?f"
@@ -264,9 +264,9 @@ def count_query(lang, page_type):
 def json_req(req):
     ''' Performs a request to an online service and returns the answer in JSON.
 
-    :param req: URL representing the request
+    :param req: URL representing the request.
 
-    :return: a JSON representation of data obtained from a call to an online service
+    :return: a JSON representation of data obtained from a call to an online service.
     '''
     try:
         call = urllib.urlopen(req)
@@ -280,12 +280,12 @@ def json_req(req):
 
 
 def get_resource_type(lang, resource):
-    ''' Asks all rdf:type of current resource to the local SPARQL endpoint
+    ''' Asks all rdf:type of current resource to the local SPARQL endpoint.
 
-    :param resource: current resource with unknown type
-    :param lang: language/endpoint
+    :param resource: current resource with unknown type.
+    :param lang: language/endpoint.
 
-    :return: a list containing all types associated to the resource in the local endpoint
+    :return: a list containing all types associated to the resource in the local endpoint.
     '''
     if lang == 'en':
         local = ""
@@ -303,12 +303,12 @@ def get_resource_type(lang, resource):
 
 
 def count_listelem_dict(res_dict):
-    ''' Counts the total number of list elements from the dictionary representing the Wikipedia page.
-
+    ''' Counts the total number of list elements from the dictionary representing the Wikipedia page.\
     It's used to know how many list elements in a page are actually extracted.
-    :param res_dict: dictionary representing the resource (Wikipedia page)
+    
+    :param res_dict: dictionary representing the resource (Wikipedia page).
 
-    :return: total list elements
+    :return: total list elements.
     '''
     list_el_num = 0
     for k in res_dict.keys():
@@ -319,11 +319,11 @@ def count_listelem_dict(res_dict):
 def evaluate(lang, source, tot_res, tot_res_success, tot_extracted_elems, tot_elems, num_statements):
     ''' Evaluates the extaction process and stores it in a csv file.
 
-    :param source: resource type(dbpedia ontology type)
+    :param source: resource type(dbpedia ontology type).
     :param tot_extracted_elems: number of list elements extracted in the resources.
     :param tot_elems: total number of list elements present in the resources.
 
-    :return: void
+    :return: void.
     '''
     try:
         print "\nEvaluation:\n===========\n"

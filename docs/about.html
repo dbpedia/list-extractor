@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>About the Extraction &#8212; Wikipedia List-Extractor 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="#" />
+    <link rel="top" title="Wikipedia List-Extractor 2.0.1 documentation" href="index.html" />
+    <link rel="next" title="Mapping Process" href="mapping_process.html" />
+    <link rel="prev" title="Welcome to Wikipedia List-Extractor’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mapping_process.html" title="Mapping Process"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Wikipedia List-Extractor’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="about-the-extraction">
+<h1><strong>About the Extraction</strong><a class="headerlink" href="#about-the-extraction" title="Permalink to this headline">¶</a></h1>
+<p>The List-Extractor is a tool that can <strong>extract information from wikipedia lists and form appropriate RDF triples.</strong></p>
+<div class="section" id="abstract">
+<h2>Abstract<a class="headerlink" href="#abstract" title="Permalink to this headline">¶</a></h2>
+<p><em>Wikipedia, being the world’s largest encyclopedia, has humongous amount of information present in form of text. While key facts and figures are encapsulated in the resource’s infobox, and some detailed statistics are present in the form of tables, but there’s also a lot of data present in form of lists which are quite unstructured and hence its difficult to form into a semantic relationship. This project focuses on the extraction of relevant but hidden data which lies inside lists in Wikipedia pages. The information is unstructured and thus cannot be easily used to form semantic statements and be integrated in the DBpedia ontology. Hence, the main task consists in creating a tool which can take one or more Wikipedia pages with lists within as an input and then construct appropriate mappings to be inserted in a DBpedia dataset.</em></p>
+</div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>The main concept behind List Extractor is about using the information we have about lists in the Wikipedia page in order to select a suitable rule/property to form RDF statements. This is very important since the list itself, because of its very nature, doesn&#8217;t carry any metadata about the information that it is expressing. To overcome this obstacle, we exploit the information carried by the list section headers and by the type of the resource (obtained from querying a DBpedia SPARQL endpoint). This means that knowing the resource type and analyzing the section title, we can decide for a certain mapping function to be applied to each list element. The resources(s) are retrieved, processed, and then passed through mapper functions, which generate the RDF triples.</p>
+</div>
+<div class="section" id="structure">
+<h2>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h2>
+<p>Below is the process architecture that is followed by the List-Extractor:</p>
+<img alt="List-Extractor Architecture" src="_images/architecture.jpg" />
+<p>The Extractor has 3 main parts:</p>
+<ul>
+<li><p class="first"><strong>Request Handler</strong>:</p>
+<blockquote>
+<div><p>Selects the resource(s) depending on the user&#8217;s options and makes corresponding <em>resource requests</em> to the JSONpedia service for list data.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>JSONpedia Service</strong>:</p>
+<blockquote>
+<div><p>JSONpedia Service provides the resource&#8217;s information in a well-structured <em>JSON</em> format, which is used by the mapping functions to form appropriate triples from the list data. Previously, <a class="reference external" href="http://jsonpedia.org/frontend/index.html">JSONpedia Live</a> was being used, which is a web-service and is hence susceptible to be overloaded by large volume of requests. To overcome this bottleneck, the <a class="reference external" href="https://bitbucket.org/hardest/jsonpedia)">JSONpedia Library</a> is now being used instead of the Live service.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Mapper</strong>:</p>
+<blockquote>
+<div><p>This is the set of modules which use the JSON recieved from the JSONpedia Service and produce appropriate triples which can be serialized. The first part is <em>cleaning</em> the JSON dictionary to extract only meaningful list data. This data is then passed to a <em>mapping_selector</em> method, which using the rules present in the <code class="docutils literal"><span class="pre">settings.json</span></code>, which are formed in accordance to the <a class="reference external" href="http://downloads.dbpedia.org/2016-10/dbpedia_2016-10.owl">DBpedia Ontology</a>, selects the mapping functions that are needed to be applied to the elements. The mapping functions then form appropriate triples, which are then serialized into a RDF graph.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>About the Extraction</strong></a><ul>
+<li><a class="reference internal" href="#abstract">Abstract</a></li>
+<li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#structure">Structure</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Wikipedia List-Extractor&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="mapping_process.html"
+                        title="next chapter"><strong>Mapping Process</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/about.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="mapping_process.html" title="Mapping Process"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Wikipedia List-Extractor’s documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Krishanu Konar, Federica Baiocchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>

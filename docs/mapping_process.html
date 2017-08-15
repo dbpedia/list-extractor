@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Mapping Process &#8212; Wikipedia List-Extractor 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Wikipedia List-Extractor 2.0.1 documentation" href="index.html" />
+    <link rel="next" title="Rules Generator" href="rules_generator.html" />
+    <link rel="prev" title="About the Extraction" href="about.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rules_generator.html" title="Rules Generator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="about.html" title="About the Extraction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="mapping-process">
+<h1><strong>Mapping Process</strong><a class="headerlink" href="#mapping-process" title="Permalink to this headline">¶</a></h1>
+<p>This will briefly explain how the mapping process works in the List-Extractor.</p>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">listExtractor</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">collect_mode</span><span class="p">]</span> <span class="p">[</span><span class="n">source</span><span class="p">]</span> <span class="p">[</span><span class="n">language</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">class_name</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul>
+<li><p class="first"><strong>collect_mode</strong> : <code class="docutils literal"><span class="pre">s</span></code> or <code class="docutils literal"><span class="pre">a</span></code></p>
+<blockquote>
+<div><ul class="simple">
+<li>use <code class="docutils literal"><span class="pre">s</span></code> to specify a single resource or <code class="docutils literal"><span class="pre">a</span></code> for a class of resources in the next parameter.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>source</strong> : a string representing a class of resources from DBpedia ontology (find supported domains below), or a single Wikipedia page of any resource.</p>
+</li>
+<li><p class="first"><strong>language</strong>: <code class="docutils literal"><span class="pre">en</span></code>, <code class="docutils literal"><span class="pre">it</span></code>, <code class="docutils literal"><span class="pre">de</span></code> etc. (for now, available only for few languages in selected domains)</p>
+<blockquote>
+<div><ul class="simple">
+<li>a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>-c &#8211;classname</strong>: a string representing classnames you want to associate your resource with. Applicable only for <code class="docutils literal"><span class="pre">collect_mode=&quot;s&quot;</span></code>.</p>
+</li>
+</ul>
+<p><strong>Examples</strong>:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">python</span> <span class="pre">listExtractor.py</span> <span class="pre">a</span> <span class="pre">Writer</span> <span class="pre">it</span></code></li>
+<li><code class="docutils literal"><span class="pre">python</span> <span class="pre">listExtractor.py</span> <span class="pre">s</span> <span class="pre">William_Gibson</span> <span class="pre">en</span></code> : Uses the default inbuilt mapper-functions</li>
+<li><code class="docutils literal"><span class="pre">python</span> <span class="pre">listExtractor.py</span> <span class="pre">s</span> <span class="pre">William_Gibson</span> <span class="pre">en</span> <span class="pre">-c</span> <span class="pre">CUSTOM_WRITER</span></code> : Uses the <cite>CUSTOM_WRITER</cite> mapping only to extract list elements.</li>
+</ul>
+</div>
+<div class="section" id="process">
+<h2>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
+<p>Depending on the input, the Extractor will analyze a single Wikipedia page or all pages about resources from a given DBpedia ontology class. In both cases, each page is parsed using the <a class="reference external" href="https://bitbucket.org/hardest/jsonpedia)">JSONpedia Library</a>, (<a class="reference external" href="http://jsonpedia.org/frontend/index.html">JSONpedia Web-service</a> in previous version), obtaining a representation of the inner lists, linked to their section and subsection title. The <cite>JSONpedia wrapper</cite> provides a simplistic command-line execution of the JSONpedia library, so it can be used easily.</p>
+<p>At this point, it looks for all the mappings suited to the resource class and confronts the section titles to find a match with a list of keywords, depending on the requested language. If a match is found, a related mapping function is applied to each list element to form semantic triples and construct a RDF graph (for example, from a bibliography list of a writer it tries to extract info about his/her works, their literary genre, publication year and isbn code). Finally, if the graph is not empty, all statements are serialized in a .ttl file.</p>
+<p>When used in single resource mode, the extractor asks the endpoint for every <code class="docutils literal"><span class="pre">rdf:type</span></code> associated to it and tries to apply every matching mapping (for example, if a person is both a writer and an actor, it will look for both lists related to bibliography and filmography). On the other hand, if using all resources mode, it will apply the related class mapping to each collected resource.</p>
+<p>Once the resource information is retrieved and parsed, the mapping process happens.</p>
+<p><strong>Mapper</strong> module confronts the resource type(s) with a value from <code class="docutils literal"><span class="pre">MAPPING</span></code> dictionary inside <code class="docutils literal"><span class="pre">settings.json</span></code> and finds the name of the corresponding mapping function. It links each class to its mapping topic (e.g. Writer to Bibliography). For each value in MAPPING there is another dictionary with the same name containing the specific key-words for that domain divided by language, to be matched with section titles of interest. Other dictionaries sharing the same structure are used to extract further properties from section names.</p>
+<ul class="simple">
+<li>For eg., for <em>writers</em>, a bibliography mapping is applied to form triples having the literary work as subject, related to its author (the examined resource), publication year and ISBN if present. Similarly for <em>actors</em>, a filmography mapping is applied to form triples having the movie as subject, related to its type (Film, Cartoon, TV show..), its release year and to the resource by specifying the part took in it (starring, director, producer...) and so on.</li>
+</ul>
+<p>The <strong>mapping_rules.py</strong> file can be easily extended with new mappings, both to reach new languages and domains or to add new section keywords, thus extending the potential of List Extractor. For a new domain to be added, it is also necessary to write a new mapping function in mapper.py, which must be in the form of <code class="docutils literal"><span class="pre">map_(ValueFromMAPPING)</span></code>.</p>
+<p>Another way of extending to include new mappings and mappers is to use <strong>rulesGenerator</strong>, which is an interactive tool that can be used to create mappers and rules very easily.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Mapping Process</strong></a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#process">Process</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="about.html"
+                        title="previous chapter"><strong>About the Extraction</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="rules_generator.html"
+                        title="next chapter"><strong>Rules Generator</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/mapping_process.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="rules_generator.html" title="Rules Generator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="about.html" title="About the Extraction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Krishanu Konar, Federica Baiocchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>

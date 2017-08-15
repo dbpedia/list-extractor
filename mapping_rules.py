@@ -75,9 +75,9 @@ EXCLUDED_SECTIONS = {
 
 
 '''
-############################
-### SECTION DICTIONARIES ###
-############################
+###################################
+### MAPPER/SECTION DICTIONARIES ###
+###################################
 
 * Contains the substrings or keywords to be searched inside section names in order to relate a list 
   to the topic (Section headers).
@@ -158,15 +158,21 @@ OTHER_PERSON_DETAILS = {
     'en': ['family','marriages','restaurants', 'memberships']
 }
 
-MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',
-            'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
-            'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
-
 CONTRIBUTORS = {
     'en': ['contributors', 'staff' , 'cover', 'editors', 'editor', 'publisher', 'publishers', 'celebrity',
             'celebrities', 'mastheads', 'columnist', 'correspondent', 'reporter', 'personalities', 'personnel',
             'personal' ]
 }
+
+
+
+###############################################################
+
+MONTHS = ['january', r'\Wjan\W', 'february', r'\Wfeb\W','march', r'\Wmar\W', 'april', r'\Wapr\W', r'\Wmay\W',
+            'june', r'\Wjun\W', 'july' , r'\Wjul\W' , 'august', r'\Waug\W', 'september', r'\Wsep\W',r'\Wsept\W',
+            'october', r'\Woct\W', 'november', r'\Wnov\W' ,'december', r'\Wdec\W']
+
+
 
 
 #############################################################

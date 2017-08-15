@@ -2,60 +2,20 @@
 # -*- coding: utf-8 -*-
 
 """
-########################
-### listExtractor.py ###
-########################
-
---------------------------------------------------
-List-extractor - Extract Data from Wikipedia Lists
---------------------------------------------------
-
-This program is used to create RDF triples from wikipedia lists so that they can be inserted into the
-DBpedia dataset.
-
-The program accepts three parameters: collect_mode, source and language.
-
-The first one is used to discriminate between the extraction of a single page or from all the pages 
-related to a given class; the second one is the name of a single resource in the first case or a 
-class in the latter. The last one is a two-letter language prefix used by DBpedia (currently only 
-'it' and 'en' are accepted because the are mappings for italian and english.)
-
-Depending on the collection mode chosen, it either passes the source as it is to wikiParser or 
-collects first the list of resources from the given class to be passed from the endpoint.
-wikiParser returns a dictionary representing the list information inside each resource, and optionally
-you can save the dictionary inside a subdirectory named 'resources'. The dictionary is then passed to 
-mapper module, which selects a mapping function depending on resource type and starts building the RDF 
-graph, keeping trace of the number of list elements extracted. Finally, if the graph is not empty, it 
-is serialized in a .ttl file inside a subdirectory named 'extracted'.
+##################
+ List-Extractor
+##################
 
 
-## How to run the tool
-----------------------
+* This program is used to create `RDF triples` from wikipedia lists so that they can be inserted into \
+the DBpedia dataset.
 
-`python listExtractor.py collect_mode source language`
+* This module is the starting point to the list-extractor program. It accepts three commanline parameters: 
+    ``collect_mode``, ``source`` and ``language``.
 
-* `collect_mode` : `s` or `a`
-
-    * use `s` to specify a single resource or `a` for a class of resources in the next parameter.
-
-* `source`: a string representing a class of resources from DBpedia ontology 
-    (right now it works for `Writer` and `Actor`), or a single Wikipedia page of an actor/writer.
-
-* `language`: `en` or `it`
-
-    * a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint
-     to be queried.
-
-* `-c --classname`: a string representing classnames you want to associate your resource with. 
-   Applicable only for `collect_mode="s"`. 
-
-
-## Examples: 
-------------
-* `python listExtractor.py a Writer it` 
-* `python listExtractor.py s William_Gibson en`
-* `python listExtractor.py s William_Gibson en -c CUSTOM_WRITER` : Uses the `CUSTOM_WRITER` mapping only to 
-   extract list elements.
+* It takes commandline arguments and parses them, and depending on the input, call different methods \
+in different modules to generate triples. Once triples are generated, the RDF graph is serialized in \
+a ``.ttl`` file inside a subdirectory named ``extracted``.
 
 """
 
@@ -69,8 +29,22 @@ import mapper
 
 def main():
     """
-    Entry point for list-extractor.
-    Parses parameters and calls other modules in order to serialize a RDF graph.
+    Entry point for list-extractor. Parses parameters and calls other modules in order to serialize a RDF graph.
+    
+    Takes following **command-line parameters**:
+    
+    * **collect_mode** : ``s`` or ``a``
+
+        Use ``s`` to specify a single resource or ``a`` for a class of resources in the next parameter.
+
+    * **source** : a string representing a class of resources from DBpedia ontology (find supported domains below), or a single Wikipedia page of any resource.
+
+    * **language**: ``en``, ``it``, ``de``, ``es`` (for now, available only for selected domains)
+
+        a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried.
+
+    * **-c --classname**: a string representing classnames you want to associate your resource with. Applicable only for ``collect_mode="s"``. 
+
     """
     
     # initialize argparse parameters

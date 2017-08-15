@@ -3,15 +3,18 @@
 
 '''
 
-#########################
-### rulesGenerator.py ###
-#########################
+##################
+ Rules Generator
+##################
 
-* This is the module that allows the user to add new mapping rules that can be used by the extractor. Follow
-  the rules below to add a new language/domain or mapper function to the list-extractor.
+* This is the module that allows the user to **add new mapping rules** that can be used by the extractor. Follow \
+the rules below to add a new language/domain or mapper function to the list-extractor.
 
-* This modifies the `settings.json` and `custom_mappers.json` to store all the mapping rules and the user-
-  defined custom mapping functions.
+* This module also allows user to **create their own mapper functions**, which can be used to extract triples \
+in conjuction with the mapping rules present in ``settings.json``.
+
+* This modifies the ``settings.json`` and ``custom_mappers.json`` to store all the mapping rules and the \
+user-defined custom mapping functions.
 
 '''
 
@@ -33,7 +36,7 @@ custom_mappers = dict()
 def main():
     """
     Entry point for rulesGenerator.
-    Parses parameters and calls other modules in order to create/modify settings file.
+    Parses parameters and calls other modules in order to create/modify ``settings.json`` file.
 
     :return: void
     """
@@ -89,11 +92,11 @@ def main():
 
 
 def show_mappings(settings):
-    ''' show existing class and related mappings and display all the mapping rules. 
+    ''' Shows existing classes and related mappings and displays all the mapping rules. 
 
-    :param settings: the existing settings dict, containing mapping rules
+    :param settings: the existing settings dict, containing mapping rules.
 
-    :return: void
+    :return: void.
     '''
     mappings = settings["MAPPING"]  #load the default mapping rules
     print 'Following are the classes whose mappings exist:'
@@ -108,9 +111,9 @@ def show_mappings(settings):
         print '\n'
 
 def show_mapper_functions():
-    ''' Show available mapper functions 
+    ''' Shows available mapper functions.
 
-    :return: void
+    :return: void.
     '''
     print 'Available mapper functions (See mapping_rules.py for details):\n'
     
@@ -120,12 +123,12 @@ def show_mapper_functions():
     print ''
 
 def add_mapping_rule(settings):
-    ''' The main method for adding a user defined mapping rules.
-        It's an interactive method that asks user for class(domain) name and mapping functions 
-        to be used and updates the `settings.json` accordingly.
+    ''' The main method for adding `user defined mapping rules`.
+        It's an interactive method that asks user for ``class(domain)`` name and mapping functions 
+        to be used and updates the ``settings.json`` accordingly.
 
-    :param settings: the existing settings dict, containing mapping rules
-    :return: void
+    :param settings: the existing settings dict, containing mapping rules.
+    :return: void.
     '''
 
     mappings = settings['MAPPING']  #load the default mapping rules
@@ -178,12 +181,12 @@ def add_mapping_rule(settings):
             return
 
 def add_mapper_fn():
-    ''' The main method for adding a user defined mapper function.
-        Its an interactive method that asks user for mapper function name, language, section headers,
+    ''' The main method for adding a `user defined mapper function`.
+        Its an interactive method that asks user for mapper function name, language, section headers, \
         Ontology to be used, extractor functions to be used.
-        Upon completion, it stores the details in `custom_mappers.json` for future use.
+        Upon completion, it stores the details in ``custom_mappers.json`` for future use.
 
-    :return: void
+    :return: void.
     '''
     global custom_mappers
     mapper_function = defaultdict(dict)
@@ -268,10 +271,10 @@ def add_mapper_fn():
 
 
 def merge_mappers():
-    ''' Utility function to load both in-built and user-defined mapper functions into the
-        program memory and use them.
+    ''' Utility function to load both in-built and user-defined mapper functions into the \
+    program memory and use them.
 
-    :return: void
+    :return: void.
     ''' 
     global mappers
     global custom_mappers
@@ -280,14 +283,14 @@ def merge_mappers():
             mappers.append(key)
 
 def dump_custom_mappers(mapper_name, mapper_function):
-    ''' THis method saves the modified custom mappers into the `custom_mappers.json` file and 
-        makes a call to `load_custom_mappers()` and `merge_mappers()` to reload the custom_mappers 
-        file to reflect updated changes.
+    ''' This method saves the modified custom mappers into the ``custom_mappers.json`` file and \
+    makes a call to ``load_custom_mappers()`` and ``merge_mappers()`` to reload the ``custom_mappers`` \
+    file to reflect updated changes.
 
-    :param mapper_name: the mapper function name to be saved 
-    :param mapper_function: the mapper function dict, containing settings related to the mapper function
+    :param mapper_name: the mapper function name to be saved.
+    :param mapper_function: the mapper function dict, containing settings related to the mapper function.
 
-    :return: void
+    :return: void.
     '''
     global custom_mappers
     custom_mappers[mapper_name] = mapper_function
@@ -299,10 +302,10 @@ def dump_custom_mappers(mapper_name, mapper_function):
     return
 
 def load_custom_mappers():
-    ''' Opens and loads the custom mapper functions from `custom_mappers.json` and stores them in 
-        custom_mappers so it can be used by the rulesGenerator program.
+    ''' Opens and loads the custom mapper functions from ``custom_mappers.json`` and stores them in \
+    ``custom_mappers`` so it can be used by the rulesGenerator program.
 
-    :return: void
+    :return: void.
     '''
     global custom_mappers
     try:
@@ -324,12 +327,12 @@ def load_custom_mappers():
         sys.exit(1)
 
 def dump_settings(new_settings):
-    ''' This method save the modified settings into the `setting.json` file and makes call to load_settings()
-        which reloads the settings file to reflect the updated changes.
+    ''' This method save the modified settings into the ``setting.json`` file and makes call to \
+    ``load_settings()`` which reloads the settings file to reflect the updated changes.
 
-    :param new_settings: the updated settings dict to be saved 
+    :param new_settings: the updated settings dict to be saved.
 
-    :return: void
+    :return: void.
     '''
     global settings
     settings_file = open("settings.json", "w+")
@@ -339,9 +342,9 @@ def dump_settings(new_settings):
     return
 
 def load_settings():
-    ''' This method loads the saved settings (mapping rules) from `settings.json`.
+    ''' This method loads the saved settings (mapping rules) from ``settings.json``.
 
-    :return: void
+    :return: void.
     '''
     global settings
     try:
@@ -356,10 +359,10 @@ def load_settings():
         sys.exit(1)
 
 def show_custom_mappers():
-    ''' This is a utility function that displays all the mapper function created by user 
-        using rulesGenerator.py
+    ''' This is a utility function that displays all the mapper function created by user \
+    using ``rulesGenerator.py``.
 
-    :return: void
+    :return: void.
     '''
     global custom_mappers
     if len(custom_mappers) == 0:

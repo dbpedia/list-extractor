@@ -1,0 +1,95 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://dbpedia.org/resource/...And_Justice_for_All_%28album%29> a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1988-01-01"^^xsd:gYear .
+
+dbr:Bob_Rock dbo:bandMember dbr:Metallica .
+
+dbr:Cliff_Burton dbo:bandMember dbr:Metallica .
+
+dbr:Dave_Mustaine dbo:bandMember dbr:Metallica .
+
+dbr:Grammy_Award_for_Best_Hard_Rock_Performance dbo:AwardedFor dbr:Whiskey_in_the_Jar ;
+    dbo:activeYear "2000-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Nominated ;
+    dbo:awardedTo dbr:Metallica .
+
+dbr:Grammy_Award_for_Best_Metal_Performance dbo:AwardedFor <http://dbpedia.org/resource/Better_than_You_%28Metallica_song%29>,
+        <http://dbpedia.org/resource/Metallica_%28album%29>,
+        dbr:My_Apocalypse,
+        <http://dbpedia.org/resource/One_%28Metallica_song%29>,
+        <http://dbpedia.org/resource/St._Anger_%28song%29>,
+        dbr:Stone_Cold_Crazy ;
+    dbo:activeYear "1990-01-01"^^xsd:gYear,
+        "1991-01-01"^^xsd:gYear,
+        "1992-01-01"^^xsd:gYear,
+        "1999-01-01"^^xsd:gYear,
+        "2004-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Nominated ;
+    dbo:awardedTo dbr:Metallica .
+
+dbr:Grammy_Award_for_Best_Recording_Package dbo:AwardedFor dbr:Death_Magnetic ;
+    dbo:activeYear "2009-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Nominated ;
+    dbo:awardedTo dbr:Metallica .
+
+dbr:Grammy_Award_for_Best_Rock_Instrumental_Performance dbo:AwardedFor dbr:The_Call_of_Ktulu ;
+    dbo:activeYear "2001-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Nominated ;
+    dbo:awardedTo dbr:Metallica .
+
+dbr:Hardwired..._to_Self-Destruct a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "2016-01-01"^^xsd:gYear .
+
+dbr:James_Hetfield dbo:bandMember dbr:Metallica .
+
+dbr:Jason_Newsted dbo:bandMember dbr:Metallica .
+
+<http://dbpedia.org/resource/Kill_%27Em_All> a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1983-01-01"^^xsd:gYear .
+
+dbr:Kirk_Hammett dbo:bandMember dbr:Metallica .
+
+dbr:Lars_Ulrich dbo:bandMember dbr:Metallica .
+
+<http://dbpedia.org/resource/Load_%28album%29> a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1996-01-01"^^xsd:gYear .
+
+dbr:Master_of_Puppets a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1986-01-01"^^xsd:gYear .
+
+<http://dbpedia.org/resource/Reload_%28Metallica_album%29> a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1997-01-01"^^xsd:gYear .
+
+dbr:Ride_the_Lightning a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1984-01-01"^^xsd:gYear .
+
+dbr:Robert_Trujillo dbo:bandMember dbr:Metallica .
+
+dbr:Ron_McGovney dbo:bandMember dbr:Metallica .
+
+dbr:St._Anger a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "2003-01-01"^^xsd:gYear .
+
+dbr:Death_Magnetic a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "2008-01-01"^^xsd:gYear .
+
+<http://dbpedia.org/resource/Metallica_%28album%29> a dbo:Album ;
+    dbo:musicalArtist dbr:Metallica ;
+    dbo:releaseYear "1991-01-01"^^xsd:gYear .
+

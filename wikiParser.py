@@ -2,9 +2,9 @@
 
 
 '''
-#####################
-### wikiParser.py ###
-#####################
+##############
+  WikiParser 
+##############
 
 * This module contains all the utility methods/functions that are used to process and parse the wikipedia 
   articles.
@@ -32,15 +32,16 @@ last_sec_lev = 0  # last section level parsed
 
 
 def main_parser(language, resource):
-    ''' Main method, obtains a JSON representation of a resource and stores the relevant data in a dictionary
+    ''' **Main method**, obtains a **JSON** *representation* of a resource and stores the relevant data 
+    in a dictionary.
 
     Asks JSONpedia for the JSON representing the resource and parses the result looking for lists in sections.
-    Returns final dictionary containing all lists and their section names from given resource in given language
+    Returns final dictionary containing all lists and their section names from given resource in given language.
     
-    :param language: Language of Wikipedia page, needed by JSONpedia to identify the resource
-    :param resource: Resource name, needed by JSONpedia
+    :param language: ``Language`` of Wikipedia page, needed by JSONpedia to identify the resource.
+    :param resource: ``Resource name``, needed by JSONpedia.
     
-    :return: a dictionary containing section names as keys and featured lists as values, without empty fields
+    :return: a ``dictionary`` containing section names as keys and featured lists as values, without empty fields.
     '''
 
     global header_title  # used to concatenate sections and subsections titles
@@ -61,14 +62,14 @@ def main_parser(language, resource):
 
 
 def parse_section(section):
-    ''' Parses each section of the Wikipedia page searching for lists and calling parse_list() in turn.
+    ''' Parses each section of the Wikipedia page searching for lists and calling ``parse_list()`` in turn.
 
     Returns a dictionary with section names as keys and their list contents as values.
 
-    :param section: current section to parse in json format
-    :param title: a string used to concatenate names of nested sections
+    :param section: current section to parse in json format.
+    :param title: a string used to concatenate names of nested sections.
     
-    :return: a dictionary element representing the section
+    :return: a ``dictionary`` representing the section.
     '''
     
     global last_sec_lev
@@ -116,11 +117,12 @@ def parse_section(section):
 def parse_list(list_elem):
     '''Parses a list element extracting relevant info and to be put in a string.
 
-    It also marks references (links) with double curly brackets {{...}} in order to be recognizable for mapping
+    It also marks `references (links)` with double curly brackets ``{{...}}`` in order to be recognizable 
+    for mapping.
     
-    :param list_elem: current list item in json format
+    :param list_elem: current list item in json format.
 
-    :return: a string containing useful info from list element
+    :return: a string containing useful info from list element.
     '''
     list_content = ""  # initializing output
     if ('content' in list_elem and list_elem['content'] != None):
@@ -245,13 +247,13 @@ def parse_list(list_elem):
 ### Comment the lines below to use the web-request version.
 
 def jsonpedia_convert(language, resource):
-    ''' Uses the JSONpedia wrapper to use the JSONpedia library to get a JSON representation of the 
+    ''' Uses the ``JSONpedia wrapper`` to use the JSONpedia library to get a JSON representation of the 
         Wikipedia page divided in sections.
 
-    :param language: language of the resource we want to parse (e.g. it, en, fr...)
-    :param resource:  name of the resource
+    :param language: language of the resource we want to parse `(e.g. it, en, fr...)`.
+    :param resource:  name of the resource.
 
-    :return: a JSON with significant info about the resource
+    :return: a JSON with significant info about the resource.
     '''
     try:
         # spawn a new process that makes a call to the json wrapper, which creates the required
@@ -294,14 +296,14 @@ def jsonpedia_convert(language, resource):
     pass
 
 def find_page_redirects(res, lang):
-    '''Calls JSONpedia wrapper to find out whether the resource name provided redirects to 
+    '''Calls ``JSONpedia wrapper`` to find out whether the resource name provided redirects to 
     another Wikipedia page. Returns the actual page if found, thus preventing from losing pages 
     due to non-existing names.
 
-    :param lang: Wikipedia language of the resource
-    :param res: initial resource name which may trigger a redirection
+    :param lang: Wikipedia language of the resource.
+    :param res: initial resource name which may trigger a redirection.
     
-    :return: the redirection page if found
+    :return: the redirection page, if found.
     '''
     try:
         # spawn a new process that makes a call to the json wrapper, which creates the required

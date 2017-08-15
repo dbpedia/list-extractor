@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Rules Generator &#8212; Wikipedia List-Extractor 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="Wikipedia List-Extractor 2.0.1 documentation" href="index.html" />
+    <link rel="next" title="Module Documentation" href="code.html" />
+    <link rel="prev" title="Mapping Process" href="mapping_process.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Module Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="mapping_process.html" title="Mapping Process"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="rules-generator">
+<h1><strong>Rules Generator</strong><a class="headerlink" href="#rules-generator" title="Permalink to this headline">¶</a></h1>
+<p><strong>Rules Generator</strong> is a tool that would allow the user to <strong>add new mapping rules</strong> that can be used by the extractor. This tool also allows the user to <strong>create their own mapper functions</strong>, which can be used to extract triples in conjuction with the mapping rules present in <code class="docutils literal"><span class="pre">settings.json</span></code>.</p>
+<p>This tool modifies the <code class="docutils literal"><span class="pre">settings.json</span></code> and <code class="docutils literal"><span class="pre">custom_mappers.json</span></code> to store all the mapping rules and the user-defined custom mapping functions.</p>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal"><span class="pre">python</span> <span class="pre">rulesGenerator.py</span></code></p>
+<ul class="simple">
+<li>This is an interactive tool, select the options given in the menu for using the rules generator.</li>
+<li>While creating new mapping rules or mapper functions, make sure to follow the required format as suggested by the tool.</li>
+<li>Upon successful addition/modification, it will update the <code class="docutils literal"><span class="pre">settings.json</span></code> and <code class="docutils literal"><span class="pre">custom_mapper.json</span></code> so that the new user defined rules/functions can run with extractor.</li>
+</ul>
+</div>
+<div class="section" id="process">
+<h2>Process<a class="headerlink" href="#process" title="Permalink to this headline">¶</a></h2>
+<p>When <cite>Rules Generator</cite> tool is started, it initially loads all the mapping rules currently saved in <code class="docutils literal"><span class="pre">settings.json</span></code>, all the dictionaries required by the pre-defined mapper functions from <code class="docutils literal"><span class="pre">mapping_rules.py</span></code> and all the user defined mapper function settings from <code class="docutils literal"><span class="pre">custom_mapper.json</span></code>. All the insertions and updates now happen on the most recent settings and the changes are saved after completion.</p>
+<p>The prompt screen upon running the tool is</p>
+<div class="highlight-none"><div class="highlight"><pre><span></span>Select one of the following options:
+
+1. Show existing mapping rules
+2. Show available mapper functions
+3. Add new rules
+4. Add new mapper function
+5. Show custom mapper functions
+0. exit
+Your option:
+</pre></div>
+</div>
+<p>Two of the important functions of the rules generator are <strong>3. Add new rules</strong> and <strong>4. Add new mapper function</strong>. The working and structure of both is explained below.</p>
+<div class="section" id="add-new-mapping-rules">
+<h3>Add new mapping rules<a class="headerlink" href="#add-new-mapping-rules" title="Permalink to this headline">¶</a></h3>
+<p>Adding new mapping rules means adding an entry for a new/existing domain and listing all the mapper functions it should use for the triple generation. The mapper function can be chosen depending on the domain you&#8217;re focusing on, hence knowledge about the domain is very important. Selection of mapper functions in the mapping rules is important, because simply selecting all the availabe mapper functions to be run on the domain resources might be extremely time and resource consuming, without producing substantial output.</p>
+<p>All the mapping rules are stored in <code class="docutils literal"><span class="pre">settings.json</span></code>. The structure of the file looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;MAPPING&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;domain_name_1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Mapper-function_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Mapper-function_2&quot;</span><span class="p">,</span> <span class="s2">&quot;Mapper-function_3&quot;</span><span class="o">.....</span><span class="p">],</span>
+                <span class="s2">&quot;domain_name_2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Mapper-function_1&quot;</span><span class="p">,</span> <span class="s2">&quot;Mapper-function_2&quot;</span><span class="p">,</span> <span class="s2">&quot;Mapper-function_3&quot;</span><span class="o">.....</span><span class="p">],</span>
+                <span class="o">...</span>
+                <span class="o">...</span>
+                <span class="o">...</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">domain_name</span></code> would contain the domain/class of the resources you want to extract the triples from. For eg. <code class="docutils literal"><span class="pre">Writer</span></code>, <code class="docutils literal"><span class="pre">University</span></code>, <code class="docutils literal"><span class="pre">MusicalArtist</span></code> etc. You can get a rough idea from <a class="reference external" href="http://mappings.dbpedia.org/server/ontology/classes/">here.</a></p>
+<p>The <code class="docutils literal"><span class="pre">Mapper-function</span></code> would contain one of the mapper function dictionaries present in <code class="docutils literal"><span class="pre">mapping_rules.py</span></code>, or the custom mapping rules generated by using rulesGenerator present in <code class="docutils literal"><span class="pre">custom_mappers.json</span></code>. For eg. <code class="docutils literal"><span class="pre">BIBLIOGRAPHY</span></code>, <code class="docutils literal"><span class="pre">HONORS</span></code> present in <code class="docutils literal"><span class="pre">mapping_rules.py</span></code>, or <code class="docutils literal"><span class="pre">MUSIC_GENRE_MAPPER</span></code>, present in <code class="docutils literal"><span class="pre">custom_mappers.json</span></code>.</p>
+<p>Here&#8217;s an example from the existing <code class="docutils literal"><span class="pre">settings.json</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;MAPPING&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;Writer&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;BIBLIOGRAPHY&quot;</span><span class="p">,</span> <span class="s2">&quot;HONORS&quot;</span><span class="p">,</span> <span class="s2">&quot;OTHER_PERSON_DETAILS&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;EducationalInstitution&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ALUMNI&quot;</span><span class="p">,</span> <span class="s2">&quot;PROGRAMS_OFFERED&quot;</span><span class="p">,</span> <span class="s2">&quot;STAFF&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;Actor&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FILMOGRAPHY&quot;</span><span class="p">,</span> <span class="s2">&quot;DISCOGRAPHY&quot;</span><span class="p">,</span> <span class="s2">&quot;HONORS&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;MusicalArtist&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;DISCOGRAPHY&quot;</span><span class="p">,</span> <span class="s2">&quot;FILMOGRAPHY&quot;</span><span class="p">,</span> <span class="s2">&quot;CONCERT_TOURS&quot;</span><span class="p">,</span> <span class="s2">&quot;HONORS&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;MusicGenre&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;MUSIC_GENRE_MAPPER&quot;</span><span class="p">,</span> <span class="s2">&quot;BIBLIOGRAPHY&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;CUSTOM_MUSICAL_ARTIST&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CUSTOM_ARTIST_MAPPER&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;CUSTOM_WRITER&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CUSTOM_BIBLIOGRAPHY_MAPPER&quot;</span><span class="p">]</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="add-new-mapper-function">
+<h3>Add new mapper function<a class="headerlink" href="#add-new-mapper-function" title="Permalink to this headline">¶</a></h3>
+<p>Adding a new mapper function involves deciding on how to extract the list-elements from the Wikipedia resource, and once extracted, how to map them to form the appropriate RDF triples. Again, the knowledge about the domain is very necessary, as choosing the section and subsection headers are the key for writing the mapper functions. All the custom mapper functions are stored in <code class="docutils literal"><span class="pre">custom_mappers.json</span></code>. Here&#8217;s the skeletal structure of the file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;mapper_function_name&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;lang_1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;header_1&quot;</span><span class="p">,</span> <span class="s2">&quot;header_2&quot;</span><span class="p">,</span> <span class="o">....</span><span class="p">],</span>
+                        <span class="s2">&quot;lang_2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;header_1&quot;</span><span class="p">,</span> <span class="s2">&quot;header_2&quot;</span><span class="p">,</span> <span class="o">....</span><span class="p">],</span>
+                        <span class="o">...</span>
+                        <span class="o">...</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;extractors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>  <span class="c1">#at least one out of the four is required.</span>
+                <span class="s2">&quot;ontology&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;lang_1&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;subsection/property string_1&quot;</span><span class="p">:</span> <span class="s2">&quot;dbo:property&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;subsection/property string_2&quot;</span><span class="p">:</span> <span class="s2">&quot;dbo:property&quot;</span><span class="p">,</span>
+                                <span class="o">..</span>
+                                <span class="o">..</span>
+                        <span class="p">},</span>
+                        <span class="s2">&quot;lang_2&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;subsection/property string_1&quot;</span><span class="p">:</span> <span class="s2">&quot;dbo:property&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;subsection/property string_2&quot;</span><span class="p">:</span> <span class="s2">&quot;dbo:property&quot;</span><span class="p">,</span>
+                                <span class="o">..</span>
+                                <span class="o">..</span>
+                        <span class="p">}</span>
+                        <span class="o">...</span>
+                        <span class="o">...</span>
+                        <span class="o">...</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;years&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span>   <span class="c1">#boolean: Yes/No</span>
+        <span class="p">},</span>
+        <span class="o">....</span>
+        <span class="o">....</span>
+        <span class="o">....</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, there are 4 key entries each mapper function: <code class="docutils literal"><span class="pre">headers</span></code>, <code class="docutils literal"><span class="pre">extractors</span></code>, <code class="docutils literal"><span class="pre">ontology</span></code> and <code class="docutils literal"><span class="pre">years</span></code>. Since the list-extractor supports different languages, the rules generator also provides entries in several languages for <code class="docutils literal"><span class="pre">headers</span></code> and <code class="docutils literal"><span class="pre">ontology</span></code>.</p>
+<p>The first entry, <code class="docutils literal"><span class="pre">headers</span></code>, consists of <code class="docutils literal"><span class="pre">string</span></code> values for all the possible values for section headers that contain the list elements in the Wikipedia resource. Since many section headers might mean same things (possibly synonyms), this is a <code class="docutils literal"><span class="pre">list</span></code> of <code class="docutils literal"><span class="pre">string</span></code> values. The mapper function would only look for the list-elements which come under he sections provided in <code class="docutils literal"><span class="pre">headers</span></code>.</p>
+<p>The second entry, <code class="docutils literal"><span class="pre">extractors</span></code>, is a <code class="docutils literal"><span class="pre">list</span> <span class="pre">of</span> <span class="pre">integers</span></code>, which contains the integer values corresponding to the extractors that are to be used to extract out information from the raw list elements. There are 4 extractors that list-extractor provides:</p>
+<ul class="simple">
+<li><strong>Italic Mapper</strong>: Extracts <cite>italic text</cite> inside the list element, mapped by <code class="docutils literal"><span class="pre">''..''</span></code> in Wikipedia. This is the first mapping to be applied since it&#8217;s very precise. If this fails, more general mappings can be applied. Add <code class="docutils literal"><span class="pre">1</span></code> in the <code class="docutils literal"><span class="pre">extractors</span></code> list to use this extractor.</li>
+<li><strong>Reference Mapper</strong>: Looks for a <cite>reference</cite> inside the element, which has been marked with <code class="docutils literal"><span class="pre">{{...}}</span></code> by <code class="docutils literal"><span class="pre">wikiParser</span></code>. Once a reference is found, that URI is used for mapping. Add <code class="docutils literal"><span class="pre">2</span></code> in the <code class="docutils literal"><span class="pre">extractors</span></code> list to use this extractor.</li>
+<li><strong>Quote Mapper</strong>: Looks for a <cite>quotation marks</cite> inside the element and returns the string inside quotes. This is not a very precise mapper, but can prove useful at many places. Add <code class="docutils literal"><span class="pre">3</span></code> in the <code class="docutils literal"><span class="pre">extractors</span></code> list to use this extractor.</li>
+<li><strong>General Mapper</strong>: The worst case extractor, can be called when other extractors fail. It extracts all text different from lists until a punctuation mark is found. Applies a regex to find the main concept and cuts off numbers and punctuation marks. Generally not very precise and reliable. Add <code class="docutils literal"><span class="pre">4</span></code> in the <code class="docutils literal"><span class="pre">extractors</span></code> list to use this extractor.</li>
+</ul>
+<p><cite>The extractors can be chosen w.r.t the needs. For a more precise, less noisy triple generations, one can use only the first 2 extractors. On the other hand, if you&#8217;re okay with some bad triples, you can select all 4 extractors, which will generate more triples by including the less reliable extractors, but the noise will also increase.</cite></p>
+<p>The third entry, <code class="docutils literal"><span class="pre">ontology</span></code>, consists of <code class="docutils literal"><span class="pre">key-value</span></code> pairs, which are used for selecting the mapping rules in the RDF triples. The <code class="docutils literal"><span class="pre">key</span></code> is the <code class="docutils literal"><span class="pre">string</span></code> present in the wiki resource&#8217;s section/subsection/list-element entry which determines the property of the mapping to be done, and <code class="docutils literal"><span class="pre">value</span></code> is the corresponding entry in the dbpedia ontology. The RDF triples are mapped using these values, corresponding to the DBpedia ontology values.</p>
+<p>The fourth entry, <code class="docutils literal"><span class="pre">years</span></code>, is just a <code class="docutils literal"><span class="pre">boolean</span></code> value, which determines wether to look for time-periods in the list-elements in the resources or not. Selecting <code class="docutils literal"><span class="pre">Yes</span></code> would mean the mapper function will generate triples related to dates.</p>
+<p>All these entries are used by <code class="docutils literal"><span class="pre">mapper.map_user_defined_mappings()</span></code> to form a working mapper function.</p>
+<p>Here&#8217;s an example from the existing <code class="docutils literal"><span class="pre">custom_mappers.json</span></code>.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="p">{</span>
+        <span class="s2">&quot;CUSTOM_ARTIST_MAPPER&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Discography&quot;</span><span class="p">,</span> <span class="s2">&quot;Tours&quot;</span><span class="p">]</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;extractors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                <span class="s2">&quot;ontology&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;tours&quot;</span><span class="p">:</span> <span class="s2">&quot;concertTour&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;discography&quot;</span><span class="p">:</span> <span class="s2">&quot;musicalArtist&quot;</span>
+                        <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;years&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MUSIC_GENRE_MAPPER&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;headers&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bands&quot;</span><span class="p">,</span> <span class="s2">&quot;artists&quot;</span><span class="p">]</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;extractors&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+                <span class="s2">&quot;ontology&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;en&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;notableArtist&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;artist&quot;</span><span class="p">:</span> <span class="s2">&quot;notableArtist&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;band&quot;</span><span class="p">:</span> <span class="s2">&quot;notableBand&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;Subgenre&quot;</span> <span class="p">:</span> <span class="s2">&quot;SubGenre&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;division&quot;</span> <span class="p">:</span> <span class="s2">&quot;SubGenre&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;festivals&quot;</span> <span class="p">:</span> <span class="s2">&quot;relatedFestivals&quot;</span>
+                        <span class="p">}</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;years&quot;</span><span class="p">:</span> <span class="s2">&quot;Yes&quot;</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#"><strong>Rules Generator</strong></a><ul>
+<li><a class="reference internal" href="#usage">Usage</a></li>
+<li><a class="reference internal" href="#process">Process</a><ul>
+<li><a class="reference internal" href="#add-new-mapping-rules">Add new mapping rules</a></li>
+<li><a class="reference internal" href="#add-new-mapper-function">Add new mapper function</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="mapping_process.html"
+                        title="previous chapter"><strong>Mapping Process</strong></a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="code.html"
+                        title="next chapter"><strong>Module Documentation</strong></a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/rules_generator.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Module Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="mapping_process.html" title="Mapping Process"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">Wikipedia List-Extractor 2.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Krishanu Konar, Federica Baiocchi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.6.
+    </div>
+  </body>
+</html>

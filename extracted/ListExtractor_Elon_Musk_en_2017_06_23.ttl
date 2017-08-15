@@ -1,0 +1,144 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://dbpedia.org/resource/%22America%27s_20_Most_Powerful_CEOs_40_And_Under%22> dbo:activeYear "2011-01-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Aerospace_Engineering dbo:activeYear "2009-01-01"^^xsd:gYear,
+        "2015-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:HonoraryDegree ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:American_Institute_of_Aeronautics_and_Astronautics dbo:AwardedFor dbr:Falcon_1 ;
+    dbo:activeYear "2007-01-01"^^xsd:gYear,
+        "2008-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:As_of_2015 dbo:activeYear "2015-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Automotive_Executive_of_the_Year dbo:AwardedFor <http://dbpedia.org/resource/demonstrating_technology_leadership_and_innovation_via_Tesla._Prior_awardees_include_Bill_Ford_Jr%2C_Bob_Lutz%2C_Dieter_Zetsche_and_Lee_Iacocca._Musk_is_the_youngest_ever_recipient_of_this_award.> ;
+    dbo:activeYear "2010-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Business_Insider dbo:AwardedFor dbr:Mark_Zuckerberg ;
+    dbo:activeYear "2016-01-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:California_Institute_of_Technology dbo:activeYear "2010-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/Esquire_%28magazine%29> dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/F%C3%A9d%C3%A9ration_A%C3%A9ronautique_Internationale> dbo:AwardedFor dbr:Neil_Armstrong ;
+    dbo:activeYear "2010-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/Forbes_list_of_The_World%27s_Most_Powerful_People> dbo:activeYear "2016-12-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/Fortune_%28magazine%29> dbo:AwardedFor <http://dbpedia.org/resource/SpaceX%2C_SolarCity%2C_and_Tesla.> ;
+    dbo:activeYear "2013-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Global_Green dbo:AwardedFor dbr:Mikhail_Gorbachev ;
+    dbo:activeYear "2006-01-01"^^xsd:gYear,
+        "2007-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Heinlein_Prize_for_Advances_in_Space_Commercialization dbo:AwardedFor dbr:Advances_in_Space_Commercialization ;
+    dbo:activeYear "2011-01-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:HonoraryDegree dbo:AwardedBy dbr:Art_Center_College_of_Design,
+        dbr:University_of_Surrey,
+        dbr:Yale_University .
+
+dbr:Honorary_degree dbo:awardStatus dbo:HonoraryDegree ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:IEEE_Honorary_Membership dbo:activeYear "2015-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:In_2011 dbo:activeYear "2011-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:In_March_2017 dbo:activeYear "2017-01-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Inc_Magazine dbo:AwardedFor <http://dbpedia.org/resource/his_work_on_Tesla_and_SpaceX.> ;
+    dbo:activeYear "2007-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Living_Legends_of_Aviation dbo:AwardedFor dbr:Buzz_Aldrin ;
+    dbo:activeYear "2010-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:National_Space_Society dbo:AwardedFor dbr:Burt_Rutan ;
+    dbo:activeYear "2008-01-01"^^xsd:gYear,
+        "2009-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:National_Wildlife_Federation dbo:AwardedFor dbr:Thomas_Friedman ;
+    dbo:activeYear "2008-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/R%26D_Magazine_Innovator_of_the_Year_for_2007_for_SpaceX> dbo:AwardedFor <http://dbpedia.org/resource/SpaceX%2C_Tesla_and_SolarCity.> ;
+    dbo:activeYear "2007-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Royal_Aeronautical_Society dbo:activeYear "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/Smithsonian_%28magazine%29> dbo:activeYear "2012-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Space_Foundation dbo:activeYear "2010-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/The_Aviation_Week_2008_Laureate_for_the_most_significant_achievement_worldwide_in_the_space_industry.> dbo:AwardedFor <http://dbpedia.org/resource/the_most_significant_achievement_worldwide_in_the_space_industry.> ;
+    dbo:activeYear "2008-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+<http://dbpedia.org/resource/Time_%28magazine%29> dbo:activeYear "2010-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYear,
+        "2016-01-01"^^xsd:gYearMonth ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:United_States_National_Academy_of_Sciences dbo:activeYear "2006-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:Winner ;
+    dbo:awardedTo dbr:Elon_Musk .
+
+dbr:Yale_University dbo:activeYear "2015-01-01"^^xsd:gYear ;
+    dbo:awardStatus dbo:HonoraryDegree ;
+    dbo:awardedTo dbr:Elon_Musk .
+

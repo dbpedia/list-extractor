@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
 '''
-#################
-### mapper.py ###
-#################
+#########
+ Mapper
+#########
 
 * This module contains all the core methods/functions that are used for RDF-triple generation.
 
-* This module mainly consists of the mapping functions that are used by the extractor based on rules present
-  in `setting.json`, `mapping_rules.py` and `custom_mappers.json`.
 
-* This module also contains the extractors and some other helper functions that are used by the mapping 
-  functions to generate triples.
+* This module mainly consists of the mapping functions that are used by the extractors based on \
+rules present in ``setting.json``, ``mapping_rules.py`` and ``custom_mappers.json``.
 
+
+* This module also contains the extractors and some other helper functions that are used by the mapping \
+functions to generate triples.
 
 
 '''
@@ -43,17 +44,17 @@ CUSTOM_MAPPERS = dict()
 def select_mapping(resDict, res, lang, res_class, g):
     ''' Calls mapping functions for each matching section of the resource, thus constructing the associated RDF graph.
 
-    Firstly selects the mapping type(s) to apply from MAPPING (loaded from settings.json) based on resource class (domain).
+    Firstly selects the mapping type(s) to apply from ``MAPPING`` (loaded from ``settings.json``) based on resource class (domain).
     If a match is found, it tries to find another match between section names and key-words related to that domain.
     Finally, it applies related mapping functions for the list elements contained in that section.
 
-    :param resDict: dictionary representing current resource
-    :param res: current resource name
-    :param res_class: resource class/type (e.g. Writer)
-    :param lang: resource language
-    :param g: RDF graph to be created
+    :param resDict: dictionary representing current resource.
+    :param res: current resource name.
+    :param res_class: resource class/type (e.g. ``Writer``).
+    :param lang: resource language.
+    :param g: RDF graph to be created.
 
-    :return number of list elements actually mapped in th graph
+    :return: number of list elements actually mapped in the graph.
     '''
 
     #use globally defined dicts
@@ -84,7 +85,6 @@ def select_mapping(resDict, res, lang, res_class, g):
             if domain in mapped_domains:
                 continue
             
-            # <========>
             is_custom_map_fn = False
             try:
                 if lang in eval(domain):
@@ -132,22 +132,24 @@ def select_mapping(resDict, res, lang, res_class, g):
 
 
 def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g, elems):
-    ''' Uses the CUSTOM_MAPPERS dict to find the settings assotiated with the domain, and then runs the
-        mapping function according to the settings and adds the associated triples in the RDF graph.
+    ''' **This is the made module that runs all user-defined mapper functions.**
 
-    Firstly selects the settings to apply from custom_mappers.json based on resource class (domain).
-    If a match is found, it tries to find another match between section names and key-words related to that domain.
-    Finally, it applies related mapping functions for the list elements contained in that section.
+    * It uses the ``CUSTOM_MAPPERS`` dict to find the settings assotiated with the domain, and then runs \
+    the mapping functions according to the settings and adds the associated triples in the RDF graph.
+
+    * Firstly selects the settings to apply from ``custom_mappers.json`` based on resource class (domain).
+    * If a match is found, it tries to find another match between section names and key-words related to that domain.
+    * Finally, it applies related mapping functions for the list elements contained in that section.
 
     :param mapper_fn_name: Name of the custom mapper function from which settings(eg. section headers,
                            ontology classes, extractors to be used etc.) are loaded.
-    :param resDict: dictionary representing current resource
-    :param res: current resource name
-    :param res_class: resource class/type (e.g. Writer)
-    :param lang: resource language
-    :param g: RDF graph to be created
+    :param resDict: dictionary representing current resource.
+    :param res: current resource name.
+    :param res_class: resource class/type (e.g. ``Writer``).
+    :param lang: resource language.
+    :param g: RDF graph to be created.
     
-    :return number of list elements actually mapped in th graph
+    :return: number of list elements actually mapped in the graph.
     '''
     global CUSTOM_MAPPERS
     
@@ -248,18 +250,18 @@ def map_user_defined_mappings(mapper_fn_name, elem_list, sect_name, res, lang, g
 
 
 def map_discography(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles albums list present inside a section containing a match with DISCOGRAPHY.
+    ''' Handles albums list present inside a section containing a match with ``DISCOGRAPHY``.
 
-    Adds RDF statement about the album, its artist (the current resource) and the year launched.
+    Adds RDF statement about the album, its artist (the current resource) and the year it was launched.
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
 
     for elem in elem_list:
@@ -314,18 +316,18 @@ def map_discography(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists of concerts present inside a section containing a match with CONCERT_TOURS.
+    ''' Handles lists of concerts present inside a section containing a match with ``CONCERT_TOURS``.
 
-    Adds RDF statement about the tour, its artist (the current resource) and the year launched.
+    Adds RDF statement about the tour, its artist (the current resource) and the year it was launched.
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -380,18 +382,18 @@ def map_concert_tours(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_alumni(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists of alumni members present inside a section containing a match with ALUMNI.
+    ''' Handles lists of alumni members present inside a section containing a match with ``ALUMNI``.
 
     Adds RDF statement about the person and its assosiation with the resource(organisation).
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -443,18 +445,18 @@ def map_alumni(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles list present inside a section containing a match with PROGRAMS_OFFERED.
+    ''' Handles list present inside a section containing a match with ``PROGRAMS_OFFERED``.
 
     Adds RDF statement about the programs offered by the resource(organisation).
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -504,19 +506,19 @@ def map_programs_offered(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_honors(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to awards and honors given to people inside a section containing 
-        a match with HONORS.
+    ''' Handles lists related to awards and honors given to people inside a section containing \
+    a match with ``HONORS``.
 
     Adds RDF statements about the awards, and its details(if present) and the recipient.
 
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name, used to reconcile literary genre
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name, used to reconcile literary genre.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
 
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     award_status = award_status_mapper(sect_name, lang)  # if award status is found in the section name.
@@ -584,18 +586,18 @@ def map_honors(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_staff(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles list present inside a section containing a match with STAFF.
+    ''' Handles list present inside a section containing a match with ``STAFF``.
 
     Adds RDF statement about the staff members and the institution.
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -646,18 +648,18 @@ def map_staff(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles list present inside a section containing a match with OTHER.
+    ''' Handles list present inside a section containing a match with ``OTHER``.
 
-    Adds RDF statement about the unclassified sections in Person domain.
+    Adds RDF statement about the unclassified sections in ``Person`` domain.
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
    
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -724,20 +726,20 @@ def map_other_person_details(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_career(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to awards and honors given to people inside a section containing a 
-        match with CAREER.
+    ''' Handles lists related to awards and honors given to people inside a section containing a \
+    match with ``CAREER``.
 
-    Adds RDF statements about the career (academic/professional), and its details(if present)
+    Adds RDF statements about the career (academic/professional), and its details(if present) \
     and the recipient.
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name, used to reconcile literary genre
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name, used to reconcile literary genre.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
     
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     
     for elem in elem_list:
@@ -779,19 +781,19 @@ def map_career(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_filmography(elem_list, sect_name, res, lang, g, elems):
-    '''Handles lists related to filmography inside a section containing a match with FILMOGRAPHY.
+    '''Handles lists related to filmography inside a section containing a match with ``FILMOGRAPHY``.
 
-    It constructs RDF statements about the movie title, it release year and type (Film, TV show, Cartoon..)
-    and which part the current resource took in it (director, actor, ...)
+    It constructs RDF statements about the movie title, it release year and type (``Film``, ``TV show``, ``Cartoon``..)
+    and which part the current resource took in it (``director``, ``actor``, ...)
     
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name, used to reconcile literary genre
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name, used to reconcile literary genre.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
     
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     film_particip = filmpart_mapper(sect_name, lang)  # applied to every list element of the section, default:starring
     filmography_type = filmtype_mapper(sect_name, lang)  #same as above
@@ -833,18 +835,18 @@ def map_filmography(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_bibliography(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to bibliography inside a section containing a match with BIBLIOGRAPHY.
+    ''' Handles lists related to bibliography inside a section containing a match with ``BIBLIOGRAPHY``.
 
-    Adds RDF statement about the work title, its author (the current resource), publication year and isbn code.
+    Adds RDF statement about the work title, its author (the current resource), publication year and ISBN code.
 
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name, used to reconcile literary genre
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name, used to reconcile literary genre.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
 
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
 
     # literary genre depends on the name of the section, so it is the same for every element of the list
@@ -906,18 +908,18 @@ def map_bibliography(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_band_members(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to members inside a section containing a match with BAND_MEMBERS.
+    ''' Handles lists related to members inside a section containing a match with ``BAND_MEMBERS``.
 
     Adds RDF statement about the band and its members.
 
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name 
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
     
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
@@ -967,19 +969,19 @@ def map_band_members(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_contributors(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to contributions made by person inside a section containing a 
-        match with CONTRIBUTORS.
+    ''' Handles lists related to contributions made by a person inside a section containing a \
+    match with ``CONTRIBUTORS``.
 
-    Adds RDF statement about the band, its members
+    Adds RDF statement about the person and his contributions.
 
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name 
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
 
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
     for elem in elem_list:
         if type(elem) == list:  # for nested lists (recursively call this function)
@@ -1066,17 +1068,17 @@ def map_contributors(elem_list, sect_name, res, lang, g, elems):
 
 
 def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
-    ''' Handles lists related to literature details inside a section containing a 
-        match with OTHER_LITERATURE_DETAILS.
+    ''' Handles lists related to literature details inside a section containing a \
+    match with ``OTHER_LITERATURE_DETAILS``.
 
-    :param elem_list: list of elements to be mapped
-    :param sect_name: section name 
-    :param res: current resource
-    :param lang: resource language
-    :param g: RDF graph to be constructed
-    :param elems: a counter to keep track of the number of list elements extracted
+    :param elem_list: list of elements to be mapped.
+    :param sect_name: section name.
+    :param res: current resource.
+    :param lang: resource language.
+    :param g: RDF graph to be constructed.
+    :param elems: a counter to keep track of the number of list elements extracted.
 
-    :return number of list elements extracted
+    :return: number of list elements extracted.
     '''
 
     #check if the existing element has already been mapped; if yes, skip element
@@ -1172,16 +1174,18 @@ def map_other_literature_details(elem_list, sect_name, res, lang, g, elems):
 
 
 def add_years_to_graph(g, uri, year, year_ontology = {}):
-    '''Adds all the years related to the uri to the graph g. 
+    '''Adds all the years related to the URI to the graph g. 
     Does not return anything; appends existing graph.
 
-    :param g: current graph
+    :param g: current graph.
     :param uri: resource related to the years list.
     :param year: contains a list of years that need to be mapped.
-    :param year_ontology: dict containing ontologies that can be used with time periods in a particular domain;
-                            empty dict indicates default values should be taken from y_ontology.
+    :param year_ontology: dict containing ontologies that can be used with time periods in a particular domain; 
     
-    :return void
+    * Empty dict indicates default values should be taken from y_ontology.
+    
+        ``y_ontology = { 'activeYear':'activeYear', 'activeYearsStartDate': 'activeYearsStartDate', 'activeYearsEndDate' : 'activeYearsEndDate'}``
+    :return: void
     '''
 
     #default ontologies
@@ -1225,12 +1229,12 @@ def add_years_to_graph(g, uri, year, year_ontology = {}):
     return
 
 def alumni_profession_mapper(list_elem):
-    '''Applies a regex to look for a profession, returns a match if found
-    Profession is expected to present after the resource name, seperated by either a hyphen or comma
+    '''Applies a regex to look for a profession, returns a match if found.
+    Profession is expected to present after the resource name, seperated by either a hyphen or comma.
     
-    :param list_elem: current list element
+    :param list_elem: current list element.
 
-    :return: a match for profession, if present
+    :return: a match for profession, if present.
     '''
     #regex for finding profession in the list element
     profession = re.search(r'[^-|,]+$', list_elem)
@@ -1244,14 +1248,14 @@ def alumni_profession_mapper(list_elem):
     return profession
 
 def isbn_mapper(list_elem):
-    '''Applies a regex to look for a isbn number, returns a match if found
+    '''Applies a regex to look for a ISBN number, returns a match if found.
 
-    ISBN or International Standard Book Number consists of 4 parts and 10 digits (if assigned before 2007)
-    where the last character may equal to the letter "X", or 5 parts and 13 digits , possibly separated by hyphens
+    `ISBN or International Standard Book Number consists of 4 parts and 10 digits (if assigned before 2007)
+    where the last character may equal to the letter "X", or 5 parts and 13 digits , possibly separated by hyphens`.
     
-    :param list_elem: current list element
+    :param list_elem: current list element.
     
-    :return: a match for a isbn code, if present
+    :return: a match for a isbn code, if present.
     '''
 
     #regex for finding ISBN in the list element
@@ -1266,22 +1270,22 @@ def isbn_mapper(list_elem):
 
 def year_mapper(list_elem):
     '''Looks for a set of exactly 4 digits which would likely represent the year.
-    The most basic year extractor, used as a subroutine by month_year_mapper()
+    The most basic year extractor, used as a subroutine by ``month_year_mapper()``.
 
-    :param list_elem: current list element
+    :param list_elem: current list element.
 
-    :return: a numeric match if found
+    :return: a numeric match if found.
     '''
     match_num = re.findall(r'[0-9]{4}', list_elem)
     if len(match_num) == 0: return None
     return match_num
 
 def month_year_mapper(list_elem):
-    '''Looks for any kind of date formats; years, month+year or actual date and returns list of dates
+    '''Looks for any kind of date formats; years, month+year or actual date and returns list of dates.
 
-    :param list_elem: current list element
+    :param list_elem: current list element.
 
-    :return: a numeric match if found
+    :return: a numeric match if found.
     '''
     
     # month_list a dictionaly that contain regex for different months as keys and a corresponding number
@@ -1366,16 +1370,16 @@ def month_year_mapper(list_elem):
         return years
 
 def litgenre_mapper(sect_name, lang):
-    '''Tries to match the section name with a literary genre provided in BIBLIO_GENRE dictionary.
+    '''Tries to match the section name with a literary genre provided in ``BIBLIO_GENRE`` dictionary.
 
-    if a genre is found, it also checks for multiple matches and ignores them
+    If a genre is found, it also checks for multiple matches and ignores them \
     (some sections may be called 'Novels and short stories', therefore it's impossible to know if each list element
     is actually a novel or a short story).
 
-    :param sect_name: wikipedia section name, to reconcile
-    :param language: resource/endpoint language
+    :param sect_name: wikipedia section name, to reconcile.
+    :param language: resource/endpoint language.
     
-    :return: a literary genre if there is a match, None otherwise
+    :return: a literary genre if there is a match, ``None`` otherwise.
     '''
     b_genres = BIBLIO_GENRE[lang]
     for bg in b_genres.keys():  # iterate on literary genres provided for the given language
@@ -1389,12 +1393,12 @@ def litgenre_mapper(sect_name, lang):
             return b_genres[bg]
 
 def filmpart_mapper(sect_name, lang):
-    ''' Returns the part the person took in that movie as a property (e.g. starring, director, etc...)
-    In order to do so, confronts section titles with FILMOGRAPHY_PARTICIPATION. Default value is 'starring'.
+    ''' Returns the part the person took in that movie as a property (e.g. ``starring``, ``director`` etc...)
+    In order to do so, confronts section titles with ``FILMOGRAPHY_PARTICIPATION``. Default value is ``starring``.
 
-    :param sect_name: section and sub-section name to compare with a regex
+    :param sect_name: section and sub-section name to compare with a regex.
     
-    :return: a property if there is a match, None otherwise
+    :return: a property if there is a match, ``None`` otherwise.
     '''
     film_particip = 'starring'  #default property for Actors is 'starring'
     f_parts = FILMOGRAPHY_PARTICIPATION[lang]
@@ -1405,13 +1409,13 @@ def filmpart_mapper(sect_name, lang):
     return film_particip
 
 def filmtype_mapper(sect_name, lang):
-    ''' Returns the type of Filmography elements in current list as a class (TelevisionShow, Cartoon, etc...)
-    In order to do so, confronts section titles with FILMOGRAPHY_TYPE. Default value is Movie.
+    ''' Returns the type of Filmography elements in current list as a class (``TelevisionShow``, ``Cartoon`` etc...)
+    In order to do so, confronts section titles with ``FILMOGRAPHY_TYPE``. Default value is ``Movie``.
 
-    :param sect_name: section and sub-section name to compare with a regex
-    :param lang: page language
+    :param sect_name: section and sub-section name to compare with a regex.
+    :param lang: page language.
     
-    :return: a class if there is a match, None otherwise
+    :return: a class if there is a match, ``None`` otherwise.
     '''
     filmtype = 'Film'  # default type for Filmography elements is 'Film'
     f_types = FILMOGRAPHY_TYPE[lang]
@@ -1422,12 +1426,12 @@ def filmtype_mapper(sect_name, lang):
     return filmtype
 
 def award_status_mapper(sect_name, lang):
-    ''' Returns the status of the award to the recipient; default is Winnig, i.e. Awarded
+    ''' Returns the status of the award to the recipient; default is Winning, i.e. ``Awarded``.
 
-    :param sect_name: section and sub-section name to compare with a regex
-    :param lang: page language
+    :param sect_name: section and sub-section name to compare with a regex.
+    :param lang: page language.
 
-    :return: a class if there is a match, None otherwise
+    :return: a class if there is a match, ``None`` otherwise.
     '''
     status = None
     s_types = AWARD_STATUS_TYPE[lang]
@@ -1438,17 +1442,17 @@ def award_status_mapper(sect_name, lang):
     return status
 
 def sentence_splitter(elem,word,lang):
-    ''' Generic method that returns (if any) the second part (uri, if possibel) of the sentence after
-        splitting the sentence using the supplied word.
+    ''' Generic method that returns (if any) the second part (``URI``, if possible) of the sentence after \
+    splitting the sentence using the supplied word.
     
-    Can be use to extract more information from a single list element, which can contain complex compound
+    Can be use to extract more information from a single list element, which can contain complex compound \
     information.
-    For eg. 'X won Y award FOR Z work FROM V organisation.'
+    For eg. '``X`` won ``Y`` award **FOR** ``Z`` work **FROM** ``V`` organisation.'
     splitting at FOR and FROM can potentially create more triples with the work and organisation.
 
-    :param elem: dictionary element entry
-    :param word: the word on which to split (must exist in TRANSLATIONS in mapping_rules.py)
-    :param lang: page language
+    :param elem: dictionary element entry.
+    :param word: the word on which to split (must exist in ``TRANSLATIONS`` in ``mapping_rules.py``).
+    :param lang: page language.
 
     :return: an entity if there is a match, None otherwise
     '''
@@ -1487,11 +1491,11 @@ def sentence_splitter(elem,word,lang):
     return entity
 
 def bracket_feature_mapper(elem):
-    ''' Returns the entity (if any) which is found inside brackets in an element
+    ''' Returns the entity (if any) which is found inside brackets in an element.
 
-    :param elem: dictionary element entry
+    :param elem: dictionary element entry.
 
-    :return: an entity if there is a match, None otherwise
+    :return: an entity if there is a match, ``None`` otherwise.
     '''
     entity = None
     val = re.search('\(.*\)', elem, re.IGNORECASE)
@@ -1514,11 +1518,11 @@ Contains some of the helper modules that are required by the mapping functions.
 
 
 def lookup_call(keyword):
-    ''' Calls DBpedia lookup service to get a corresponding URI from a keyword [NOT USED ANYMORE]
+    ''' Calls DBpedia lookup service to get a corresponding URI from a keyword **[NOT USED ANYMORE]**
 
-    :param keyword: the string to be reconciled with a URI
+    :param keyword: the string to be reconciled with a URI.
 
-    :return: service answer in JSON format
+    :return: service answer in JSON format.
     '''
     base_req = 'http://lookup.dbpedia.org/api/search/PrefixSearch?MaxHits=1&QueryString='
     req = base_req + str(keyword)
@@ -1537,12 +1541,12 @@ def lookup_call(keyword):
 
 
 def wikidataAPI_call(res, lang):
-    '''Calls Wikidata API service to get a corresponding URI from a string
+    '''Calls Wikidata API service to get a corresponding URI from a string.
 
-    :param res: string related to the URI we want to find
-    :param lang: language or endpoint in which we perform the search
+    :param res: string related to the URI we want to find.
+    :param lang: language or endpoint in which we perform the search.
 
-    :return: answer in json format
+    :return: answer in json format.
     '''
 
     enc_res = urllib2.quote(res)  # then encode the string to be used in a URL
@@ -1570,12 +1574,12 @@ def wikidataAPI_call(res, lang):
 
 
 def find_DBpedia_uri(wk_uri, lang):
-    ''' Used to find an equivalent URI in DBpedia from a Wikidata one obtained by Wikidata API
+    ''' Used to find an equivalent URI in DBpedia from a Wikidata one obtained by `Wikidata API`.
 
-    :param wk_uri: URI found using the WikiData API
-    :param lang: resource/endpoint language
+    :param wk_uri: URI found using the WikiData API.
+    :param lang: resource/endpoint language.
 
-    :return: DBpedia equivalent URI if found
+    :return: DBpedia equivalent URI if found.
     '''
     query = "select distinct ?s where {?s <http://www.w3.org/2002/07/owl#sameAs> <" + wk_uri + "> }"
     try:
@@ -1595,10 +1599,10 @@ def find_DBpedia_uri(wk_uri, lang):
 
 
 def list_elem_clean(list_elem):
-    ''' Used to clean a list elements from forbidden or futile characters in a URI
+    ''' Used to clean a list elements from forbidden or futile characters in a URI.
 
-    :param list_elem: the list element to be cleaned
-    :return: cleaned element
+    :param list_elem: the list element to be cleaned.
+    :return: cleaned element.
     '''
     list_elem = list_elem.lstrip()
     list_elem = list_elem.lstrip('\'')
@@ -1632,14 +1636,13 @@ def list_elem_clean(list_elem):
 '''
 
 def italic_mapper(list_elem):
-    '''Extracts italic text inside the list element, mapped by ''..'' in Wikipedia.
+    '''Extracts italic text inside the list element, mapped by ``''..''`` in Wikipedia.
 
-    This is the first mapping to be applied since it's very precise.
-    If this fails, more geneal mappings are applied.
+    This is the first mapping to be applied since it's very precise. If this fails, more general mappings are applied.
 
-    :param list_elem: current list element
+    :param list_elem: current list element.
     
-    :return: a match if found, None object otherwise
+    :return: a match if found, ``None`` otherwise.
     '''
     
     # match_ref_italic = re.search(r'\'{2,}(.*?)\'{2,}', list_elem)
@@ -1652,12 +1655,12 @@ def italic_mapper(list_elem):
 
 
 def reference_mapper(list_elem):
-    '''Looks for a reference inside the element, which has been marked with {{...}} by wikiParser.
-    It also ignores date references because they are non-relevant
+    '''Looks for a reference inside the element, which has been marked with ``{{...}}`` by ``wikiParser``.
+    It also ignores date references because they are non-relevant.
     
-    :param list_elem: current list element
+    :param list_elem: current list element.
 
-    :return: a match if found, excluding number references
+    :return: a match if found, excluding number references.
     '''
     match_ref = re.search(r'\{\{.*?\}\}', list_elem)
     if match_ref:
@@ -1672,14 +1675,14 @@ def reference_mapper(list_elem):
 
 
 def general_mapper(list_elem):
-    ''' Called when other text mappers fail, extract all text different from number until a 
-        punctuation mark is found.
+    ''' Called when other text mappers fail, extract all text different from number until a \
+    punctuation mark is found.
 
-    Applies a regex to find the main concept and cuts off numbers and punctuation marks
+    Applies a regex to find the main concept and cuts off numbers and punctuation marks.
     
-    :param list_elem: current list element
+    :param list_elem: current list element.
     
-    :return: a match if found
+    :return: a match if found.
     '''
     
     list_elem = list_elem_clean(list_elem)
@@ -1704,9 +1707,9 @@ def quote_mapper(list_elem):
     '''Looks for a quotation marks inside the element and returns the string inside quotes.
     It also ignores date references because they are non-relevant.
 
-    :param list_elem: current list element
+    :param list_elem: current list element.
 
-    :return: a match if found, excluding number references
+    :return: a match if found, excluding number references.
     '''
     match_ref = re.search(r'\"(.*?)\"', list_elem)
     if match_ref:

@@ -1,0 +1,37 @@
+**Module Documentation**
+========================
+
+This contains the information regarding methods/functions present in the different List-Extractor modules.
+
+Summary
+-------
+:**listExtractor**: Entry point, calls functions from the other modules with the aim of costructing a RDF graph. It verifies input parameters, collects the single resource or all the resources from a domain and proceeds with parsing thanks to ``wikiParser``. Then it starts the mapping process using mapper on each list section, and iteratively adds statements to the graph. Finally, if it is non-empty, a ``.ttl`` file (dataset) with all the RDF statements is created, and the total number of extracted statement is printed.
+
+:**wikiParser**: *mainParser* function takes a language and a wiki page and returns a dictionary containing all lists from page connected to their section and sub-section title (every key is a section title and its value corresponds to the related list). In order to do so, it uses the `JSONpedia <http://jsonpedia.org/frontend/index.html>`_ web service calling *jsonpedia_convert* (which returns a JSON representation of given page). Then it calls *parse_section* which iterates on every section and constructs the dictionary using *parse_list* on each list element.
+
+:**mapper**: Takes a resource dictionary and extracts statements adding RDF triples to the graph. In order to do so, it must try to apply a set of specified rules to every list element, considering the resource type and its section titles. It uses different mappings for each domain and other support functions to extract particular portions of text, typically by applying regular expressions or by using WikiData API to reconcile URI references and querying the endpoint for the corresponding DBpedia resource.
+
+:**utilities**: This contains many accessory functions used by other modules (e.g. querying a SPARQL endpoint, obtaining a JSON answer from a URL...).
+
+:**mapping_rules**: It is made of dictionaries used by mapper module to select the domain and to link key-words to section titles in order to form statements. 
+
+:**rulesGenerator**: It's a seperate interactive tool that is used to create mapping rules for new, unmapped domains using the existing mapper functions. We can also create a new mapper function using this tool, and that mapper function can also be used within the mapping rules. 
+
+Detailed Documentation
+-----------------------
+
+.. automodule:: listExtractor
+   :members:
+
+.. automodule:: mapper
+   :members:
+
+.. automodule:: utilities
+   :members:
+
+.. automodule:: wikiParser
+   :members:
+
+.. automodule:: rulesGenerator
+   :members:
+
