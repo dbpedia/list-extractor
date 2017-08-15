@@ -63,7 +63,7 @@ If successful, a .ttl file containing RDF statements about the specified source 
 
 This project uses 2 other existing open source projects.
 
-* **JSonpedia**, a framework designed to simplify access at MediaWiki contents transforming everything into JSON. Such framework provides a library, a REST service and CLI tools to parse, convert, enrich and store WikiText documents. 
+* **JSONpedia**, a framework designed to simplify access at MediaWiki contents transforming everything into JSON. Such framework provides a library, a REST service and CLI tools to parse, convert, enrich and store WikiText documents. 
 
 The software is copyright of Michele Mostarda (me@michelemostarda.it) and released under Apache 2 License.
 Link : [JSONpedia](https://bitbucket.org/hardest/jsonpedia)
