@@ -1,0 +1,237 @@
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dbr:Alan_Tern dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actor"^^xsd:string .
+
+dbr:Ang_Mong_Seng dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Former MP"^^xsd:string .
+
+dbr:Anthony_Gordon_Fane dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Azmoon_Ahmad dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Balazs_Gulyas dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Bertil_Andersson dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:C_Kunalan dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Calvin_Kang_Li_Loong dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "National Sprinter"^^xsd:string .
+
+dbr:Chade-Meng_Tan dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Chen_Ou_Leo_-_Co-founder_and_Chief_Executive_Officer_of_Jumei.com dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "buying site."^^xsd:string .
+
+dbr:Cheo_Chai_Chen dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Christopher_G._Newhall dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Daniela_Rhodes dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Darren_Tan_Siew_Peng dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Chinese Banking Corporation"^^xsd:string .
+
+dbr:Diana_Ser dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Dipna_Lim_Prasad dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "National Hurdler"^^xsd:string .
+
+<http://dbpedia.org/resource/Dr_Chua_Chee_Kai_-_Executive_director_for_the_Singapore_Centre_for_3D_Printing_at_NTU.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Executive director for the Singapore Centre for 3D Printing at NTU."^^xsd:string .
+
+<http://dbpedia.org/resource/Dr_Khoo_Seow_Hwa__-_Renowned_calligrapher.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Renowned calligrapher."^^xsd:string .
+
+dbr:Dr_Nie_Chenxi_-__Vice-Governor_of_China dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Governor of China’s Hebei Province."^^xsd:string .
+
+dbr:Edhie_Baskoro_Yudhoyono dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Farish_A._Noor dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Freddy_Boey dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Gerald_Giam dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Constituency Member of Parliament"^^xsd:string .
+
+dbr:Grace_Chia dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Ho_Ho_Ying dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Abstract artist."^^xsd:string .
+
+<http://dbpedia.org/resource/Inderjit_Singh_%28politician%29> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Former MP"^^xsd:string .
+
+dbr:Intan_Azura_Mokhtar dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Jerry_Yeo dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actor"^^xsd:string .
+
+dbr:Joanne_Peh dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actress"^^xsd:string .
+
+dbr:Joseph_Walther dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Joseph_Wilfred_Lakai dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Kerry_Sieh dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Lee_Bee_Wah dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "MP"^^xsd:string .
+
+<http://dbpedia.org/resource/Lee_Teng_%28Singapore%29> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "television host"^^xsd:string .
+
+dbr:Lee_Wung_Yew dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Multiple SEA Games gold medallist in shooting."^^xsd:string .
+
+dbr:Lee_Yong_Miang dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Chairman and founder of the Expand Group of Companies."^^xsd:string .
+
+dbr:Leo_Chen_Ou dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Liang_Wern_Fook dbo:alumni dbr:Nanyang_Technological_University .
+
+<http://dbpedia.org/resource/Lien_Siaou_Sze_-_Ranked_on_Fortune_magazine%27s_list_of_the_%2750_Most_Powerful_Women_in_Business_2006> dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Lim_Chong_Yah dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Lim_Chow_Kiat dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Ling_Kai dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "songwriter"^^xsd:string .
+
+dbr:Low_Thia_Khiang dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "General of the Workers Party of Singapore"^^xsd:string .
+
+dbr:Low_Yen_Ling dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Major dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Masagos_Zulkifli dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Mayapada dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Michelle_Saram dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actress"^^xsd:string .
+
+dbr:Miss_Singapore_Universe dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "International Business and Relations Researcher in the University of Gothenburg and  1999"^^xsd:string .
+
+dbr:Nadia_Magnenat_Thalmann dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Ng_Gek_Boo dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "General of International Labour Organisation"^^xsd:string .
+
+dbr:Ng_Hui dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actress"^^xsd:string .
+
+dbr:Ng_Joo_Hee dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Commissioner of Police (Singapore)"^^xsd:string .
+
+<http://dbpedia.org/resource/Ong_Lay_Khiam_-_Veteran_corporate_banker.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Veteran corporate banker."^^xsd:string .
+
+dbr:Paul_Tapponnier dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Peter_M.A._Sloot dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Philip_Ingham dbo:staff dbr:Nanyang_Technological_University .
+
+<http://dbpedia.org/resource/Prof_Ong_Choon_Nam_-_Xenobiotics_and_Carcinogenesis_researcher._2002_AstraZeneca-American_Toxicology_Society_award.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "American Toxicology Society award."^^xsd:string .
+
+dbr:Richard_Ling dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Rudolph_A._Marcus dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Rui_En dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actress"^^xsd:string .
+
+dbr:Sebastian_Teo dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "President of the National Solidarity Party (Singapore)"^^xsd:string .
+
+dbr:Shafie_Shamsuddin dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Sim_Ann dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Staffan_Kjelleberg dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Stefanie_Sun dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "singer"^^xsd:string .
+
+dbr:Tan_Chin_Hwee dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "CEO of Trafigura"^^xsd:string .
+
+dbr:Tan_Hun_Tong dbo:staff dbr:Nanyang_Technological_University .
+
+<http://dbpedia.org/resource/Tan_Sri_Dato%27_Lim_Guan_Teik_-_Paper_giant._Muda_Holdings_Berhad.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Paper giant. Muda Holdings Berhad."^^xsd:string .
+
+dbr:Teo_Ser_Luck dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:The_Honourable_Pehin_Dato_Abu_Bakar_Apong_-_Minister_of_Education dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Tito_Karnavian dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Universiti_Tunku_Abdul_Rahman dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Founding President of  ."^^xsd:string .
+
+dbr:Vanessa_Vanderstraaten dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "actress"^^xsd:string .
+
+dbr:Vijay_Sethi dbo:staff dbr:Nanyang_Technological_University .
+
+dbr:Vincy_Chan dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Cantopop singer"^^xsd:string .
+
+dbr:Wang_Zhongwei_-_Deputy_Secretary-General_of_the_Chinese_State_Council dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Wee_Ka_Siong dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Deputy Minister of Education of Malaysia."^^xsd:string .
+
+<http://dbpedia.org/resource/Wu_Hsioh_Kwang_-_Founder_of_Straco_Corporation_Limited.> dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Founder of Straco Corporation Limited."^^xsd:string .
+
+dbr:Xerox dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "patent mark."^^xsd:string .
+
+<http://dbpedia.org/resource/Y.B._Tan_Sri_Dato%27_Seri_Law_-_Past_Malaysian_Minister_of_Science> dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Yang_Quee_Yee dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Malay and Chinese Linguist."^^xsd:string .
+
+dbr:Yap_Koon_Chan dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "author and literary activist."^^xsd:string .
+
+dbr:Yee_Jenn_Jong dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "NCMP"^^xsd:string .
+
+dbr:Yew-Kwang_Ng dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Albert Winsemius Professor of Economics in NTU"^^xsd:string .
+
+dbr:You_Jin dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "winning writer."^^xsd:string .
+
+<http://dbpedia.org/resource/Youyi_%28actress%29> dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Yu-Foo_Yee_Shoon dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Former MP and Minister of State"^^xsd:string .
+
+dbr:Zaqy_Mohamad dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "MP"^^xsd:string .
+
+dbr:Zhu_Zhiqiang dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:Zihan_Loo dbo:alumni dbr:Nanyang_Technological_University .
+
+dbr:genetically_modified_food dbo:alumni dbr:Nanyang_Technological_University ;
+    dbo:notableWork "Biochemistry researcher and Head of Biological Sciences at the National University of Singapore. Known for creation of  salmon."^^xsd:string .
+

@@ -129,20 +129,14 @@ CONCERT_TOURS = {
 
 ALUMNI = {
     'en': ['alumni', 'pupil'],
-    'it': [],
-    'de': []
 }
 
 STAFF = {
     'en': ['professors', 'Presidents', 'Faculty', 'staff', 'people', 'Principals', 'recipients'],
-    'it': [],
-    'de': []
 }
 
 PROGRAMS_OFFERED = {
     'en': ['Programs', 'Programmes', 'Faculties', 'Academics', 'Courses', 'Departments' ],
-    'it': [],
-    'de': []
 }
 
 HONORS = {

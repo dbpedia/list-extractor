@@ -12,7 +12,7 @@ This project contains 2 differnt tools: `List-Extractor` and `Rules-Generator`.
 Use `rulesGenerator.py` first to generate desired rules, and then use `listExtractor.py` to extract triples for wiki resources.
 Alternatively, you can use only `listExtractor.py` and extract with existing default settings.
 
-For more details, refer to the documentation present in the `docs` folder.
+For more details, refer to the documentation present in the `docs` folder. The sample generated datasets can be found **[here](https://drive.google.com/open?id=0BzDWYUiB6LUTYzdFU19BX2lUMjA).** Some example triples for different domains are present in `extracted` folder.
 
 ### List-Extractor:
 
@@ -29,6 +29,8 @@ For more details, refer to the documentation present in the `docs` folder.
     * a two-letter prefix corresponding to the desired language of Wikipedia pages and SPARQL endpoint to be queried.
 
 * `-c --classname`: a string representing classnames you want to associate your resource with. Applicable only for `collect_mode="s"`. 
+
+**NOTE:** While extracting triples from multiple resources in a domain (`collect_mode = a`), using `Ctrl + C` will skip the current resource and move on to the next resource. To quit the extractor, use `Ctrl + \`.
 
 ## Examples: 
 

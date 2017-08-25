@@ -23,6 +23,7 @@ import json
 import re
 import rdflib
 import utilities
+import sys
 import time
 from mapping_rules import *
 
@@ -90,13 +91,15 @@ def select_mapping(resDict, res, lang, res_class, g):
                 if lang in eval(domain):
                     domain_keys = eval(domain)[lang]  # e.g. ['bibliography', 'works', ..]
                 else:
-                    print("The language provided is not available yet for this mapping")
-                    return 0
+                    print("The language provided is not available yet for this mapping!")
+                    sys.exit(1)
+
             except NameError:  #key not found(predefined mappers)
                 if domain not in CUSTOM_MAPPERS.keys():
                     print "Cannot find the domain's mapper function!!"
                     print 'You can add a mapper function for this mapping using rulesGenerator.py and try again...\n'
-                    return 0
+                    sys.exit(1)
+
                 else:
                     is_custom_map_fn = True
                     domain_keys = CUSTOM_MAPPERS[domain]["headers"][lang]
@@ -1237,12 +1240,13 @@ def alumni_profession_mapper(list_elem):
     :return: a match for profession, if present.
     '''
     #regex for finding profession in the list element
-    profession = re.search(r'[^-|,]+$', list_elem)
+ 
+    profession = re.search(r'(?:–|-)[^-|,]+$', list_elem)
 
     #if found, return the profession
     if profession != None:
         profession = profession.group()
-        profession = profession.replace("{{", "").replace("}}","")
+        profession = profession.replace("{{", "").replace("}}","").replace("-","").replace("–","").strip()
         if profession[0] == " ": profession = profession[1:]
     
     return profession

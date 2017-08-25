@@ -103,6 +103,7 @@ def main():
     elif args.collect_mode == 'a':  # extract lists from a class of resources from DBpedia ontology (e.g. 'Writer')
         if utilities.check_existing_class(args.source) == True: #Check if the domain has already been mapped (in settings.json)
             try:
+                print 'Fetching resources, please wait......'
                 resources = utilities.get_resources(args.language, args.source)
                 res_num = len(resources)  # total number of resources
                 curr_num = 1  # current resource to be analyzed
@@ -117,6 +118,7 @@ def main():
         tot_extracted_elems = 0  # Used to keep track of the number of list elements extracted
         tot_elems = 0 # Used to keep track of total number of list elements
         total_res_failed = 0
+        print 'Completed! Found', str(res_num), 'resources.\nStarting extraction....\n' 
         for res in resources:
             try:
                 print(res + " (" + str(curr_num) + " of " + str(res_num) + ")")
