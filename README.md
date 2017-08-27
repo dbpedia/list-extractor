@@ -1,9 +1,12 @@
 # List-extractor - Extract Data from Wikipedia Lists
 
+List-Extractor is a tool that can *extract information from wikipedia lists and form appropriate RDF triples from the list data.*
+
 #### [GSoC'16 Detailed Progress available here](https://github.com/dbpedia/extraction-framework/wiki/GSoC_2016_Progress_Federica)
-#### [GSoC'17 Detailed Progress available here](https://github.com/dbpedia/list-extractor/wiki/GSoC-2017:-Krishanu-Konar-progress)
+#### [Final commit of GSoC'16 can be found here](https://github.com/dbpedia/list-extractor/tree/55abff51634324bb657f531fe2e3bb699dfada74)
+#### [GSoC'17 Work's detailed progress available here](https://github.com/dbpedia/list-extractor/wiki/GSoC-2017:-Krishanu-Konar-progress)
 #### [List-Extractor wiki available here](https://github.com/dbpedia/list-extractor/wiki)
-#### [GSoC'17 Final results and challenges available here](https://github.com/dbpedia/list-extractor/wiki/GSoC-2017:-Krishanu-Konar-progress)
+#### [GSoC'17 Final results and challenges available here](https://github.com/dbpedia/list-extractor/wiki/GSoC-2017:-Krishanu-Konar-progress#results)
 
 
 ## How to run the tools
